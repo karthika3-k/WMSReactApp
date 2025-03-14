@@ -43,6 +43,7 @@ const LoginPage: React.FC = () => {
             }
             else {
                 localStorage.setItem('userName', username)
+                // localStorage.setItem('userRole', "Admin")
                 router.push('/pages/dashboard');
             }
 

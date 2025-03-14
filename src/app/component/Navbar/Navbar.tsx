@@ -1,7 +1,7 @@
-"use client";
+"use client"
+import { FaSearch, FaComments, FaLock, FaSignOutAlt, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useState } from "react";
-import { useRouter } from 'next/navigation'; // Use next.js router for redirection
-import { FaLock, FaSignOutAlt, FaEye, FaEyeSlash } from "react-icons/fa";
+import { useRouter } from 'next/navigation';
 
 // A simple confirmation dialog component
 const ConfirmationDialog: React.FC<{ onConfirm: () => void; onCancel: () => void }> = ({ onConfirm, onCancel }) => (
@@ -30,7 +30,7 @@ const PasswordChangeForm: React.FC<{ onCancel: () => void }> = ({ onCancel }) =>
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (newPassword === confirmPassword) {
-            const userID = typeof window !== "undefined" ? localStorage.getItem("userID") : null;
+            const userID = typeof window !== "undefined" ? localStorage.getItem("userName") : null;
 
             if (userID) {
                 // Call your API to change the password here
@@ -118,18 +118,16 @@ const PasswordChangeForm: React.FC<{ onCancel: () => void }> = ({ onCancel }) =>
     );
 };
 
-const Navbar: React.FC = () => {
-    const router = useRouter(); // Using Next.js Router for navigation
-    const username = typeof window !== 'undefined' ? localStorage.getItem("userName") || "John Smith" : "John Smith";
-    const profileImageUrl = "/userlogo.png";
-    const companyLogo = "/Techativelogo.png"
 
+const Navbar: React.FC = () => {
+    const router = useRouter();
+    const username = typeof window !== 'undefined' ? localStorage.getItem("userName") || "John Smith" : "John Smith";
+    const userRole = typeof window !== 'undefined' ? localStorage.getItem("userRole") || "Admin" : "Admin";
+    const profileImageUrl = "/userlogo.png";
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [isLogoutDialogOpen, setLogoutDialogOpen] = useState(false);
     const [isPasswordChangeOpen, setPasswordChangeOpen] = useState(false);
-
     const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
-
     const handleLogout = () => setLogoutDialogOpen(true);
 
     const confirmLogout = () => {
@@ -137,7 +135,7 @@ const Navbar: React.FC = () => {
         localStorage.removeItem("username");
         localStorage.removeItem("userID");
         localStorage.removeItem("admin");
-        router.push("/"); // Redirect to home after logout
+        router.push("/"); 
         setLogoutDialogOpen(false);
     };
 
@@ -145,79 +143,51 @@ const Navbar: React.FC = () => {
 
     const openPasswordChangeForm = () => setPasswordChangeOpen(true);
     const closePasswordChangeForm = () => setPasswordChangeOpen(false);
-
     return (
-        <header className="w-full bg-gradient-to-b from-indigo-700 to-indigo-800 text-indigo-100 p-2 shadow-md flex justify-between items-center">
-            <div>
-                <img
-                    src={companyLogo}
-                    alt="Profile"
-                    className="w-45 h-10 border-2 border-indigo-100"
-                />
+        <div className="flex items-center justify-between p-4">
+            <div className="hidden md:flex items-center gap-2 tex-xs rounded-full ring-[1.5px] ring-gray-300">
+                <FaSearch />
+                <input type="text" placeholder="Search..." className="w-[200px] p-2 bg-transparent outline-none" />
             </div>
-            <h1 className="text-xl font-bold items-center">WareHouse Management System</h1>
-            <div className="flex items-center gap-6">
-                <div className="relative">
-                    <div className="flex items-center gap-2">
-                        <span className="text-lg text-indigo-100">{username}</span>
-                        <img
-                            src={profileImageUrl}
-                            alt="Profile"
-                            className="w-10 h-10 rounded-full border-2 border-indigo-100"
-                            onClick={toggleDropdown}
-                        />
-                    </div>
-                    {isDropdownOpen && (
-                        <div className="absolute right-0 mt-2 w-48 bg-blue-400 text-Teal-100 rounded-lg shadow-lg">
-                            <ul>
-                                <li
-                                    onClick={openPasswordChangeForm}
-                                    className="flex items-center px-4 py-2 hover:bg-blue-300 cursor-pointer"
-                                >
-                                    <FaLock className="w-5 h-5 mr-2" />
-                                    Change Password
-                                </li>
-                                <li
-                                    onClick={handleLogout}
-                                    className="flex items-center px-4 py-2 hover:bg-blue-300 cursor-pointer"
-                                >
-                                    <FaSignOutAlt className="w-5 h-5 mr-2" />
-                                    Logout
-                                </li>
-                            </ul>
-                        </div>
-                    )}
-                </div>
-            </div>
+            <div className="flex items-center gap-6 justify-end w-full"> 
+    <div className="bg-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer">
+        <FaComments />
+    </div>
+    <div className="flex flex-col">
+        <span className="text-xs leading-3 font-medium">{username}</span>
+        <span className="text-[10px] text-black-100 text-right">{userRole}</span>
+    </div>
+    <img
+        src={profileImageUrl}
+        alt="Profile"
+        className="w-10 h-10 rounded-full border-2 border-indigo-100 cursor-pointer"
+        onClick={toggleDropdown}
+    />
+    <div>
+    {isDropdownOpen && (
+        <div className="absolute right-0 mt-2 w-48 bg-blue-400 text-teal-100 rounded-lg shadow-lg z-10"> {/* z-10 ensures the dropdown is above other elements */}
+            <ul>
+                <li
+                    onClick={openPasswordChangeForm}
+                    className="flex items-center px-4 py-2 hover:bg-blue-300 cursor-pointer"
+                >
+                    <FaLock className="w-5 h-5 mr-2" />
+                    Change Password
+                </li>
+                <li
+                    onClick={handleLogout}
+                    className="flex items-center px-4 py-2 hover:bg-blue-300 cursor-pointer"
+                >
+                    <FaSignOutAlt className="w-5 h-5 mr-2" />
+                    Logout
+                </li>
+            </ul>
+        </div>
+    )}
+    </div>
+</div>
 
-            {isLogoutDialogOpen && <ConfirmationDialog onConfirm={confirmLogout} onCancel={cancelLogout} />}
-            {isPasswordChangeOpen && <PasswordChangeForm onCancel={closePasswordChangeForm} />}
-        </header>
+        </div>
     );
 };
-
 export default Navbar;
-
-
-
-
-
-
-
-
-
-// const Navbar: React.FC = () => {
-//     return (
-//         <header className="w-full bg-gray-900 text-white p-4 shadow-md">
-//             <div className="flex justify-between items-center">
-//                 <h1 className="text-xl font-bold">Warehouse Management System</h1>
-//                 <div className="flex items-center gap-4">
-//                     <button className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded">
-//                         Sign Out
-//                     </button>
-//                 </div>
-//             </div>
-//         </header>
-//     );
-// };
-// export default Navbar;

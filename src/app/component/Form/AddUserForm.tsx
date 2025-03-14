@@ -3,7 +3,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
-const user = localStorage.getItem("userName");
+//const user = localStorage.getItem("userName");
+let user=null
+if (typeof window !== "undefined") {
+    user = localStorage.getItem("userName");
+  }
 const AddUserForm: React.FC = () => {
     const [formData, setFormData] = useState({
         userId: 0,
