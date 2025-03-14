@@ -1,5 +1,5 @@
 import UserCard from "../UserCard/UserCard";
-
+import CountChart from "../Charts/CountChart/CountChart";
 
 const AdminPage = () => {
     return (
@@ -12,6 +12,15 @@ const AdminPage = () => {
                 <UserCard type="Outward" />
                 <UserCard type="Loading" />
                 <UserCard type="UnLoading" />
+            </div>
+            {/* middlechart */}
+            <div className="flex gap-4 flex-col lg:flex-row">
+                {/* countchart */}
+                <div className="w-full lg:w-1/3 h-[450px]">
+               <CountChart/>
+                </div>
+                {/* attanncechart */}
+                <div className="w-full lg:w-2/3 h-[450px]"></div>
             </div>
             </div>
             {/* right */}

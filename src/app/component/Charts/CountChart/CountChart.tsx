@@ -1,6 +1,6 @@
 "use client"
 import { RadialBarChart, RadialBar, Legend, ResponsiveContainer } from 'recharts';
-
+import { FaEllipsisH } from "react-icons/fa";
 const data = [
     {
         name: '18-24',
@@ -48,26 +48,31 @@ const data = [
 
 const CountChart = () => {
     return (
-        <div className=''>
+        <div className='bg-white rounded-xl w-full h-full p-0'>
             {/* title */}
-            <div className=''></div>
+            <div className='flex justify-between items-center'>
+            <h1>Staff</h1>
+            <FaEllipsisH/>
+            </div>
+          
             {/* chart */}
             <div className=''>
-                <ResponsiveContainer width="100%" height="100%">
+                {/* <ResponsiveContainer width="100%" height="100%">
                     <RadialBarChart cx="50%" cy="50%" innerRadius="10%" outerRadius="80%" barSize={10} data={data}>
-                        {/* <RadialBar
+                        <RadialBar
                             minAngle={15}
                             label={{ position: 'insideStart', fill: '#fff' }}
                             background
                             clockWise
                             dataKey="uv"
-                        /> */}
-                        {/* <Legend iconSize={10} layout="vertical" verticalAlign="middle" wrapperStyle={style} /> */}
+                        />
+                        <Legend iconSize={10} layout="vertical" verticalAlign="middle" wrapperStyle={style} />
                     </RadialBarChart>
-                </ResponsiveContainer>
+                </ResponsiveContainer> */}
             </div>
             {/* bottom */}
             <div className=''></div>
         </div>
     );
 };
+export default CountChart;
