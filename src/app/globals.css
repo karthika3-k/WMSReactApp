@@ -38,3 +38,17 @@ body {
     box-shadow: 0 0 20px 10px #fffbef;
   }
 }
+
+.react-calendar{
+  width: 100% !important;
+  border: none !important;
+  font-family: "Inter", sans-serif !important;
+}
+
+.react-calendar__navigation__label__labelText{
+  font-weight: 600;
+}
+.react-calendar__tile--active{
+  background-color: #C3EBF3 !important;
+  color: black !important;
+}

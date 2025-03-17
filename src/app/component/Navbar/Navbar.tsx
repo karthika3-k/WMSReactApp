@@ -145,7 +145,7 @@ const Navbar: React.FC = () => {
     const closePasswordChangeForm = () => setPasswordChangeOpen(false);
     return (
         <div className="flex items-center justify-between p-4">
-            <div className="hidden md:flex items-center gap-2 tex-xs rounded-full ring-[1.5px] ring-gray-300">
+            <div className="hidden md:flex items-center gap-2 text-xs rounded-full ring-[1.5px] ring-gray-300">
                 <FaSearch />
                 <input type="text" placeholder="Search..." className="w-[200px] p-2 bg-transparent outline-none" />
             </div>

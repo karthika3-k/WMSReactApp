@@ -31,7 +31,7 @@ const Sidebar: React.FC = () => {
     ];
 
     const adminSubMenuItems = [
-        { name: 'User', path: '/pages/adduser', icon: <FaUserPlus /> },
+        { name: 'User', path: '/pages/usergrid', icon: <FaUserPlus /> },
     ];
 
     const masterSubMenuItems = [

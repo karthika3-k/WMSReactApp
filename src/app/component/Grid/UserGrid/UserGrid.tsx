@@ -1,8 +1,11 @@
+"use client"
 import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loader from "../../Common/Loader";
+import Grid from "../Grid";
+
 
 interface User {
     userId: number,
@@ -11,22 +14,21 @@ interface User {
     wareHouse: string,
     role: string,
     deviceId: string,
-    createdBy: string,
     isActive: boolean,
-    isDeleted: boolean,
 }
 const UserGrid: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const userColumns = [
-        { name: "User Id", field: "ID", visible: true },
-        { name: "UserName", field: "UserName", visible: true },
-        { name: "Password", field: "Password", visible: true },
-        { name: "WareHouse", field: "Warehouse", visible: true },
-        { name: "Role", field: "Role", visible: true },
-        { name: "Device ID", field: "DeviceId", visible: true },
-        { name: "IsActive", field: "IsActive", visible: true },
+        { name: "User Id", field: "userId", visible: true },
+        { name: "UserName", field: "userName", visible: true },
+        { name: "Password", field: "password", visible: true },
+        { name: "WareHouse", field: "wareHouse", visible: true },
+        { name: "Role", field: "role", visible: true },
+        { name: "Device ID", field: "deviceId", visible: true },
+        { name: "IsActive", field: "isActive", visible: true },
+        { name: 'Actions', field: 'actions', visible: true },
     ];
 
     useEffect(() => {
@@ -43,9 +45,7 @@ const UserGrid: React.FC = () => {
                     wareHouse: user.wareHouse,
                     role: user.role,
                     deviceId: user.deviceId,
-                    createdBy: user.createdBy,
                     isActive: user.isActive,
-                    isDeleted: user.isDeleted,
                 }));
                 setUsers(filteredUsers);
             } catch (error) {
@@ -74,7 +74,7 @@ const UserGrid: React.FC = () => {
             const values = {
                 userId: user.userId,
             };
-            var response = await api.post("", values);
+            var response = await api.post(`/User/DeleteUser?id=${values}`);
             const data = response.data;
             if (response.status === 200) {
                 if (response.data.ErrorCode === 200) {
@@ -93,9 +93,24 @@ const UserGrid: React.FC = () => {
         }
     };
 
-    if (isLoading) return <Loader/>
+    if (isLoading) return <Loader />
     return (
-        <div></div>
+        <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
+            <Grid<User>
+                gridKey="UserGrid"
+                title="User Management"
+                data={users}
+                columnConfig={userColumns}
+                rowPerPage={7}
+                onDelete={handleDelete}
+                handleAddClick={handleAddClick}
+                addButtonLabel="ADD User"
+                handleEditClick={handleEdit}
+            />
+
+        </div>
+
+
     );
 };
 export default UserGrid;
