@@ -1,15 +1,24 @@
-const Table = ({ columns }: { columns: { name: string, field: string, visible: boolean } }) => {
+const Table = ({
+    columns,
+    renderRow,
+    data,
+  }: {
+    columns: { name: string; field: string; className?: string; visible: boolean }[];
+    renderRow: (item: any) => React.ReactNode;
+    data: any[];
+  }) => {
     return (
         <table className="w-full mt-4">
-            <thead>
-                <tr>
-                    {/* {columns.map((col)=>(
-                        <th key={col.name}></th>
-                    )
-                    )} */}
-                </tr>
-            </thead>
-        </table>
+      <thead>
+        <tr className="text-left text-gray-500 text-sm">
+          {columns.map((col) => (
+            <th key={col.field} className={col.className}>{col.name}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>{data.map((item) => renderRow(item))}</tbody>
+    </table>
+
     );
 };
 export default Table;
