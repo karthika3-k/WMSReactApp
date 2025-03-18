@@ -127,14 +127,14 @@ import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loader from "../../Common/Loader";
-import { FaPlus } from "react-icons/fa"
+import { FaEdit, FaPlus, FaTrash } from "react-icons/fa"
 import TableSearch from "../../TableSearch/TableSearch";
-import { role } from "@/app/lib/data";
 import Table from "../../Table/Table";
 import Pagination from "../../Pagination/Pagination";
 import Image from "next/image";
 import Link from "next/link";
 import Grid from "../Grid";
+import AddUserForm from "../../Form/AddUserForm";
 
 type User = {
     userId: number;
@@ -145,7 +145,7 @@ type User = {
     deviceId: string[];
     isActive: boolean;
 };
-
+let role = "admin";
 const userColumns = [
     { name: "User Id", field: "userId", visible: true },
     { name: "UserName", field: "userName", className: "hidden md:table-cell", visible: true },
@@ -237,22 +237,29 @@ const UserGrid = () => {
                 <td className="hidden md:table-cell">{item.wareHouse}</td>
                 <td className="hidden md:table-cell">{item.role}</td>
                 <td className="hidden md:table-cell">{item.deviceId}</td>
-                <td className="hidden md:table-cell">{item.isActive}</td>               
+                <td className="hidden md:table-cell">{item.isActive}</td>
                 <td>
                     <div className="flex items-center gap-2">
                         <Link href={`/Grid/UserGrid/${item.userId}`}>
                             {/* <button className="w-7 h-7 flex items-center justify-center rounded-full bg-sky-100"> */}
-                                {/* Add an icon if necessary */}
+                            {/* Add an icon if necessary */}
                             {/* </button> */}
                         </Link>
                         {role === "admin" && (
-                            <button onClick={() => handleEdit(item)} className="w-7 h-7 flex items-center justify-center rounded-full bg-yellow-100">
-                                Edit
+                            <button
+                                onClick={() => handleEdit(item)}
+                                className="w-7 h-7 flex items-center justify-center rounded-full bg-yellow-100 text-yellow-600"
+                            >
+                                <FaEdit />
                             </button>
                         )}
+
                         {role === "admin" && (
-                            <button onClick={() => handleDelete(item)} className="w-7 h-7 flex items-center justify-center rounded-full bg-red-100">
-                                Delete
+                            <button
+                                onClick={() => handleDelete(item)}
+                                className="w-7 h-7 flex items-center justify-center rounded-full bg-red-100 text-red-600"
+                            >
+                                <FaTrash />
                             </button>
                         )}
                     </div>
@@ -264,11 +271,11 @@ const UserGrid = () => {
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
             {/* TOP */}
-            <Grid header= "All User" handleAddClick= {handleAddClick} role= "admin"/>
+            <Grid header="All User" role="admin" FormComponent={<AddUserForm />} />
             {/* LIST */}
             <Table columns={userColumns} renderRow={renderRow} data={users} />
             {/* PAGINATION */}
-            <Pagination data={users} rowPerPage={7}/>
+            <Pagination data={users} rowPerPage={7} />
         </div>
     );
 };
