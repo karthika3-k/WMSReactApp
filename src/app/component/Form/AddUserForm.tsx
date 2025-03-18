@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 //const user = localStorage.getItem("userName");
-let user=null
+let user = null
 if (typeof window !== "undefined") {
     user = localStorage.getItem("userName");
-  }
+}
 const AddUserForm: React.FC = () => {
     const [formData, setFormData] = useState({
         userId: 0,
@@ -170,100 +170,121 @@ const AddUserForm: React.FC = () => {
         router.back();
     };
     return (
-        <div className="w-full p-10 bg-slate-100 text-indigo-800 rounded-xl shadow-xl max-w-4xl mx-auto mt-10">
-
-            <h2 className="text-3xl font-extrabold text-center text-indigo-700 mb-8">Add New User</h2>
+        <div className="w-full p-10 bg-slate-100 text-indigo-800 rounded-xl shadow-xl max-w-xl mx-auto mt-5">
+            <h2 className="text-2xl font-extrabold text-center text-indigo-700 mb-8">Add New User</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                        <label htmlFor="username" className="block mb-2 text-sm font-semibold text-indigo-700">UserName</label>
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 rounded-lg bg-white border border-indigo-300 text-indigo-800 placeholder-indigo-500 shadow-inner focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all"
-                            placeholder="Enter Username"
-                            required
-                        />
+                    {/* Username */}
+                    <div className="relative">
+                        <label className="floating-label text-indigo-700 font-medium">
+                            <span>Username</span>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                value={formData.username}
+                                onChange={handleInputChange}
+                                className="input input-md w-full p-2 rounded-lg border-2 border-indigo-300 focus:ring-indigo-500"
+                                placeholder="Username"
+                                required
+                            />
+                        </label>
                     </div>
 
-                    <div>
-                        <label htmlFor="password" className="block mb-2 text-sm font-semibold text-indigo-700">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 rounded-lg bg-white border border-indigo-300 text-indigo-800 placeholder-indigo-500 shadow-inner focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all"
-                            placeholder="Enter Password"
-                            required
-                        />
+                    {/* Password */}
+                    <div className="relative">
+                        <label className="floating-label text-indigo-700 font-medium">
+                            <span>Password</span>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleInputChange}
+                                className="input input-md w-full p-2 rounded-lg border-2 border-indigo-300 focus:ring-indigo-500"
+                                placeholder="Password"
+                                required
+                            />
+                        </label>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                        <label htmlFor="confirmPassword" className="block mb-2 text-sm font-semibold text-indigo-700">confirmPassword</label>
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 rounded-lg bg-white border border-indigo-300 text-indigo-800 placeholder-indigo-500 shadow-inner focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all"
-                            placeholder="ReEnter Your Password"
-                            required
-                        />
+                    {/* Confirm Password */}
+                    <div className="relative">
+                        <label className="floating-label text-indigo-700 font-medium">
+                            <span>Confirm Password</span>
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                value={formData.confirmPassword}
+                                onChange={handleInputChange}
+                                className="input input-md w-full p-2 rounded-lg border-2 border-indigo-300 focus:ring-indigo-500"
+                                placeholder="Confirm Password"
+                                required
+                            />
+                        </label>
                     </div>
-                    <div>
-                        <label htmlFor="role" className="block mb-2 text-sm font-semibold text-indigo-700">Role Type</label>
-                        <select
-                            id="role"
-                            name="role"
-                            value={formData.role}
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 rounded-lg bg-white border border-indigo-300 text-indigo-800 placeholder-indigo-500 shadow-inner focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all"
-                            required
-                        >
-                            <option value="" disabled>Select User Type</option>
-                            {role.map((type) => (
-                                <option key={type} value={type}>{type}</option>
-                            ))}
-                        </select>
+
+                    {/* Role Type */}
+                    <div className="relative">
+                        <label className="floating-label text-indigo-700 font-medium">
+                            <span>Role Type</span>
+                            <select
+                                id="role"
+                                name="role"
+                                value={formData.role}
+                                onChange={handleInputChange}
+                                className="input input-md w-full p-2 rounded-lg border-2 border-indigo-300 focus:ring-indigo-500"
+                                required
+                            >
+                                <option value="" disabled>Select User Type</option>
+                                {role.map((type) => (
+                                    <option key={type} value={type}>{type}</option>
+                                ))}
+                            </select>
+                        </label>
                     </div>
                 </div>
 
-                <div>
-                    <label htmlFor="wareHouse" className="block mb-2 text-sm font-semibold text-indigo-700">Warehouse</label>
-                    <input
-                        type="text"
-                        id="wareHouse"
-                        name="wareHouse"
-                        value={formData.wareHouse}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 rounded-lg bg-white border border-indigo-300 text-indigo-800 placeholder-indigo-500 shadow-inner focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all"
-                        placeholder="Enter Warehouse"
-                        required
-                    />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {/* Warehouse */}
+                    <div className="relative">
+                        <label className="floating-label text-indigo-700 font-medium">
+                            <span>Warehouse</span>
+                            <input
+                                type="text"
+                                id="wareHouse"
+                                name="wareHouse"
+                                value={formData.wareHouse}
+                                onChange={handleInputChange}
+                                className="input input-md w-full p-2 rounded-lg border-2 border-indigo-300 focus:ring-indigo-500"
+                                placeholder="Warehouse"
+                                required
+                            />
+                        </label>
+                    </div>
+
+                    {/* Device ID */}
+                    <div className="relative">
+                        <label className="floating-label text-indigo-700 font-medium">
+                            <span>Device ID</span>
+                            <input
+                                type="text"
+                                id="deviceId"
+                                name="deviceId"
+                                value={formData.deviceId}
+                                onChange={handleInputChange}
+                                className="input input-md w-full p-2 rounded-lg border-2 border-indigo-300 focus:ring-indigo-500"
+                                placeholder="Device ID"
+                                required
+                            />
+                        </label>
+                    </div>
                 </div>
 
-                <div>
-                    <label htmlFor="deviceId" className="block mb-2 text-sm font-semibold text-indigo-700">Device ID</label>
-                    <input
-                        type="text"
-                        id="deviceId"
-                        name="deviceId"
-                        value={formData.deviceId}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 rounded-lg bg-white border border-indigo-300 text-indigo-800 placeholder-indigo-500 shadow-inner focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all"
-                        placeholder="Enter Device ID"
-                        required
-                    />
-                </div>
-
+                {/* Is Active */}
                 <div className="flex items-center space-x-3">
                     <input
                         type="checkbox"
@@ -276,12 +297,13 @@ const AddUserForm: React.FC = () => {
                     <label htmlFor="isActive" className="text-sm font-semibold text-indigo-700">Is Active</label>
                 </div>
 
-                <div className="flex justify-end gap-4">
+                {/* Submit and Cancel Buttons */}
+                <div className="flex justify-end gap-4 mt-6">
                     <button
                         type="submit"
                         className="px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 focus:outline-none transition-all"
                     >
-                        {formData.userId > 0 ? 'Update' : 'Add User'}
+                        {formData.userId > 0 ? 'Update' : 'Save'}
                     </button>
                     <button
                         type="button"

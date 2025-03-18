@@ -16,10 +16,9 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
         <Image
           src="/Techativelogo.png"
           alt="background image"
-          width={32}
-          height={32}
-        />
-        <span className='hidden lg:block'>TechAtive</span>
+          width={130}
+          height={100}
+        />        
       </Link>
       <Sidebar/>
     </div>

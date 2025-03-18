@@ -264,11 +264,11 @@ const UserGrid = () => {
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
             {/* TOP */}
-            <Grid header= "All User" handleAddClick= {handleAddClick} role= "admin" />
+            <Grid header= "All User" handleAddClick= {handleAddClick} role= "admin"/>
             {/* LIST */}
             <Table columns={userColumns} renderRow={renderRow} data={users} />
             {/* PAGINATION */}
-            <Pagination />
+            <Pagination data={users} rowPerPage={7}/>
         </div>
     );
 };
