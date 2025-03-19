@@ -3,7 +3,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
-import { FaArrowLeft } from "react-icons/fa";
 import { User } from "@/types/User";
 //const user = localStorage.getItem("userName");
 let user = null
@@ -11,10 +10,10 @@ if (typeof window !== "undefined") {
     user = localStorage.getItem("userName");
 }
 interface AddUserFormProps {
-    userData?: User | null;  // ✅ Allow both `User` and `null`
+    userData?: User | null;
 }
 const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
-   
+
     const [formData, setFormData] = useState({
         userId: 0,
         username: '',
@@ -43,7 +42,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
     };
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [showrole, setShowRole] = useState<string[]>([]); 
+    const [showrole, setShowRole] = useState<string[]>([]);
     const [userNameError, setUserNameError] = useState('');
     const router = useRouter();
     const [parsedUserData, setParsedUserData] = useState<UserData | null>(null);
@@ -62,15 +61,14 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                 password: userData.password || "",
                 confirmPassword: userData.password || "",
                 wareHouse: userData.wareHouse || "",
-                deviceId: Array.isArray(userData.deviceId) 
-                    ? userData.deviceId.join(', ') // ✅ Convert array to string
-                    : userData.deviceId || '' // ✅ Fallback to empty string if undefined
+                deviceId: Array.isArray(userData.deviceId)
+                    ? userData.deviceId.join(', ')
+                    : userData.deviceId || ''
             });
-            
         }
-    }, [userData]);  // ✅ Depend on `userData` for immediate updates
-     // ✅ Depend on `userData` instead of `searchParams`
-    
+    }, [userData]);
+
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
         if (type === 'checkbox') {
@@ -88,61 +86,110 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
     const handleClickShowConfirmPassword = () => {
         setShowConfirmPassword(!showConfirmPassword);
     };
+    const validateForm = () => {
+        let isValid = true;
+        const newErrors: any = {};
+
+        if (!formData.username) {
+            newErrors.userName = "Username is required";
+            isValid = false;
+        }
+
+        if (!formData.password) {
+            newErrors.password = "Password is required";
+            isValid = false;
+        }
+
+        if (formData.password !== formData.confirmPassword) {
+            newErrors.confirmPassword = "Passwords do not match";
+            isValid = false;
+        }
+        if (!formData.role) {
+            newErrors.role = "Role is required";
+            isValid = false;
+        }
+        if (!formData.wareHouse) {
+            newErrors.wareHouse = "WareHouse is required";
+            isValid = false;
+        }
+        if (!formData.deviceId) {
+            newErrors.deviceId = "Device is required";
+            isValid = false;
+        }
+
+        setErrors(newErrors);
+        return isValid;
+    };
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('User Data', formData);
-        let userRequest;
-        if (formData.userId > 0) {
-            userRequest = {
-                userId: formData.userId,
-                userName: formData.username,
-                password: formData.password,
-                wareHouse: formData.wareHouse,
-                role: formData.role,
-                deviceId: formData.deviceId,
-                createdBy: user,
-                createdOn: '',
-                isActive: formData.isActive,
-                updatedBy: '',
-                updatedOn: '',
-                isDeleted: false,
-            }
-        } else {
-            debugger;
-            userRequest = {
-                userId: formData.userId,
-                userName: formData.username,
-                password: formData.password,
-                wareHouse: formData.wareHouse,
-                role: formData.role,
-                deviceId: formData.deviceId,
-                createdBy: user,
-                createdOn: new Date().toISOString(),
-                isActive: formData.isActive,
-                updatedBy: user,
-                updatedOn: new Date().toISOString(),
-                isDeleted: false,
-            }
+        if (validateForm()) {
+            console.log('UserForm Submitted:', formData);
+            let userRequest;
+            if (formData.userId > 0) {
+                userRequest = {
+                    userId: formData.userId,
+                    userName: formData.username,
+                    password: formData.password,
+                    wareHouse: formData.wareHouse,
+                    role: formData.role,
+                    deviceId: formData.deviceId,
+                    createdBy: '',
+                    createdOn: new Date().toISOString(),
+                    isActive: formData.isActive,
+                    updatedBy: user,
+                    updatedOn: new Date().toISOString(),
+                    isDeleted: false,
+                }
+            } else {
+                debugger;
+                userRequest = {
+                    userId: formData.userId,
+                    userName: formData.username,
+                    password: formData.password,
+                    wareHouse: formData.wareHouse,
+                    role: formData.role,
+                    deviceId: formData.deviceId,
+                    createdBy: user,
+                    createdOn: new Date().toISOString(),
+                    isActive: formData.isActive,
+                    updatedBy: user,
+                    updatedOn: new Date().toISOString(),
+                    isDeleted: false,
+                }
 
-        }
-        try {
-            debugger;
-            const response = await api.post('/User/CreateUser', userRequest);
-            debugger
-            if (response.status === 200) {
-                if (response.data.ErrorCode === 200) {
-                    showSuccessToast(`User ${formData.userId > 0 ? 'Updated' : 'Created'} Successfully!`);
-                    handleCancel();
-                    router.push('/pages/adduser');
+            }
+            try {
+                debugger;
+                let response;
+                if (formData.userId > 0) {
+                    const values = {
+                        userId: userRequest.userId,
+                    };                    
+                    response = await api.put(`/User/UpdateUser?id=${values.userId}`, userRequest);
+                    console.log(response);
+                    debugger
+                }
+                else {
+                    response = await api.post('/User/CreateUser', userRequest);
+                    debugger
+                }
+                if (response.status === 200 || response.status === 201) {
+                    debugger
+                    if (response.data !== null) {
+                        debugger
+                        showSuccessToast(`User ${formData.userId > 0 ? 'Updated' : 'Created'} Successfully!`);
+                        handleCancel();
+                        //router.push('/pages/adduser');
+                    } else {
+                        showErrorToast(`User ${formData.userId > 0 ? 'Updated' : 'Created'} failed.`);
+                    }
                 } else {
                     showErrorToast(`User ${formData.userId > 0 ? 'Updated' : 'Created'} failed.`);
                 }
-            } else {
+            } catch (error) {
                 showErrorToast(`User ${formData.userId > 0 ? 'Updated' : 'Created'} failed.`);
+                console.error('Error adding/editing user:', error);
             }
-        } catch (error) {
-            showErrorToast(`User ${formData.userId > 0 ? 'Updated' : 'Created'} failed.`);
-            console.error('Error adding/editing user:', error);
         }
     };
     const handleCancel = () => {
@@ -280,7 +327,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                             />
                         </label>
                     </div>
-                   
+
 
                     {/* Is Active */}
                     <div className="flex items-center space-x-3">

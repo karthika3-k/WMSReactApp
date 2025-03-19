@@ -1,126 +1,3 @@
-// "use client"
-// import api from "@/app/services/api";
-// import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
-// import { useRouter } from "next/navigation";
-// import { useEffect, useState } from "react";
-// import Loader from "../../Common/Loader";
-// import Grid from "../Grid";
-
-
-// interface User {
-//     userId: number,
-//     userName: string,
-//     password: string,
-//     wareHouse: string,
-//     role: string,
-//     deviceId: string,
-//     isActive: boolean,
-// }
-// const UserGrid: React.FC = () => {
-//     const [users, setUsers] = useState<User[]>([]);
-//     const [isLoading, setIsLoading] = useState<boolean>(false);
-
-//     const userColumns = [
-//         { name: "User Id", field: "userId", visible: true },
-//         { name: "UserName", field: "userName", visible: true },
-//         { name: "Password", field: "password", visible: true },
-//         { name: "WareHouse", field: "wareHouse", visible: true },
-//         { name: "Role", field: "role", visible: true },
-//         { name: "Device ID", field: "deviceId", visible: true },
-//         { name: "IsActive", field: "isActive", visible: true },
-//         { name: 'Actions', field: 'actions', visible: true },
-//     ];
-
-//     useEffect(() => {
-//         const fetchUsers = async () => {
-//             setIsLoading(true);
-//             try {
-//                 debugger;
-//                 const response = await api.get('/User/UserList');
-//                 const data = response.data;
-//                 const filteredUsers = data.map((user: any) => ({
-//                     userId: user.userId,
-//                     userName: user.userName,
-//                     password: user.password,
-//                     wareHouse: user.wareHouse,
-//                     role: user.role,
-//                     deviceId: user.deviceId,
-//                     isActive: user.isActive,
-//                 }));
-//                 setUsers(filteredUsers);
-//             } catch (error) {
-//                 console.error("Error fetching users:", error);
-//             }
-//             setIsLoading(false);
-//         };
-//         fetchUsers();
-//     }, []);
-//     const router = useRouter();
-
-//     const handleAddClick = () => {
-//         router.push('/pages/adduser');
-
-//     };
-
-//     const handleEdit = (user: User) => {
-//         debugger;
-//         const userParam = JSON.stringify(user);
-//         debugger;
-//         router.push(`/pages/adduser?userData=${encodeURIComponent(userParam)}`);
-//     };
-
-//     const handleDelete = async (user: User) => {
-//         try {
-//             const values = {
-//                 userId: user.userId,
-//             };
-//             var response = await api.post(`/User/DeleteUser?id=${values}`);
-//             const data = response.data;
-//             if (response.status === 200) {
-//                 if (response.data.ErrorCode === 200) {
-//                     showSuccessToast('User Deleted Successfully');
-//                 } else {
-//                     showErrorToast('User Deleted Failed');
-//                 }
-//             } else {
-//                 showErrorToast('error');
-//             }
-//             debugger
-//             setUsers(users.filter((u) => u.userId !== user.userId));
-
-//         } catch (error) {
-//             console.error("Error deleting user:", error);
-//         }
-//     };
-
-//     if (isLoading) return <Loader />
-//     return (
-//         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
-//             <Grid<User>
-//                 gridKey="UserGrid"
-//                 title="User Management"
-//                 data={users}
-//                 columnConfig={userColumns}
-//                 rowPerPage={7}
-//                 onDelete={handleDelete}
-//                 handleAddClick={handleAddClick}
-//                 addButtonLabel="ADD User"
-//                 handleEditClick={handleEdit}
-//             />
-
-//         </div>
-
-
-//     );
-// };
-// export default UserGrid;
-
-
-
-
-
-
-
 "use client"
 import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
@@ -128,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Loader from "../../Common/Loader";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa"
-import TableSearch from "../../TableSearch/TableSearch";
 import Table from "../../Table/Table";
 import Pagination from "../../Pagination/Pagination";
 import Image from "next/image";
@@ -136,7 +12,6 @@ import Link from "next/link";
 import Grid from "../Grid";
 import AddUserForm from "../../Form/AddUserForm";
 import { User } from "@/types/User";
-
 
 let role = "admin";
 const userColumns = [
@@ -147,15 +22,14 @@ const userColumns = [
     { name: "Role", field: "role", className: "hidden md:table-cell", visible: true },
     { name: "Device ID", field: "deviceId", className: "hidden md:table-cell", visible: true },
     { name: "IsActive", field: "isActive", className: "hidden md:table-cell", visible: true },
-    { name: 'Actions', field: 'actions', visible: true },
-];
+    { name: 'Actions', field: 'actions', visible: true },];
 
 const UserGrid = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(1); // Add page state
     const [searchTerm, setSearchTerm] = useState(""); // Add a search term state
-        const drawerCheckboxRef = useRef<HTMLInputElement>(null);
+    const drawerCheckboxRef = useRef<HTMLInputElement>(null);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
     const rowPerPage = 7;
@@ -187,24 +61,25 @@ const UserGrid = () => {
 
     const router = useRouter();
 
-    const handleAddClick = () => {
-        router.push('/pages/adduser');
-    };
+    // const handleAddClick = () => {
+    //     router.push('/pages/adduser');
+    // };
     const handleEdit = (user: User) => {
-        setSelectedUser(user);  // ✅ Store selected user
+        setSelectedUser(user);
         debugger;
         setTimeout(() => {
-            document.getElementById('my-drawer-4')?.click(); // ✅ Open the drawer with a slight delay to ensure data binding
+            document.getElementById('my-drawer-4')?.click();
         }, 100);
-    };
 
+    };
 
     const handleDelete = async (user: User) => {
         try {
             const values = {
                 userId: user.userId,
             };
-            const response = await api.post(`/User/DeleteUser?id=${values.userId}`);
+            const response = await api.delete(`/User/DeleteUser?id=${values.userId}`);
+            debugger
             if (response.status === 200) {
                 if (response.data.ErrorCode === 200) {
                     showSuccessToast('User Deleted Successfully');
@@ -220,18 +95,18 @@ const UserGrid = () => {
         }
     };
 
-     const filteredUsers = users.filter((user) =>
+    const filteredUsers = users.filter((user) =>
         Object.values(user)
-            .join(" ") 
+            .join(" ")
             .toLowerCase()
-            .includes(searchTerm.toLowerCase()) 
+            .includes(searchTerm.toLowerCase())
     );
 
     if (isLoading) return <Loader />;
 
     const indexOfLastRow = currentPage * rowPerPage;
     const indexOfFirstRow = indexOfLastRow - rowPerPage;
-    const currentData = filteredUsers.slice(indexOfFirstRow, indexOfLastRow); 
+    const currentData = filteredUsers.slice(indexOfFirstRow, indexOfLastRow);
     const renderRow = (item: User) => {
         return (
             <tr key={item.userId} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-purple-100">
@@ -266,7 +141,7 @@ const UserGrid = () => {
                         </Link>
                         {role === "admin" && (
                             <button onClick={() => handleEdit(item)} className="btn btn-warning">
-                              <FaEdit />
+                                <FaEdit />
                             </button>
 
                         )}
@@ -288,7 +163,7 @@ const UserGrid = () => {
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
             {/* TOP */}
-            <Grid header="All User"  role="admin" FormComponent={<AddUserForm userData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <Grid header="All User" role="admin" FormComponent={<AddUserForm userData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             {/* LIST */}
             <Table columns={userColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}
