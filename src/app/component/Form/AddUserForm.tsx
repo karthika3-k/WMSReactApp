@@ -3,6 +3,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
+import { FaArrowLeft } from "react-icons/fa";
 import { User } from "@/types/User";
 //const user = localStorage.getItem("userName");
 let user = null

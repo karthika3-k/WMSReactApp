@@ -153,15 +153,19 @@ const userColumns = [
 const UserGrid = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const drawerCheckboxRef = useRef<HTMLInputElement>(null);
+    const [currentPage, setCurrentPage] = useState(1); // Add page state
+    const [searchTerm, setSearchTerm] = useState(""); // Add a search term state
+        const drawerCheckboxRef = useRef<HTMLInputElement>(null);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
+    const rowPerPage = 7;
     useEffect(() => {
         const fetchUsers = async () => {
             setIsLoading(true);
             try {
                 const response = await api.get('/User/UserList');
                 const data = response.data;
+                debugger
                 const filteredUsers = data.map((user: any) => ({
                     userId: user.userId,
                     userName: user.userName,
@@ -171,6 +175,7 @@ const UserGrid = () => {
                     deviceId: user.deviceId,
                     isActive: user.isActive,
                 }));
+                debugger
                 setUsers(filteredUsers);
             } catch (error) {
                 console.error("Error fetching users:", error);
@@ -215,8 +220,18 @@ const UserGrid = () => {
         }
     };
 
+     const filteredUsers = users.filter((user) =>
+        Object.values(user)
+            .join(" ") 
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) 
+    );
+
     if (isLoading) return <Loader />;
 
+    const indexOfLastRow = currentPage * rowPerPage;
+    const indexOfFirstRow = indexOfLastRow - rowPerPage;
+    const currentData = filteredUsers.slice(indexOfFirstRow, indexOfLastRow); 
     const renderRow = (item: User) => {
         return (
             <tr key={item.userId} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-purple-100">
@@ -235,7 +250,13 @@ const UserGrid = () => {
                 <td className="hidden md:table-cell">{item.wareHouse}</td>
                 <td className="hidden md:table-cell">{item.role}</td>
                 <td className="hidden md:table-cell">{item.deviceId}</td>
-                <td className="hidden md:table-cell">{item.isActive}</td>
+                <td className="hidden md:table-cell">
+                    <input
+                        type="checkbox"
+                        checked={item.isActive}
+                        readOnly
+                    />
+                </td>
                 <td>
                     <div className="flex items-center gap-2">
                         <Link href={`/Grid/UserGrid/${item.userId}`}>
@@ -267,15 +288,12 @@ const UserGrid = () => {
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
             {/* TOP */}
-            <Grid
-                header="All Users"
-                role="admin"
-                FormComponent={<AddUserForm userData={selectedUser || undefined} />}  // ✅ Handles null properly
-            />
+            <Grid header="All User"  role="admin" FormComponent={<AddUserForm userData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             {/* LIST */}
-            <Table columns={userColumns} renderRow={renderRow} data={users} />
+            <Table columns={userColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}
-            <Pagination data={users} rowPerPage={7} />
+            <Pagination data={users} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+
         </div>
     );
 };

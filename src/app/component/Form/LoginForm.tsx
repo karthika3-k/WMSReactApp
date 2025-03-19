@@ -38,37 +38,36 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, usernameError, password
 
                     <form onSubmit={handleSubmit} className="w-full max-w-md">
                         <div className="mb-6 relative">
+                        
+                            <label className="floating-label text-indigo-700 font-medium transition-all duration-200">
+                            <span> UserName*</span>
+                               
                             <input
-                                className="peer mt-2 w-full py-3 px-4 bg-transparent border-2 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className="input input-md mt-2 w-full py-3 px-4 text-white bg-transparent border-2 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                 type="text"
                                 id="email"
                                 value={username}
                                 onChange={(e) => setUserName(e.target.value)}
-                                placeholder=" " 
+                                placeholder="UserName" 
                             />
-                            <label
-                                htmlFor="email"
-                                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-sm font-medium text-white-500 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-2 peer-focus:text-xs peer-focus:text-white-600 transition-all duration-200"
-                            >
-                                UserName*
+                           
                             </label>
                             {usernameError && <div className="text-red-500 text-sm mt-2">{usernameError}</div>}
                         </div>
 
                         <div className="mb-6 relative">
+                             <label className="floating-label text-indigo-700 font-medium transition-all duration-200">
+                             <span> Password*</span>
+                                
                             <input
-                                className="peer mt-2 w-full py-3 px-4 bg-transparent border-2 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className="input input-md mt-2 w-full py-3 px-4 text-white bg-transparent border-2 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                 type="password"
                                 id="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder=" " 
+                                placeholder="Password" 
                             />
-                            <label
-                                htmlFor="password"
-                                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-sm font-medium text-white-500 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-2 peer-focus:text-xs peer-focus:text-white-600 transition-all duration-200"
-                            >
-                                Password*
+                            
                             </label>
                             {passwordError && <div className="text-red-500 text-sm mt-2">{passwordError}</div>}
                         </div>

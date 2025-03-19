@@ -1,18 +1,11 @@
-import { useState } from "react";
-
 type PaginationProps = {
   rowPerPage: number;
   data: any[];
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const Pagination = ({ rowPerPage, data }: PaginationProps) => {
-  const [currentPage, setCurrentPage] = useState(1);
-
-  // Calculate current page data
-  const indexOfLastRow = currentPage * rowPerPage;
-  const indexOfFirstRow = indexOfLastRow - rowPerPage;
-  const currentData = data.slice(indexOfFirstRow, indexOfLastRow);
-
+const Pagination = ({ rowPerPage, data, currentPage, setCurrentPage }: PaginationProps) => {
   const totalPages = Math.ceil(data.length / rowPerPage);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
