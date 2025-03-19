@@ -15,7 +15,7 @@ import { User } from "@/types/User";
 
 let role = "admin";
 const userColumns = [
-    { name: "User Id", field: "userId", visible: true },
+    // { name: "User Id", field: "userId", visible: true },
     { name: "UserName", field: "userName", className: "hidden md:table-cell", visible: true },
     { name: "Password", field: "password", className: "hidden md:table-cell", visible: true },
     { name: "WareHouse", field: "wareHouse", className: "hidden md:table-cell", visible: true },
@@ -80,8 +80,8 @@ const UserGrid = () => {
             };
             const response = await api.delete(`/User/DeleteUser?id=${values.userId}`);
             debugger
-            if (response.status === 200) {
-                if (response.data.ErrorCode === 200) {
+            if (response.status === 200 || response.status==201) {
+                if (response.data !== null) {
                     showSuccessToast('User Deleted Successfully');
                 } else {
                     showErrorToast('User Deletion Failed');
@@ -110,7 +110,7 @@ const UserGrid = () => {
     const renderRow = (item: User) => {
         return (
             <tr key={item.userId} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-accent/20">
-                <td className="flex items-center gap-4 p-4">
+                {/* <td className="flex items-center gap-4 p-4">
                     <Image src="/userlogo.png"
                         alt=""
                         width={40}
@@ -119,7 +119,7 @@ const UserGrid = () => {
                     <div className="flex flex-col">
                         <h3 className="font-semibold">{item.userName}</h3>
                     </div>
-                </td>
+                </td> */}
                 <td className="hidden md:table-cell">{item.userName}</td>
                 <td className="hidden md:table-cell">{item.password}</td>
                 <td className="hidden md:table-cell">{item.wareHouse}</td>

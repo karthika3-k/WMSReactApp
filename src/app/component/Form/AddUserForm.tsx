@@ -209,7 +209,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
             updatedOn: '',
             isDeleted: false,
         });
-        router.push('/pages/adduser');
+        //router.push('/pages/adduser');
     };
 
     const handleBackClick = () => {
