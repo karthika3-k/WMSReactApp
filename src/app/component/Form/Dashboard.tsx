@@ -12,7 +12,7 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
   return (
     <div className="flex h-screen">
     <div className='w-[14%] md:w-[8%] lg:w-[16%] xl:w-[14%] p-4'>
-      <Link href='/' className='flex items-center justify-center lg:justify-start gap-2'>
+      <Link href='/pages/admin' className='flex items-center justify-center lg:justify-start gap-2'>
         <Image
           src="/Techativelogo.png"
           alt="background image"

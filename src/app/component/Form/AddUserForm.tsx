@@ -3,12 +3,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
+import { User } from "@/types/User";
 //const user = localStorage.getItem("userName");
 let user = null
 if (typeof window !== "undefined") {
     user = localStorage.getItem("userName");
 }
-const AddUserForm: React.FC = () => {
+interface AddUserFormProps {
+    userData?: User | null;  // ✅ Allow both `User` and `null`
+}
+const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
+   
     const [formData, setFormData] = useState({
         userId: 0,
         username: '',
@@ -37,7 +42,7 @@ const AddUserForm: React.FC = () => {
     };
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [showrole, setShowRole] = useState<string[]>([]);
+    const [showrole, setShowRole] = useState<string[]>([]); 
     const [userNameError, setUserNameError] = useState('');
     const router = useRouter();
     const [parsedUserData, setParsedUserData] = useState<UserData | null>(null);
@@ -46,33 +51,25 @@ const AddUserForm: React.FC = () => {
     const role = ['User', 'Admin'];
 
     useEffect(() => {
-        const userDataParam = searchParams.get("userData");
-        if (userDataParam) {
-            try {
-                const userDataParamAgain = JSON.parse(userDataParam);
-                setParsedUserData(userDataParamAgain);
-                debugger
-                const parsedUserData = JSON.parse(decodeURIComponent(userDataParam));
-                setFormData({
-                    userId: parsedUserData.userID || 0,
-                    username: parsedUserData.userName || "",
-                    isActive: parsedUserData.isActive ?? true,
-                    role: parsedUserData.role || 'Standard',
-                    password: parsedUserData.password || "",
-                    confirmPassword: parsedUserData.password || "",
-                    wareHouse: parsedUserData.wareHouse || "",
-                    deviceId: parsedUserData.deviceId || "",
-                    createdBy: parsedUserData.createdBy || "",
-                    createdOn: parsedUserData.createdOn || "",
-                    updatedBy: parsedUserData.updatedBy || "",
-                    updatedOn: parsedUserData.updatedOn || "",
-                    isDeleted: false
-                });
-            } catch (error) {
-                console.error("Error parsing user data:", error);
-            }
+        if (userData) {
+            setFormData({
+                ...formData,
+                userId: userData.userId || 0,
+                username: userData.userName || "",
+                isActive: userData.isActive ?? true,
+                role: userData.role || 'Standard',
+                password: userData.password || "",
+                confirmPassword: userData.password || "",
+                wareHouse: userData.wareHouse || "",
+                deviceId: Array.isArray(userData.deviceId) 
+                    ? userData.deviceId.join(', ') // ✅ Convert array to string
+                    : userData.deviceId || '' // ✅ Fallback to empty string if undefined
+            });
+            
         }
-    }, [searchParams]);
+    }, [userData]);  // ✅ Depend on `userData` for immediate updates
+     // ✅ Depend on `userData` instead of `searchParams`
+    
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
         if (type === 'checkbox') {
@@ -170,10 +167,14 @@ const AddUserForm: React.FC = () => {
         router.back();
     };
     return (
-        <div className="w-full p-10 bg-slate-100 text-indigo-800 rounded-xl shadow-xl max-w-xl mx-auto mt-5">
-            <h2 className="text-2xl font-extrabold text-center text-indigo-700 mb-8">Add New User</h2>
+        <div className="w-full p-10 text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden p-4">
+            <h2 className="text-2xl font-extrabold text-center text-indigo-700 mb-8">
+                Add New User
+            </h2>
+
             <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6">  {/* Updated grid structure */}
+
                     {/* Username */}
                     <div className="relative">
                         <label className="floating-label text-indigo-700 font-medium">
@@ -207,9 +208,7 @@ const AddUserForm: React.FC = () => {
                             />
                         </label>
                     </div>
-                </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {/* Confirm Password */}
                     <div className="relative">
                         <label className="floating-label text-indigo-700 font-medium">
@@ -246,9 +245,7 @@ const AddUserForm: React.FC = () => {
                             </select>
                         </label>
                     </div>
-                </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {/* Warehouse */}
                     <div className="relative">
                         <label className="floating-label text-indigo-700 font-medium">
@@ -282,19 +279,22 @@ const AddUserForm: React.FC = () => {
                             />
                         </label>
                     </div>
-                </div>
+                   
 
-                {/* Is Active */}
-                <div className="flex items-center space-x-3">
-                    <input
-                        type="checkbox"
-                        id="isActive"
-                        name="isActive"
-                        checked={formData.isActive}
-                        onChange={handleInputChange}
-                        className="h-4 w-4 rounded border-indigo-300 text-blue-500 focus:ring-2 focus:ring-blue-400"
-                    />
-                    <label htmlFor="isActive" className="text-sm font-semibold text-indigo-700">Is Active</label>
+                    {/* Is Active */}
+                    <div className="flex items-center space-x-3">
+                        <input
+                            type="checkbox"
+                            id="isActive"
+                            name="isActive"
+                            checked={formData.isActive}
+                            onChange={handleInputChange}
+                            className="h-4 w-4 rounded border-indigo-300 text-blue-500 focus:ring-2 focus:ring-blue-400"
+                        />
+                        <label htmlFor="isActive" className="text-sm font-semibold text-indigo-700">
+                            Is Active
+                        </label>
+                    </div>
                 </div>
 
                 {/* Submit and Cancel Buttons */}
@@ -314,7 +314,9 @@ const AddUserForm: React.FC = () => {
                     </button>
                 </div>
             </form>
+
         </div>
+
 
     );
 

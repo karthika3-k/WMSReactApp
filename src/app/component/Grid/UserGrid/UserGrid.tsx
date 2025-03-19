@@ -125,7 +125,7 @@
 import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Loader from "../../Common/Loader";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa"
 import TableSearch from "../../TableSearch/TableSearch";
@@ -135,31 +135,26 @@ import Image from "next/image";
 import Link from "next/link";
 import Grid from "../Grid";
 import AddUserForm from "../../Form/AddUserForm";
+import { User } from "@/types/User";
 
-type User = {
-    userId: number;
-    userName: string;
-    password: string;
-    wareHouse: string;
-    role: string;
-    deviceId: string[];
-    isActive: boolean;
-};
+
 let role = "admin";
 const userColumns = [
     { name: "User Id", field: "userId", visible: true },
     { name: "UserName", field: "userName", className: "hidden md:table-cell", visible: true },
-    { name: "Password", field: "password", className: "hidden md:table-cell",visible: true },
-    { name: "WareHouse", field: "wareHouse",className: "hidden md:table-cell", visible: true },
-    { name: "Role", field: "role", className: "hidden md:table-cell",visible: true },
-    { name: "Device ID", field: "deviceId", className: "hidden md:table-cell",visible: true },
-    { name: "IsActive", field: "isActive", className: "hidden md:table-cell",visible: true },
+    { name: "Password", field: "password", className: "hidden md:table-cell", visible: true },
+    { name: "WareHouse", field: "wareHouse", className: "hidden md:table-cell", visible: true },
+    { name: "Role", field: "role", className: "hidden md:table-cell", visible: true },
+    { name: "Device ID", field: "deviceId", className: "hidden md:table-cell", visible: true },
+    { name: "IsActive", field: "isActive", className: "hidden md:table-cell", visible: true },
     { name: 'Actions', field: 'actions', visible: true },
 ];
 
 const UserGrid = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const drawerCheckboxRef = useRef<HTMLInputElement>(null);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -190,11 +185,14 @@ const UserGrid = () => {
     const handleAddClick = () => {
         router.push('/pages/adduser');
     };
-
     const handleEdit = (user: User) => {
-        const userParam = JSON.stringify(user);
-        router.push(`/pages/adduser?userData=${encodeURIComponent(userParam)}`);
+        setSelectedUser(user);  // ✅ Store selected user
+        debugger;
+        setTimeout(() => {
+            document.getElementById('my-drawer-4')?.click(); // ✅ Open the drawer with a slight delay to ensure data binding
+        }, 100);
     };
+
 
     const handleDelete = async (user: User) => {
         try {
@@ -246,12 +244,10 @@ const UserGrid = () => {
                             {/* </button> */}
                         </Link>
                         {role === "admin" && (
-                            <button
-                                onClick={() => handleEdit(item)}
-                                className="w-7 h-7 flex items-center justify-center rounded-full bg-yellow-100 text-yellow-600"
-                            >
-                                <FaEdit />
+                            <button onClick={() => handleEdit(item)} className="btn btn-warning">
+                              <FaEdit />
                             </button>
+
                         )}
 
                         {role === "admin" && (
@@ -271,7 +267,11 @@ const UserGrid = () => {
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
             {/* TOP */}
-            <Grid header="All User" role="admin" FormComponent={<AddUserForm />} />
+            <Grid
+                header="All Users"
+                role="admin"
+                FormComponent={<AddUserForm userData={selectedUser || undefined} />}  // ✅ Handles null properly
+            />
             {/* LIST */}
             <Table columns={userColumns} renderRow={renderRow} data={users} />
             {/* PAGINATION */}

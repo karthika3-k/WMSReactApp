@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^1.8.2",
+    "bootstrap": "^5.3.3",
     "next": "15.2.1",
     "react": "^19.0.0",
     "react-calendar": "^5.1.0",
@@ -30,5 +31,5 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "proxy": "https://localhost:7269"
+ "proxy": "https://localhost:7269"
 }

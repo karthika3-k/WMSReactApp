@@ -37,7 +37,7 @@ const Sidebar: React.FC = () => {
     const masterSubMenuItems = [
         { name: 'Bin Configuration', path: '', icon: <FaRecycle /> },
         { name: 'Bin Master', path: '', icon: <FaRulerCombined /> },
-        { name: 'Device', path: '/pages/device', icon: <FaMobileAlt /> },
+        { name: 'Device', path: '/pages/devicegrid', icon: <FaMobileAlt /> },
     ];
 
     return (
@@ -58,6 +58,7 @@ const Sidebar: React.FC = () => {
                                     </span>
                                 )}
                                 <span className="hidden lg:flex text-black-400 font-light items-center">
+                                    
                                     {item.name}
                                     <button className="ml-auto text-lg">
                                         {['Inventory', 'Admin', 'Master'].includes(item.name) && (
