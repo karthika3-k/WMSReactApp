@@ -142,12 +142,7 @@ const DeviceGrid = () => {
 
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
-            {/* TOP */}
-            <Grid header="All Devices" role="admin" FormComponent={<DeviceForm />} />
-            {/* LIST */}
-            <Table columns={deviceColumns} renderRow={renderRow} data={devices} />
-            {/* PAGINATION */}
-            <Pagination data={devices} rowPerPage={7} />
+           
         </div>
     );
 };

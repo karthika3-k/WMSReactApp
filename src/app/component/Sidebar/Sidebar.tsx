@@ -50,7 +50,7 @@ const Sidebar: React.FC = () => {
                         {item.hasSubMenu ? (
                             <div
                                 onClick={() => toggleSubMenu(item.name.toLowerCase())}
-                                className="block py-2 px-2 rounded flex items-center hover:bg-indigo-700 cursor-pointer"
+                                className="block py-2 px-2 rounded flex items-center hover:bg-accent/20 cursor-pointer"
                             >
                                 {item.icon && (
                                     <span className="mr-2">
@@ -92,7 +92,7 @@ const Sidebar: React.FC = () => {
                             <div className="relative">
                                 {/* Vertical line with sliding effect */}
                                 <div
-                                    className={`absolute left-0 top-0 h-full w-1 bg-indigo-600 rounded-tl-full rounded-br-full transition-all duration-300 transform ${isInventoryOpen ? 'translate-x-0' : '-translate-x-full'}`}
+                                    className={`absolute left-0 top-0 h-full w-1 bg-accent rounded-tl-full rounded-br-full transition-all duration-300 transform ${isInventoryOpen ? 'translate-x-0' : '-translate-x-full'}`}
                                 ></div>
                                 <div className="pl-0">
                                     {/* Submenu items */}
@@ -100,7 +100,7 @@ const Sidebar: React.FC = () => {
                                         <Link
                                             href={subItem.path}
                                             key={subItem.name}
-                                            className="block py-2 px-4 text-sm hover:bg-indigo-700 rounded-md flex items-center"
+                                            className="block py-2 px-4 text-sm hover:bg-accent/20 rounded-md flex items-center"
                                         >
                                             <span className="mr-2">{subItem.icon}</span>
                                             <span className="hidden lg:flex text-black-400 font-light items-center"> {subItem.name}</span>
@@ -110,7 +110,7 @@ const Sidebar: React.FC = () => {
                                         <Link
                                             href={subItem.path}
                                             key={subItem.name}
-                                            className="block py-2 px-4 text-sm hover:bg-indigo-700 rounded-md flex items-center"
+                                            className="block py-2 px-4 text-sm hover:bg-accent/20 rounded-md flex items-center"
                                         >
                                             <span className="mr-2">{subItem.icon}</span>
                                             <span className="hidden lg:flex text-black-400 font-light items-center"> {subItem.name}</span>
@@ -120,7 +120,7 @@ const Sidebar: React.FC = () => {
                                         <Link
                                             href={subItem.path}
                                             key={subItem.name}
-                                            className="block py-2 px-4 text-sm hover:bg-indigo-700 rounded-md flex items-center"
+                                            className="block py-2 px-4 text-sm hover:bg-accent/20 rounded-md flex items-center"
                                         >
                                             <span className="mr-2">{subItem.icon}</span>
                                             <span className="hidden lg:flex text-black-400 font-light items-center"> {subItem.name}</span>

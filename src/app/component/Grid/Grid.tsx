@@ -19,11 +19,11 @@ interface GridProps {
 const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, searchTerm, setSearchTerm }) => {
   const drawerCheckboxRef = useRef<HTMLInputElement>(null);
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between ">
       <h1 className="hidden md:block text-lg font-semibold">{header}</h1>
       <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
         <TableSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        <div className="flex items-center gap-4 self-end">
+        <div className="flex items-center gap-4  self-end">
           {role === "admin" && (
             <div className="drawer drawer-end">
               <input
@@ -40,7 +40,7 @@ const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, sear
                       drawerCheckboxRef.current.checked = true; // ✅ Open the drawer
                     }
                   }}
-                  className="btn btn-primary"
+                 className="btn btn-outline btn-accent"
                 >
                   <FaPlus />
                 </button>

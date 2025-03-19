@@ -14,6 +14,7 @@ interface AddUserFormProps {
 }
 const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
 
+
     const [formData, setFormData] = useState({
         userId: 0,
         username: '',
@@ -216,7 +217,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
     };
     return (
         <div className="w-full p-10 text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden p-4">
-            <h2 className="text-2xl font-extrabold text-center text-indigo-700 mb-8">
+            <h2 className="text-xl font-medium text-center text-black mb-8">
                 Add New User
             </h2>
 
@@ -225,7 +226,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
 
                     {/* Username */}
                     <div className="relative">
-                        <label className="floating-label text-indigo-700 font-medium">
+                        <label className="floating-label text-black font-medium">
                             <span>Username</span>
                             <input
                                 type="text"
@@ -233,7 +234,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                                 name="username"
                                 value={formData.username}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-indigo-300 focus:ring-indigo-500"
+                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500 "
                                 placeholder="Username"
                                 required
                             />
@@ -242,7 +243,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
 
                     {/* Password */}
                     <div className="relative">
-                        <label className="floating-label text-indigo-700 font-medium">
+                        <label className="floating-label text-black font-medium">
                             <span>Password</span>
                             <input
                                 type="password"
@@ -250,7 +251,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                                 name="password"
                                 value={formData.password}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-indigo-300 focus:ring-indigo-500"
+                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500"
                                 placeholder="Password"
                                 required
                             />
@@ -259,7 +260,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
 
                     {/* Confirm Password */}
                     <div className="relative">
-                        <label className="floating-label text-indigo-700 font-medium">
+                        <label className="floating-label text-black font-medium">
                             <span>Confirm Password</span>
                             <input
                                 type="password"
@@ -267,7 +268,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                                 name="confirmPassword"
                                 value={formData.confirmPassword}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-indigo-300 focus:ring-indigo-500"
+                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500"
                                 placeholder="Confirm Password"
                                 required
                             />
@@ -276,14 +277,14 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
 
                     {/* Role Type */}
                     <div className="relative">
-                        <label className="floating-label text-indigo-700 font-medium">
+                        <label className="floating-label text-black font-medium">
                             <span>Role Type</span>
                             <select
                                 id="role"
                                 name="role"
                                 value={formData.role}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-indigo-300 focus:ring-indigo-500"
+                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500"
                                 required
                             >
                                 <option value="" disabled>Select User Type</option>
@@ -296,7 +297,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
 
                     {/* Warehouse */}
                     <div className="relative">
-                        <label className="floating-label text-indigo-700 font-medium">
+                        <label className="floating-label text-black font-medium">
                             <span>Warehouse</span>
                             <input
                                 type="text"
@@ -304,7 +305,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                                 name="wareHouse"
                                 value={formData.wareHouse}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-indigo-300 focus:ring-indigo-500"
+                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500"
                                 placeholder="Warehouse"
                                 required
                             />
@@ -313,7 +314,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
 
                     {/* Device ID */}
                     <div className="relative">
-                        <label className="floating-label text-indigo-700 font-medium">
+                        <label className="floating-label text-black font-medium">
                             <span>Device ID</span>
                             <input
                                 type="text"
@@ -321,7 +322,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                                 name="deviceId"
                                 value={formData.deviceId}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-indigo-300 focus:ring-indigo-500"
+                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500"
                                 placeholder="Device ID"
                                 required
                             />
@@ -337,9 +338,9 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                             name="isActive"
                             checked={formData.isActive}
                             onChange={handleInputChange}
-                            className="h-4 w-4 rounded border-indigo-300 text-blue-500 focus:ring-2 focus:ring-blue-400"
+                            className="h-4 w-4 rounded border-indigo-300 text-black focus:ring-2 focus:ring-blue-400"
                         />
-                        <label htmlFor="isActive" className="text-sm font-semibold text-indigo-700">
+                        <label htmlFor="isActive" className="text-sm font-medium text-black">
                             Is Active
                         </label>
                     </div>
@@ -349,14 +350,14 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                 <div className="flex justify-end gap-4 mt-6">
                     <button
                         type="submit"
-                        className="px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 focus:outline-none transition-all"
+                        className="btn btn-accent text-white"
                     >
                         {formData.userId > 0 ? 'Update' : 'Save'}
                     </button>
                     <button
                         type="button"
                         onClick={handleCancel}
-                        className="px-6 py-3 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 focus:outline-none transition-all"
+                        className="btn btn-outline btn-error hover:bg-red-100 hover:text-red-600"
                     >
                         Cancel
                     </button>

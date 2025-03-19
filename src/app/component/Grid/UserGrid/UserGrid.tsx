@@ -109,7 +109,7 @@ const UserGrid = () => {
     const currentData = filteredUsers.slice(indexOfFirstRow, indexOfLastRow);
     const renderRow = (item: User) => {
         return (
-            <tr key={item.userId} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-purple-100">
+            <tr key={item.userId} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-accent/20">
                 <td className="flex items-center gap-4 p-4">
                     <Image src="/userlogo.png"
                         alt=""
@@ -140,8 +140,8 @@ const UserGrid = () => {
                             {/* </button> */}
                         </Link>
                         {role === "admin" && (
-                            <button onClick={() => handleEdit(item)} className="btn btn-warning">
-                                <FaEdit />
+                            <button onClick={() => handleEdit(item)} className="btn btn-outline btn-accent">
+                              <FaEdit />
                             </button>
 
                         )}
@@ -149,7 +149,7 @@ const UserGrid = () => {
                         {role === "admin" && (
                             <button
                                 onClick={() => handleDelete(item)}
-                                className="w-7 h-7 flex items-center justify-center rounded-full bg-red-100 text-red-600"
+                                className="btn btn-outline btn-error"
                             >
                                 <FaTrash />
                             </button>

@@ -1,3 +1,5 @@
+import { FaArrowLeft, FaArrowRight, FaEdit } from "react-icons/fa";
+
 type PaginationProps = {
   rowPerPage: number;
   data: any[];
@@ -19,9 +21,9 @@ const Pagination = ({ rowPerPage, data, currentPage, setCurrentPage }: Paginatio
       <button
         onClick={() => paginate(currentPage - 1)}
         disabled={isPrevDisabled}
-        className="py-2 px-4 rounded-md bg-slate-200 text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+        className="btn btn-outline btn-accent"
       >
-        Prev
+       <FaArrowLeft />
       </button>
       <div className="flex items-center gap-2 text-sm">
         {/* Dynamically generate page numbers */}
@@ -29,7 +31,7 @@ const Pagination = ({ rowPerPage, data, currentPage, setCurrentPage }: Paginatio
           <button
             key={pageNumber}
             onClick={() => paginate(pageNumber)}
-            className={`px-2 rounded-sm ${pageNumber === currentPage ? "bg-purple-100" : ""}`}
+            className={`px-2 rounded-sm ${pageNumber === currentPage ? "bg-accent/20" : ""}`}
           >
             {pageNumber}
           </button>
@@ -38,9 +40,9 @@ const Pagination = ({ rowPerPage, data, currentPage, setCurrentPage }: Paginatio
       <button
         onClick={() => paginate(currentPage + 1)}
         disabled={isNextDisabled}
-        className="py-2 px-4 rounded-md bg-slate-200 text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+        className="btn btn-outline btn-accent"
       >
-        Next
+       <FaArrowRight />
       </button>
     </div>
   );
