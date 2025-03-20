@@ -3,7 +3,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
-import { User } from "@/types/User";
+import { User } from "@/app/component/types/User";
 //const user = localStorage.getItem("userName");
 let user = null
 if (typeof window !== "undefined") {
@@ -13,8 +13,6 @@ interface AddUserFormProps {
     userData?: User | null;
 }
 const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
-
-
     const [formData, setFormData] = useState({
         userId: 0,
         username: '',
@@ -92,6 +90,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
         setShowConfirmPassword(!showConfirmPassword);
     };
     const validateForm = () => {
+        debugger
         let isValid = true;
         const newErrors: any = {};
 
@@ -127,7 +126,9 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
     };
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        debugger
         if (validateForm()) {
+            debugger
             console.log('UserForm Submitted:', formData);
             let userRequest;
             if (formData.userId > 0) {
@@ -164,7 +165,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
 
             }
             try {
-                debugger;
+               
                 let response;
                 if (formData.userId > 0) {
                     const values = {
@@ -172,11 +173,9 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                     };
                     response = await api.put(`/User/UpdateUser?id=${values.userId}`, userRequest);
                     console.log(response);
-                    debugger
                 }
                 else {
                     response = await api.post('/User/CreateUser', userRequest);
-                    debugger
                 }
                 if (response.status === 200 || response.status === 201) {
                     debugger

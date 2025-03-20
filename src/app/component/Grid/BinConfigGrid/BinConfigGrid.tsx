@@ -7,54 +7,54 @@ import Loader from "../../Common/Loader";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa"
 import Table from "../../Table/Table";
 import Pagination from "../../Pagination/Pagination";
-import Image from "next/image";
 import Link from "next/link";
 import Grid from "../Grid";
-import AddUserForm from "../../Form/AddUserForm";
-import { User } from "@/app/component/types/User";
+import BinConfigForm from "../../Form/BinConfigForm";
+import { BinCnfg } from "@/app/component/types/BinConfig";
 
 let role = "admin";
 const userColumns = [
     // { name: "User Id", field: "userId", visible: true },
-    { name: "UserName", field: "userName", className: "hidden md:table-cell", visible: true },
-    { name: "Password", field: "password", className: "hidden md:table-cell", visible: true },
-    { name: "WareHouse", field: "wareHouse", className: "hidden md:table-cell", visible: true },
-    { name: "Role", field: "role", className: "hidden md:table-cell", visible: true },
-    { name: "Device ID", field: "deviceId", className: "hidden md:table-cell", visible: true },
-    { name: "IsActive", field: "isActive", className: "hidden md:table-cell", visible: true },
+    { name: "BinCode", field: "binCode", className: "hidden md:table-cell", visible: true },
+    { name: "BinName", field: "binName", className: "hidden md:table-cell", visible: true },
+    { name: "Prefix", field: "prefix", className: "hidden md:table-cell", visible: true },
+    { name: "WareHouse", field: "whsCode", className: "hidden md:table-cell", visible: true },
+    { name: "Starting No", field: "startNo", className: "hidden md:table-cell", visible: true },
+    { name: "Ending No", field: "endNo", className: "hidden md:table-cell", visible: true },
     { name: 'Actions', field: 'actions', visible: true },];
 
 const UserGrid = () => {
-    const [users, setUsers] = useState<User[]>([]);
+    const [binConfg, setBinConfg] = useState<BinCnfg[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(1); // Add page state
     const [searchTerm, setSearchTerm] = useState(""); // Add a search term state
     const drawerCheckboxRef = useRef<HTMLInputElement>(null);
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [selectedBinConfig, setSelectedBinConfig] = useState<BinCnfg | null>(null);
 
     const rowPerPage = 7;
     useEffect(() => {
-        const fetchUsers = async () => {
+        const fetchBinConfigs = async () => {
             setIsLoading(true);
             try {
-                const response = await api.get('/User/UserList');
+                const response = await api.get('/BinConfig/BinConfigList');
                 const data = response.data;
-                const filteredUsers = data.map((user: any) => ({
-                    userId: user.userId,
-                    userName: user.userName,
-                    password: user.password,
-                    wareHouse: user.wareHouse,
-                    role: user.role,
-                    deviceId: user.deviceId,
-                    isActive: user.isActive,
+                debugger
+                const filteredBinConfig = data.map((binConfig: any) => ({
+                    binConfigId: binConfig.binConfigId,
+                    binCode: binConfig.binCode,
+                    binName: binConfig.binName,
+                    prefix: binConfig.prefix,
+                    whsCode: binConfig.whsCode,
+                    startNo: binConfig.startNo,
+                    endNo: binConfig.endNo,
                 }));
-                setUsers(filteredUsers);
+                setBinConfg(filteredBinConfig);
             } catch (error) {
                 console.error("Error fetching users:", error);
             }
             setIsLoading(false);
         };
-        fetchUsers();
+        fetchBinConfigs();
     }, []);
 
     const router = useRouter();
@@ -62,8 +62,8 @@ const UserGrid = () => {
     // const handleAddClick = () => {
     //     router.push('/pages/adduser');
     // };
-    const handleEdit = (user: User) => {
-        setSelectedUser(user);
+    const handleEdit = (binCnfg: BinCnfg) => {
+        setSelectedBinConfig(binCnfg);
         debugger;
         setTimeout(() => {
             document.getElementById('my-drawer-4')?.click();
@@ -71,12 +71,12 @@ const UserGrid = () => {
         
     };
 
-    const handleDelete = async (user: User) => {
+    const handleDelete = async (binCnfg: BinCnfg) => {
         try {
             const values = {
-                userId: user.userId,
+                userId: binCnfg.binConfigId,
             };
-            const response = await api.delete(`/User/DeleteUser?id=${values.userId}`);
+            const response = await api.delete(`/BinConfig/DeleteBinConfig?id=${values.userId}`);
             debugger
             if (response.status === 200 || response.status == 201) {
                 if (response.data !== null) {
@@ -88,14 +88,14 @@ const UserGrid = () => {
             } else {
                 showErrorToast('Error');
             }
-            setUsers(users.filter((u) => u.userId !== user.userId));
+            setBinConfg(binConfg.filter((u) => u.binConfigId !== binCnfg.binConfigId));
         } catch (error) {
             console.error("Error deleting user:", error);
         }
     };
 
-    const filteredUsers = users.filter((user) =>
-        Object.values(user)
+    const filteredUsers = binConfg.filter((binConfg) =>
+        Object.values(binConfg)
             .join(" ")
             .toLowerCase()
             .includes(searchTerm.toLowerCase())
@@ -106,9 +106,9 @@ const UserGrid = () => {
     const indexOfLastRow = currentPage * rowPerPage;
     const indexOfFirstRow = indexOfLastRow - rowPerPage;
     const currentData = filteredUsers.slice(indexOfFirstRow, indexOfLastRow);
-    const renderRow = (item: User) => {
+    const renderRow = (item: BinCnfg) => {
         return (
-            <tr key={item.userId} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-accent/20">
+            <tr key={item.binConfigId} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-accent/20">
                 {/* <td className="flex items-center gap-4 p-4">
                     <Image src="/userlogo.png"
                         alt=""
@@ -119,21 +119,15 @@ const UserGrid = () => {
                         <h3 className="font-semibold">{item.userName}</h3>
                     </div>
                 </td> */}
-                <td className="hidden md:table-cell">{item.userName}</td>
-                <td className="hidden md:table-cell">{item.password}</td>
-                <td className="hidden md:table-cell">{item.wareHouse}</td>
-                <td className="hidden md:table-cell">{item.role}</td>
-                <td className="hidden md:table-cell">{item.deviceId}</td>
-                <td className="hidden md:table-cell">
-                    <input
-                        type="checkbox"
-                        checked={item.isActive}
-                        readOnly
-                    />
-                </td>
+                <td className="hidden md:table-cell">{item.binCode}</td>
+                <td className="hidden md:table-cell">{item.binName}</td>
+                <td className="hidden md:table-cell">{item.prefix}</td>
+                <td className="hidden md:table-cell">{item.whsCode}</td>
+                <td className="hidden md:table-cell">{item.startNo}</td>
+                <td className="hidden md:table-cell">{item.endNo}</td>
                 <td>
                     <div className="flex items-center gap-2">
-                        <Link href={`/Grid/UserGrid/${item.userId}`}>
+                        <Link href={`/Grid/UserGrid/${item.binConfigId}`}>
                             {/* <button className="w-7 h-7 flex items-center justify-center rounded-full bg-sky-100"> */}
                             {/* Add an icon if necessary */}
                             {/* </button> */}
@@ -162,11 +156,11 @@ const UserGrid = () => {
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
             {/* TOP */}
-            <Grid header="All User" role="admin" FormComponent={<AddUserForm userData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <Grid header="All BinConfig" role="admin" FormComponent={<BinConfigForm binConfigData={selectedBinConfig || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             {/* LIST */}
             <Table columns={userColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}
-            <Pagination data={users} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            <Pagination data={binConfg} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
         </div>
     );

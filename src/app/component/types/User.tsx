@@ -8,3 +8,5 @@ export interface User {
     deviceId: string[];
     isActive: boolean;
 }
+
+

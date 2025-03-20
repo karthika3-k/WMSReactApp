@@ -3,7 +3,7 @@
 import React, { ReactNode, useRef } from "react";
 import TableSearch from "../TableSearch/TableSearch";
 import { FaPlus } from "react-icons/fa"; // Assuming you're using FontAwesome for the "+" icon
-import { User } from "@/types/User";
+import { User } from "@/app/component/types/User";
 
 
 // Define the props type for the Grid component
