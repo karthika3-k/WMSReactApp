@@ -29,7 +29,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, usernameError, password
                     />
                 </div>
                 <div className="bg-[#16202a] text-white flex items-center justify-center flex-col py-10 px-6 md:px-16">
+                    <div>
+                    <Image
+                                  src="/Techativelogo.png"
+                                  alt="background image"
+                                  width={130}
+                                  height={100}
+                                  className="m-4" 
+                                /> 
+                    </div>
                     <div className="my-4 text-center">
+                        
                         <h1 className="text-4xl font-semibold mb-2">Login</h1>
                         <p className="mt-2 text-xs text-slate-200">
                             Access your account and manage your profile.

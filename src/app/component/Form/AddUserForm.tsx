@@ -52,22 +52,26 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
     const role = ['User', 'Admin'];
 
     useEffect(() => {
-        if (userData) {
-            setFormData({
-                ...formData,
-                userId: userData.userId || 0,
-                username: userData.userName || "",
-                isActive: userData.isActive ?? true,
-                role: userData.role || 'Standard',
-                password: userData.password || "",
-                confirmPassword: userData.password || "",
-                wareHouse: userData.wareHouse || "",
-                deviceId: Array.isArray(userData.deviceId)
-                    ? userData.deviceId.join(', ')
-                    : userData.deviceId || ''
-            });
+        if (typeof window !== "undefined") {
+            if (userData) {
+                setFormData({
+...formData,
+                    userId: userData.userId || 0,
+                    username: userData.userName || "",
+                    isActive: userData.isActive ?? true,
+                    role: userData.role || 'Standard',
+                    password: userData.password || "",
+                    confirmPassword: userData.password || "",
+                    wareHouse: userData.wareHouse || "",
+                    deviceId: Array.isArray(userData.deviceId)
+                        ? userData.deviceId.join(', ')
+                        : userData.deviceId || ''  // ✅ Ensures deviceId is handled safely
+                });
+            } 
         }
     }, [userData]);
+    
+    
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -165,7 +169,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                 if (formData.userId > 0) {
                     const values = {
                         userId: userRequest.userId,
-                    };                    
+                    };
                     response = await api.put(`/User/UpdateUser?id=${values.userId}`, userRequest);
                     console.log(response);
                     debugger
@@ -217,8 +221,18 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
     };
     return (
         <div className="w-full p-10 text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden p-4">
+
+            <button
+                className="text-red-500 text-3xl absolute top-4 right-4 p-3 rounded-full  hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"
+                onClick={handleBackClick}
+                aria-label="Add User"
+            >
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+
             <h2 className="text-xl font-medium text-center text-black mb-8">
-                Add New User
+                {formData.userId > 0 ? 'Update User' : 'Add New User'}
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -350,14 +364,14 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                 <div className="flex justify-end gap-4 mt-6">
                     <button
                         type="submit"
-                        className="btn btn-accent text-white"
+                        className="btn btn-accent text-white font-inter"
                     >
                         {formData.userId > 0 ? 'Update' : 'Save'}
                     </button>
                     <button
                         type="button"
                         onClick={handleCancel}
-                        className="btn btn-outline btn-error hover:bg-red-100 hover:text-red-600"
+                        className="btn btn-outline btn-error hover:bg-red-100 hover:text-red-600 font-inter"
                     >
                         Cancel
                     </button>

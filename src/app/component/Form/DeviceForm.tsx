@@ -3,8 +3,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
+import { Device } from "@/types/Device";
 
-const DeviceForm: React.FC = () => {
+interface DeviceFormProps {
+    deviceData?: Device | null;
+}
+const DeviceForm:React.FC<DeviceFormProps> = ({ deviceData }) => {
     const [formData, setFormData] = useState({
         deviceId: 0,
         username: '',
@@ -24,14 +28,14 @@ const DeviceForm: React.FC = () => {
     const searchParams = useSearchParams();
 
     useEffect(() => {
-        const userDataParam = searchParams.get("userData");
+        const deviceDataParam = searchParams.get("deviceData");
 
         // ✅ Fix: Initialize `device` inside useEffect to ensure client-side access
         const device = typeof window !== "undefined" ? localStorage.getItem("userName") : null;
 
-        if (userDataParam) {
+        if (deviceDataParam) {
             try {
-                const parsedDeviceData = JSON.parse(decodeURIComponent(userDataParam));
+                const parsedDeviceData = JSON.parse(decodeURIComponent(deviceDataParam));
                 setFormData({
                     deviceId: parsedDeviceData.DeviceId || 0,
                     username: parsedDeviceData.UserName || "",
@@ -66,7 +70,7 @@ const DeviceForm: React.FC = () => {
         e.preventDefault();
         console.log('Device Data:', formData);
 
-        const userRequest = {
+        const deviceRequest = {
             deviceId: formData.deviceId,
             username: formData.username,
             deviceSerialNo: formData.devicenumber, // ✅ Ensured consistent naming
@@ -77,18 +81,18 @@ const DeviceForm: React.FC = () => {
         };
 
         try {
-            const response = await api.post('/Device/CreateDevice', userRequest);
+            const response = await api.post('/Device/CreateDevice', deviceRequest);
 
             if (response.status === 200 && response.data.ErrorCode === 200) {
-                showSuccessToast(`User ${formData.deviceId > 0 ? 'Updated' : 'Created'} Successfully!`);
+                showSuccessToast(`Device ${formData.deviceId > 0 ? 'Updated' : 'Created'} Successfully!`);
                 handleCancel();
-                router.push('/pages/adduser');
+                router.push('/pages/adddevie');
             } else {
-                showErrorToast(`User ${formData.deviceId > 0 ? 'Updated' : 'Created'} failed.`);
+                showErrorToast(`Device ${formData.deviceId > 0 ? 'Updated' : 'Created'} failed.`);
             }
         } catch (error) {
-            showErrorToast(`User ${formData.deviceId > 0 ? 'Updated' : 'Created'} failed.`);
-            console.error('Error adding/editing user:', error);
+            showErrorToast(`Device ${formData.deviceId > 0 ? 'Updated' : 'Created'} failed.`);
+            console.error('Error adding/editing device:', error);
         }
     };
 
