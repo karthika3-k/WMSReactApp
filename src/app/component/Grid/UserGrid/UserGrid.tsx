@@ -66,7 +66,7 @@ const UserGrid = () => {
     const router = useRouter();
 
     const handleAddUser = (newUser: User) => {
-        setUsers((prevUsers) => [newUser, ...prevUsers]);
+        setUsers((prevUsers) => [newUser, ...prevUsers]);       
         fetchUsers();
       };
     const handleEdit = (user: User) => {
@@ -253,7 +253,6 @@ const UserGrid = () => {
             <Table columns={userColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}
             <Pagination data={reversedUsers} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
-
         </div>
     );
 };

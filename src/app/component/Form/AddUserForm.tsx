@@ -15,7 +15,7 @@ interface AddUserFormProps {
     userData?: User | null;
     onAddUser: (newUser: User) => void;
 }
-const AddUserForm: React.FC<AddUserFormProps> = ({ userData , onAddUser}) => {
+const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
     const [formData, setFormData] = useState({
         userId: 0,
         username: '',
@@ -93,7 +93,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData , onAddUser}) => {
         setShowConfirmPassword(!showConfirmPassword);
     };
     const validateForm = () => {
-       
+
         let isValid = true;
         const newErrors: any = {};
 
@@ -129,11 +129,11 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData , onAddUser}) => {
         return isValid;
     };
     const handleSubmit = async (e: React.FormEvent) => {
-        
+
         e.preventDefault();
-      
-        if (validateForm()) {           
-           
+
+        if (validateForm()) {
+
             console.log('UserForm Submitted:', formData);
             let userRequest;
             if (formData.userId > 0) {
@@ -152,7 +152,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData , onAddUser}) => {
                     isDeleted: false,
                 }
             } else {
-               
+
                 userRequest = {
                     userId: formData.userId,
                     userName: formData.username,
@@ -172,7 +172,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData , onAddUser}) => {
 
                 let response;
                 if (formData.userId > 0) {
-                    
+
                     const values = {
                         userId: userRequest.userId,
                     };
@@ -184,11 +184,18 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData , onAddUser}) => {
                 }
                 if (response.status === 200 || response.status === 201) {
                     debugger
-                    if (response.data !== null) {                   
-                        handleCancel();
-                       
-                        showSuccessToast(`User ${formData.userId > 0 ? 'Updated' : 'Created'} Successfully!`);
-                         onAddUser(response.data);
+                    if (response.data !== null) {
+                        // handleCancel();
+                        // console.log(`User ${formData.userId > 0 ? 'Updated' : 'Created'} Successfully!`);
+                        // showSuccessToast(`User ${formData.userId > 0 ? 'Updated' : 'Created'} Successfully!`);
+                        // onAddUser(response.data);
+                        const message = `User ${formData.userId > 0 ? 'Updated' : 'Created'} Successfully!`;
+                        showSuccessToast(message);
+                        setTimeout(() => {
+                            handleCancel();
+                            console.log(message);
+                            onAddUser(response.data);
+                        }, 1000);
                     } else {
                         showErrorToast(`User ${formData.userId > 0 ? 'Updated' : 'Created'} failed.`);
                     }
@@ -280,7 +287,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData , onAddUser}) => {
                                 required
                             />
                         </label>
-                       
+
                     </div>
 
                     {/* Password */}
@@ -293,7 +300,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData , onAddUser}) => {
                                 name="password"
                                 value={formData.password}
                                 onChange={handleInputChange}
-                              className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
+                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Password"
                                 required
                             />
@@ -364,7 +371,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData , onAddUser}) => {
                                 name="deviceId"
                                 value={formData.deviceId}
                                 onChange={handleInputChange}
-                               className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
+                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Device ID"
                                 required
                             />
