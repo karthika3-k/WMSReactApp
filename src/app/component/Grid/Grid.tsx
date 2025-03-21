@@ -2,11 +2,10 @@
 
 import React, { ReactNode, useRef } from "react";
 import TableSearch from "../TableSearch/TableSearch";
-import { FaPlus } from "react-icons/fa"; // Assuming you're using FontAwesome for the "+" icon
+import { FaPlus } from "react-icons/fa"; 
 import { User } from "@/app/component/types/User";
 
 
-// Define the props type for the Grid component
 interface GridProps {
   header: string;
   userData?: User;
@@ -37,7 +36,7 @@ const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, sear
                 <button
                   onClick={() => {
                     if (drawerCheckboxRef.current) {
-                      drawerCheckboxRef.current.checked = true; // ✅ Open the drawer
+                      drawerCheckboxRef.current.checked = true; 
                     }
                   }}
                  className="btn btn-outline btn-accent"

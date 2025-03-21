@@ -131,9 +131,11 @@ const UserGrid = () => {
 
     if (isLoading) return <Loader />;
 
+    const reversedUsers = [...filteredUsers].reverse();
+
     const indexOfLastRow = currentPage * rowPerPage;
     const indexOfFirstRow = indexOfLastRow - rowPerPage;
-    const currentData = filteredUsers.slice(indexOfFirstRow, indexOfLastRow);
+    const currentData = reversedUsers.slice(indexOfFirstRow, indexOfLastRow);
     const renderRow = (item: User) => {
         return (
             <tr key={item.userId} className="border-b border-gray-200 h-15 text-[16px] font-medium text-sm hover:bg-accent/20">
@@ -180,11 +182,11 @@ const UserGrid = () => {
                         </Link>
                         {role === "admin" && (
                             <button
-                            className="text-success hover:scale-150 "
-                            onClick={() => handleEdit(item)}
-                          >
-                            <FaEdit />
-                          </button>
+                                className="text-success hover:scale-150 "
+                                onClick={() => handleEdit(item)}
+                            >
+                                <FaEdit />
+                            </button>
 
                         )}
 
@@ -209,7 +211,7 @@ const UserGrid = () => {
             {/* LIST */}
             <Table columns={userColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}
-            <Pagination data={users} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            <Pagination data={reversedUsers} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
         </div>
     );
