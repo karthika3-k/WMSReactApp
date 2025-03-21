@@ -12,6 +12,7 @@ import Link from "next/link";
 import Grid from "../Grid";
 import AddUserForm from "../../Form/AddUserForm";
 import { User } from "@/app/component/types/User";
+import ConfirmDialog from "../../Common/ConfirmDialog";
 
 let role = "admin";
 const userColumns = [
@@ -31,6 +32,7 @@ const UserGrid = () => {
     const [searchTerm, setSearchTerm] = useState(""); // Add a search term state
     const drawerCheckboxRef = useRef<HTMLInputElement>(null);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const rowPerPage = 10;
     useEffect(() => {
@@ -136,6 +138,37 @@ const UserGrid = () => {
     const indexOfLastRow = currentPage * rowPerPage;
     const indexOfFirstRow = indexOfLastRow - rowPerPage;
     const currentData = reversedUsers.slice(indexOfFirstRow, indexOfLastRow);
+    
+    const handleDeleteClick = (user:User) => {
+        setSelectedUser(user);
+        setIsDialogOpen(true);
+        handleDelete(user);
+      };
+  
+      const handleConfirmDelete = async () => {
+        if (!selectedUser) return;
+      
+        try {
+          const response = await api.delete(`/User/DeleteUser?id=${selectedUser.userId}`);
+          if (response.status === 200 || response.status === 201) {
+            setUsers(users.filter((u) => u.userId !== selectedUser.userId));
+            showSuccessToast('User Deleted Successfully');
+          } else {
+            showErrorToast('User Deletion Failed');
+          }
+        } catch (error) {
+          console.error('Error deleting user:', error);
+          showErrorToast('An error occurred');
+        } finally {
+          setIsDialogOpen(false);
+        }
+      };
+      
+  
+    const handleCancelDelete = () => {
+      setIsDialogOpen(false);
+      setSelectedUser(null);
+    };
     const renderRow = (item: User) => {
         return (
             <tr key={item.userId} className="border-b border-gray-200 h-15 text-[16px] font-medium text-sm hover:bg-accent/20">
@@ -175,30 +208,36 @@ const UserGrid = () => {
                 </td>
                 <td>
                     <div className="flex items-center gap-2">
-                        <Link href={`/Grid/UserGrid/${item.userId}`}>
-                            {/* <button className="w-7 h-7 flex items-center justify-center rounded-full bg-sky-100"> */}
-                            {/* Add an icon if necessary */}
-                            {/* </button> */}
-                        </Link>
-                        {role === "admin" && (
-                            <button
-                                className="text-success hover:scale-150 "
-                                onClick={() => handleEdit(item)}
-                            >
-                                <FaEdit />
-                            </button>
-
-                        )}
-
-                        {role === "admin" && (
-                            <button className="text-error  hover:scale-150"
-                                onClick={() => handleDelete(item)}
-
-                            >
-                                <FaTrash />
-                            </button>
-                        )}
+          <Link href={`/Grid/UserGrid/${item.userId}`}>
+            {/* Add an icon or user details here */}
+          </Link>
+          {role === 'admin' && (
+            <>
+              <button
+                className="text-success hover:scale-150"
+                onClick={() => handleEdit(item)}
+              >
+                <FaEdit />
+              </button>
+              <button
+                className="text-error hover:scale-150"
+                onClick={() => handleDeleteClick(item)}
+              >
+                <FaTrash />
+              </button>
+            </>
+          )}
+        
+      <ConfirmDialog
+        isOpen={isDialogOpen}
+        title="Confirm Deletion"
+        message={`Are you sure you want to delete ${selectedUser?.userName}?`}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
+                        
                     </div>
+                    
                 </td>
             </tr>
         );
