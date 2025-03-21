@@ -4,7 +4,7 @@ import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Loader from "../../Common/Loader";
-import { FaEdit, FaPlus, FaTrash } from "react-icons/fa"
+import { FaEdit, FaPlus, FaTrash, FaUser, FaUserShield } from "react-icons/fa"
 import Table from "../../Table/Table";
 import Pagination from "../../Pagination/Pagination";
 import Image from "next/image";
@@ -17,7 +17,7 @@ let role = "admin";
 const userColumns = [
     // { name: "User Id", field: "userId", visible: true },
     { name: "UserName", field: "userName", className: "hidden md:table-cell", visible: true },
-    { name: "Password", field: "password", className: "hidden md:table-cell", visible: true },
+    // { name: "Password", field: "password", className: "hidden md:table-cell", visible: true },
     { name: "WareHouse", field: "wareHouse", className: "hidden md:table-cell", visible: true },
     { name: "Role", field: "role", className: "hidden md:table-cell", visible: true },
     { name: "Device ID", field: "deviceId", className: "hidden md:table-cell", visible: true },
@@ -32,23 +32,26 @@ const UserGrid = () => {
     const drawerCheckboxRef = useRef<HTMLInputElement>(null);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-    const rowPerPage = 7;
+    const rowPerPage = 10;
     useEffect(() => {
         const fetchUsers = async () => {
             setIsLoading(true);
             try {
                 const response = await api.get('/User/UserList');
                 const data = response.data;
+                debugger
                 const filteredUsers = data.map((user: any) => ({
                     userId: user.userId,
                     userName: user.userName,
                     password: user.password,
                     wareHouse: user.wareHouse,
                     role: user.role,
-                    deviceId: user.deviceId,
+                    deviceId: user.deviceId || [],  // ✅ Default to empty array
                     isActive: user.isActive,
                 }));
+                debugger
                 setUsers(filteredUsers);
+
             } catch (error) {
                 console.error("Error fetching users:", error);
             }
@@ -68,7 +71,7 @@ const UserGrid = () => {
         setTimeout(() => {
             document.getElementById('my-drawer-4')?.click();
         }, 100);
-        
+
     };
 
     const handleDelete = async (user: User) => {
@@ -81,7 +84,6 @@ const UserGrid = () => {
             if (response.status === 200 || response.status == 201) {
                 if (response.data !== null) {
                     showSuccessToast('User Deleted Successfully');
-                    router.refresh();
                 } else {
                     showErrorToast('User Deletion Failed');
                 }
@@ -93,6 +95,32 @@ const UserGrid = () => {
             console.error("Error deleting user:", error);
         }
     };
+
+    function getInitials(name: string) {
+        if (!name) return '';
+        const nameParts = name.trim().split(/\s+/);
+        if (nameParts.length === 1) {
+            // Single name, return the first letter
+            return nameParts[0].charAt(0).toUpperCase();
+        } else {
+            // Multiple names, return the first letter of the first and last parts
+            const firstInitial = nameParts[0].charAt(0).toUpperCase();
+            const lastInitial = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+            return firstInitial + lastInitial;
+        }
+    }
+
+    function getRoleIcon(role: string) {
+        switch (role.toLowerCase()) {
+            case 'admin':
+                return <FaUserShield className="text-blue-500" />;
+            case 'user':
+                return <FaUser className="text-green-500" />;
+            default:
+                return null;
+        }
+    }
+
 
     const filteredUsers = users.filter((user) =>
         Object.values(user)
@@ -108,7 +136,7 @@ const UserGrid = () => {
     const currentData = filteredUsers.slice(indexOfFirstRow, indexOfLastRow);
     const renderRow = (item: User) => {
         return (
-            <tr key={item.userId} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-accent/20">
+            <tr key={item.userId} className="border-b border-gray-200 h-15 text-[16px] font-medium text-sm hover:bg-accent/20">
                 {/* <td className="flex items-center gap-4 p-4">
                     <Image src="/userlogo.png"
                         alt=""
@@ -119,17 +147,29 @@ const UserGrid = () => {
                         <h3 className="font-semibold">{item.userName}</h3>
                     </div>
                 </td> */}
-                <td className="hidden md:table-cell">{item.userName}</td>
-                <td className="hidden md:table-cell">{item.password}</td>
+                <td className="hidden md:table-cell">
+                    <div className="flex items-center">
+                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-500 flex items-center justify-center text-white font-bold">
+                            {getInitials(item.userName)}
+                        </div>
+                        <span className="ml-3">{item.userName}</span>
+                    </div>
+                </td>
+                {/* <td className="hidden md:table-cell">{item.password}</td> */}
                 <td className="hidden md:table-cell">{item.wareHouse}</td>
-                <td className="hidden md:table-cell">{item.role}</td>
+                <td className="hidden md:table-cell">
+                    <div className="flex items-center">
+                        {getRoleIcon(item.role)}
+                        <span className="ml-2">{item.role}</span>
+                    </div>
+                </td>
                 <td className="hidden md:table-cell">{item.deviceId}</td>
                 <td className="hidden md:table-cell">
-                    <input
-                        type="checkbox"
-                        checked={item.isActive}
-                        readOnly
-                    />
+                    <button
+                        className={`btn btn-soft  text-[16px] font-medium ${item.isActive ? 'btn-success' : 'btn-error'}`}
+                    >
+                        {item.isActive ? 'Active' : 'Inactive'}
+                    </button>
                 </td>
                 <td>
                     <div className="flex items-center gap-2">
@@ -139,16 +179,19 @@ const UserGrid = () => {
                             {/* </button> */}
                         </Link>
                         {role === "admin" && (
-                            <button onClick={() => handleEdit(item)} className="btn btn-outline btn-accent">
-                                <FaEdit />
-                            </button>
+                            <button
+                            className="text-success hover:scale-150 "
+                            onClick={() => handleEdit(item)}
+                          >
+                            <FaEdit />
+                          </button>
 
                         )}
 
                         {role === "admin" && (
-                            <button
+                            <button className="text-error  hover:scale-150"
                                 onClick={() => handleDelete(item)}
-                                className="btn btn-outline btn-error"
+
                             >
                                 <FaTrash />
                             </button>
@@ -162,7 +205,7 @@ const UserGrid = () => {
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
             {/* TOP */}
-            <Grid header="All User" role="admin" FormComponent={<AddUserForm userData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <Grid header="User List" role="admin" FormComponent={<AddUserForm userData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             {/* LIST */}
             <Table columns={userColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}

@@ -53,7 +53,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
         if (typeof window !== "undefined") {
             if (userData) {
                 setFormData({
-...formData,
+                    ...formData,
                     userId: userData.userId || 0,
                     username: userData.userName || "",
                     isActive: userData.isActive ?? true,
@@ -65,11 +65,11 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                         ? userData.deviceId.join(', ')
                         : userData.deviceId || ''  // ✅ Ensures deviceId is handled safely
                 });
-            } 
+            }
         }
     }, [userData]);
-    
-    
+
+
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -165,7 +165,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
 
             }
             try {
-               
+
                 let response;
                 if (formData.userId > 0) {
                     const values = {
@@ -216,8 +216,31 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
     };
 
     const handleBackClick = () => {
-        router.back();
+        setFormData({
+            userId: 0,
+            username: '',
+            password: '',
+            confirmPassword: '',
+            wareHouse: '',
+            role: '',
+            deviceId: '',
+            isActive: false,
+            createdBy: user,
+            createdOn: '',
+            updatedBy: '',
+            updatedOn: '',
+            isDeleted: false,
+        });
+        // Retrieve the checkbox element by its ID
+        const drawerCheckbox = document.getElementById('my-drawer-4') as HTMLInputElement | null;
+
+        // Check if the element exists
+        if (drawerCheckbox) {
+            // Set the checked property to false to close the drawer
+            drawerCheckbox.checked = false;
+        }
     };
+
     return (
         <div className="w-full p-10 text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden p-4">
 
@@ -247,7 +270,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                                 name="username"
                                 value={formData.username}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500 "
+                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Username"
                                 required
                             />
@@ -264,7 +287,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                                 name="password"
                                 value={formData.password}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500"
+                              className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Password"
                                 required
                             />
@@ -281,7 +304,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                                 name="confirmPassword"
                                 value={formData.confirmPassword}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500"
+                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Confirm Password"
                                 required
                             />
@@ -297,7 +320,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                                 name="role"
                                 value={formData.role}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500"
+                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 required
                             >
                                 <option value="" disabled>Select User Type</option>
@@ -318,7 +341,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                                 name="wareHouse"
                                 value={formData.wareHouse}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500"
+                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Warehouse"
                                 required
                             />
@@ -335,7 +358,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                                 name="deviceId"
                                 value={formData.deviceId}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500"
+                               className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Device ID"
                                 required
                             />

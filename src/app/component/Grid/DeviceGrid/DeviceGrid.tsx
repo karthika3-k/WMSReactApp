@@ -12,11 +12,11 @@ import Grid from "../Grid";
 import DeviceForm from "../../Form/DeviceForm";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
-import { Device } from "@/types/Device";
+import { Device } from "@/app/component/types/Device";
 
 let role = "admin";
 const deviceColumns = [
-     //{ name: "DeviceId", field: "deviceId", visible: false },
+    //{ name: "DeviceId", field: "deviceId", visible: false },
     { name: "UserName", field: "userName", className: "hidden md:table-cell", visible: true },
     { name: "DeviceSerialNo", field: "deviceSerialNo", className: "hidden md:table-cell", visible: true },
     // { name: "CreatedBy", field: "CreatedBy",className: "hidden md:table-cell", visible: true },
@@ -30,13 +30,13 @@ interface AddUserFormProps {
     deviceData?: Device | null;
 }
 
-const DeviceGrid : React.FC<AddUserFormProps> = ({ deviceData }) => {
+const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
     const rowPerPage = 7;
     const [searchTerm, setSearchTerm] = useState(""); // Add a search term state
     const [devices, setDevices] = useState<Device[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(1); // Add page state
-   
+
     const [selectedUser, setSelectedUser] = useState<Device | null>(null);
     const filteredUsers = devices.filter((Device) =>
         Object.values(Device)
@@ -78,10 +78,15 @@ const DeviceGrid : React.FC<AddUserFormProps> = ({ deviceData }) => {
         router.push('/pages/adddevice');
     };
 
-    const handleEdit = (device: Device) => {
-        const deviceParam = JSON.stringify(device);
-        router.push(`/pages/adddevice?userData=${encodeURIComponent(deviceParam)}`);
-    };
+   const handleEdit = (device: Device) => {
+    debugger
+           setSelectedUser(device);
+           debugger;
+           setTimeout(() => {
+               document.getElementById('my-drawer-4')?.click();
+           }, 100);
+   
+       };
 
     const handleDelete = async (device: Device) => {
         try {
@@ -125,18 +130,17 @@ const DeviceGrid : React.FC<AddUserFormProps> = ({ deviceData }) => {
                             {/* </button> */}
                         </Link>
                         {role === "admin" && (
-                            <button
-                                onClick={() => handleEdit(item)}
-                                className="w-7 h-7 flex items-center justify-center rounded-full bg-yellow-100 text-yellow-600"
-                            >
+                            <button onClick={() => handleEdit(item)} className="btn btn-outline btn-accent">
                                 <FaEdit />
                             </button>
+
                         )}
 
                         {role === "admin" && (
                             <button
                                 onClick={() => handleDelete(item)}
-                                className="w-7 h-7 flex items-center justify-center rounded-full bg-red-100 text-red-600" >
+                                className="btn btn-outline btn-error"
+                            >
                                 <FaTrash />
                             </button>
                         )}
@@ -148,8 +152,8 @@ const DeviceGrid : React.FC<AddUserFormProps> = ({ deviceData }) => {
 
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
-             {/* TOP */}
-             <Grid header="All Devices" role="admin" FormComponent={<DeviceForm deviceData={selectedUser || undefined} /> } searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            {/* TOP */}
+            <Grid header="All Devices" role="admin" FormComponent={<DeviceForm deviceData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             {/* LIST */}
             <Table columns={deviceColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}

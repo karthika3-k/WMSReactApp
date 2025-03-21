@@ -3,20 +3,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
-import { Device } from "@/types/Device";
+import { Device } from "@/app/component/types/Device";
 
 interface DeviceFormProps {
     deviceData?: Device | null;
 }
-const DeviceForm:React.FC<DeviceFormProps> = ({ deviceData }) => {
+const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
     const [formData, setFormData] = useState({
         deviceId: 0,
         username: '',
         devicenumber: '',
-        createdBy: '',
-        createdOn: '',
-        updatedBy: '',
-        updatedOn: '',
+       
     });
 
     const [errors, setErrors] = useState({
@@ -28,35 +25,19 @@ const DeviceForm:React.FC<DeviceFormProps> = ({ deviceData }) => {
     const searchParams = useSearchParams();
 
     useEffect(() => {
-        const deviceDataParam = searchParams.get("deviceData");
-
-        // ✅ Fix: Initialize `device` inside useEffect to ensure client-side access
-        const device = typeof window !== "undefined" ? localStorage.getItem("userName") : null;
-
-        if (deviceDataParam) {
-            try {
-                const parsedDeviceData = JSON.parse(decodeURIComponent(deviceDataParam));
+        if (typeof window !== "undefined") {
+            if (deviceData) {
                 setFormData({
-                    deviceId: parsedDeviceData.DeviceId || 0,
-                    username: parsedDeviceData.UserName || "",
-                    devicenumber: parsedDeviceData.DeviceSerialNo || "",
-                    createdBy: parsedDeviceData.CreatedBy || device || "",
-                    createdOn: parsedDeviceData.CreatedOn || "",
-                    updatedBy: parsedDeviceData.UpdatedBy || "",
-                    updatedOn: parsedDeviceData.UpdatedOn || "",
+                    deviceId: deviceData.deviceId || 0,
+                    username: deviceData.userName || "",
+                    devicenumber: deviceData.deviceSerialNo || "",
+                    
                 });
-            } catch (error) {
-                console.error("Error parsing device data:", error);
             }
-        } else {
-            // ✅ Set default values for `createdBy` on load
-            setFormData((prevData) => ({
-                ...prevData,
-                createdBy: device || ""
-            }));
         }
-    }, [searchParams]);
+    }, [deviceData]);
 
+  
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
 
@@ -69,24 +50,24 @@ const DeviceForm:React.FC<DeviceFormProps> = ({ deviceData }) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         console.log('Device Data:', formData);
-
+        debugger;
         const deviceRequest = {
-            deviceId: formData.deviceId,
+            //deviceId: formData.deviceId,
             username: formData.username,
             deviceSerialNo: formData.devicenumber, // ✅ Ensured consistent naming
-            createdBy: formData.createdBy,
-            createdOn: formData.deviceId > 0 ? formData.createdOn : new Date().toISOString(),
-            updatedBy: formData.deviceId > 0 ? formData.updatedBy : '',
-            updatedOn: formData.deviceId > 0 ? new Date().toISOString() : '',
+            // createdBy: formData.createdBy,
+            // createdOn: new Date().toISOString(),
+            // updatedBy: formData.deviceId > 0 ? formData.updatedBy : '',
+            // updatedOn: new Date().toISOString(),
         };
 
         try {
             const response = await api.post('/Device/CreateDevice', deviceRequest);
 
-            if (response.status === 200 && response.data.ErrorCode === 200) {
+            if (response.status === 200 || response.status === 201) {
                 showSuccessToast(`Device ${formData.deviceId > 0 ? 'Updated' : 'Created'} Successfully!`);
                 handleCancel();
-                router.push('/pages/adddevie');
+                //router.push('/pages/adddevie');
             } else {
                 showErrorToast(`Device ${formData.deviceId > 0 ? 'Updated' : 'Created'} failed.`);
             }
@@ -101,65 +82,89 @@ const DeviceForm:React.FC<DeviceFormProps> = ({ deviceData }) => {
             deviceId: 0,
             username: '',
             devicenumber: '',
-            createdBy: '',
-            createdOn: '',
-            updatedBy: '',
-            updatedOn: '',
+            // createdBy: '',
+            // createdOn: '',
+            // updatedBy: '',
+            // updatedOn: '',
         });
-        router.push('/pages/device');
+        //router.push('/pages/device');
+    };
+    const handleBackClick = () => {
+        handleCancel();
+        const drawerCheckbox = document.getElementById('my-drawer-4') as HTMLInputElement | null;
+
+        // Check if the element exists
+        if (drawerCheckbox) {
+            // Set the checked property to false to close the drawer
+            drawerCheckbox.checked = false;
+        }
     };
 
     return (
-        <div className="w-full p-10 bg-slate-100 text-indigo-800 rounded-xl shadow-xl max-w-4xl mx-auto mt-10">
-            <h2 className="text-3xl font-extrabold text-center text-indigo-700 mb-8">Device</h2>
+        <div className="w-full p-10 text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden bg-slate-100 shadow-xl max-w-4xl mx-auto mt-10">
+
+            <button
+                className="text-red-500 text-3xl absolute top-4 right-4 p-3 rounded-full hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"
+                onClick={handleBackClick}
+                aria-label="Back"
+            >
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <h2 className="text-xl font-medium text-center text-black mb-8">
+                Add New Device
+            </h2>
+
             <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                        <label htmlFor="username" className="block mb-2 text-sm font-semibold text-indigo-700">
-                            UserName
+                <div className="grid grid-cols-1 gap-6">
+
+                    {/* Username */}
+                    <div className="relative">
+                        <label className="floating-label text-black font-medium">
+                            <span>Username</span>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                value={formData.username}
+                                onChange={handleInputChange}
+                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500"
+                                placeholder="Enter Your UserName"
+                                required
+                            />
                         </label>
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            value={formData.username} // ✅ Fixed value binding
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 rounded-lg bg-white border border-indigo-300 text-indigo-800 placeholder-indigo-500 shadow-inner focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all"
-                            placeholder="Enter Your UserName"
-                            required
-                        />
+                    </div>
+
+                    {/* Device Serial Number */}
+                    <div className="relative">
+                        <label className="floating-label text-black font-medium">
+                            <span>Device Serial Number</span>
+                            <input
+                                type="text"
+                                id="devicenumber"
+                                name="devicenumber"
+                                value={formData.devicenumber}
+                                onChange={handleInputChange}
+                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500"
+                                placeholder="Enter Your Device No"
+                                required
+                            />
+                        </label>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                        <label htmlFor="devicenumber" className="block mb-2 text-sm font-semibold text-indigo-700">
-                            Device Serial Number
-                        </label>
-                        <input
-                            type="text"
-                            id="devicenumber"
-                            name="devicenumber"
-                            value={formData.devicenumber}  // ✅ Fixed value binding
-                            onChange={handleInputChange}
-                            className="w-full px-4 py-3 rounded-lg bg-white border border-indigo-300 text-indigo-800 placeholder-indigo-500 shadow-inner focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all"
-                            placeholder="Enter Your Device No"
-                            required
-                        />
-                    </div>
-                </div>
-
-                <div className="flex justify-end gap-4">
+                {/* Submit and Cancel Buttons */}
+                <div className="flex justify-end gap-4 mt-6">
                     <button
                         type="submit"
-                        className="px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 focus:outline-none transition-all"
+                        className="btn btn-accent text-white font-inter"
                     >
                         {formData.deviceId > 0 ? 'Update' : 'Save'}
                     </button>
                     <button
                         type="button"
                         onClick={handleCancel}
-                        className="px-6 py-3 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 focus:outline-none transition-all"
+                        className="btn btn-outline btn-error hover:bg-red-100 hover:text-red-600 font-inter"
                     >
                         Cancel
                     </button>
@@ -167,6 +172,8 @@ const DeviceForm:React.FC<DeviceFormProps> = ({ deviceData }) => {
             </form>
         </div>
     );
+
+
 };
 
 export default DeviceForm;
