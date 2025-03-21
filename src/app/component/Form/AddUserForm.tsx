@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 import { User } from "@/app/component/types/User";
+import { ToastContainer } from "react-toastify";
 //const user = localStorage.getItem("userName");
 let user = null
 if (typeof window !== "undefined") {
@@ -90,7 +91,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
         setShowConfirmPassword(!showConfirmPassword);
     };
     const validateForm = () => {
-        debugger
+       
         let isValid = true;
         const newErrors: any = {};
 
@@ -106,6 +107,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
 
         if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = "Passwords do not match";
+            showErrorToast(`Password Mismatching`);
             isValid = false;
         }
         if (!formData.role) {
@@ -125,10 +127,12 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
         return isValid;
     };
     const handleSubmit = async (e: React.FormEvent) => {
+        
         e.preventDefault();
-        debugger
+      
         if (validateForm()) {
-            debugger
+            
+           
             console.log('UserForm Submitted:', formData);
             let userRequest;
             if (formData.userId > 0) {
@@ -147,7 +151,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                     isDeleted: false,
                 }
             } else {
-                debugger;
+               
                 userRequest = {
                     userId: formData.userId,
                     userName: formData.username,
@@ -168,6 +172,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
 
                 let response;
                 if (formData.userId > 0) {
+                    
                     const values = {
                         userId: userRequest.userId,
                     };
@@ -178,12 +183,12 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                     response = await api.post('/User/CreateUser', userRequest);
                 }
                 if (response.status === 200 || response.status === 201) {
-                    debugger
+                    
                     if (response.data !== null) {
-                        debugger
-                        showSuccessToast(`User ${formData.userId > 0 ? 'Updated' : 'Created'} Successfully!`);
+                        
+                        
                         handleCancel();
-                        //router.push('/pages/adduser');
+                        showSuccessToast(`User ${formData.userId > 0 ? 'Updated' : 'Created'} Successfully!`);
                     } else {
                         showErrorToast(`User ${formData.userId > 0 ? 'Updated' : 'Created'} failed.`);
                     }
@@ -275,6 +280,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                                 required
                             />
                         </label>
+                       
                     </div>
 
                     {/* Password */}
@@ -399,7 +405,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                     </button>
                 </div>
             </form>
-
+            <ToastContainer />
         </div>
 
 
