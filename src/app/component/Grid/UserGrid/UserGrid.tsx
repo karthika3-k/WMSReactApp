@@ -13,6 +13,7 @@ import Grid from "../Grid";
 import AddUserForm from "../../Form/AddUserForm";
 import { User } from "@/app/component/types/User";
 
+
 let role = "admin";
 const userColumns = [
     // { name: "User Id", field: "userId", visible: true },
@@ -33,38 +34,39 @@ const UserGrid = () => {
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
     const rowPerPage = 10;
-    useEffect(() => {
-        const fetchUsers = async () => {
-            setIsLoading(true);
-            try {
-                const response = await api.get('/User/UserList');
-                const data = response.data;
-                debugger
-                const filteredUsers = data.map((user: any) => ({
-                    userId: user.userId,
-                    userName: user.userName,
-                    password: user.password,
-                    wareHouse: user.wareHouse,
-                    role: user.role,
-                    deviceId: user.deviceId || [],  // ✅ Default to empty array
-                    isActive: user.isActive,
-                }));
-                debugger
-                setUsers(filteredUsers);
+    const fetchUsers = async () => {
+        debugger
+        setIsLoading(true);
+        try {
+            const response = await api.get('/User/UserList');
+            const data = response.data;            
+            const filteredUsers = data.map((user: any) => ({
+                userId: user.userId,
+                userName: user.userName,
+                password: user.password,
+                wareHouse: user.wareHouse,
+                role: user.role,
+                deviceId: user.deviceId || [],  // ✅ Default to empty array
+                isActive: user.isActive,
+            }));
+            setUsers(filteredUsers);
 
-            } catch (error) {
-                console.error("Error fetching users:", error);
-            }
-            setIsLoading(false);
-        };
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+        setIsLoading(false);
+    };
+    useEffect(() => {
+       
         fetchUsers();
     }, []);
 
     const router = useRouter();
 
-    // const handleAddClick = () => {
-    //     router.push('/pages/adduser');
-    // };
+    const handleAddUser = (newUser: User) => {
+        setUsers((prevUsers) => [newUser, ...prevUsers]);
+        fetchUsers();
+      };
     const handleEdit = (user: User) => {
         setSelectedUser(user);
         debugger;
@@ -207,7 +209,7 @@ const UserGrid = () => {
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
             {/* TOP */}
-            <Grid header="User List" role="admin" FormComponent={<AddUserForm userData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <Grid header="User List" role="admin" FormComponent={<AddUserForm onAddUser={handleAddUser} userData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             {/* LIST */}
             <Table columns={userColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}

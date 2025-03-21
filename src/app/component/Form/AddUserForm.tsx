@@ -5,6 +5,7 @@ import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 import { User } from "@/app/component/types/User";
 import { ToastContainer } from "react-toastify";
+import UserGrid from "../Grid/UserGrid/UserGrid";
 //const user = localStorage.getItem("userName");
 let user = null
 if (typeof window !== "undefined") {
@@ -12,8 +13,9 @@ if (typeof window !== "undefined") {
 }
 interface AddUserFormProps {
     userData?: User | null;
+    onAddUser: (newUser: User) => void;
 }
-const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
+const AddUserForm: React.FC<AddUserFormProps> = ({ userData , onAddUser}) => {
     const [formData, setFormData] = useState({
         userId: 0,
         username: '',
@@ -130,8 +132,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
         
         e.preventDefault();
       
-        if (validateForm()) {
-            
+        if (validateForm()) {           
            
             console.log('UserForm Submitted:', formData);
             let userRequest;
@@ -166,7 +167,6 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                     updatedOn: new Date().toISOString(),
                     isDeleted: false,
                 }
-
             }
             try {
 
@@ -183,12 +183,12 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData }) => {
                     response = await api.post('/User/CreateUser', userRequest);
                 }
                 if (response.status === 200 || response.status === 201) {
-                    
-                    if (response.data !== null) {
-                        
-                        
+                    debugger
+                    if (response.data !== null) {                   
                         handleCancel();
+                       
                         showSuccessToast(`User ${formData.userId > 0 ? 'Updated' : 'Created'} Successfully!`);
+                         onAddUser(response.data);
                     } else {
                         showErrorToast(`User ${formData.userId > 0 ? 'Updated' : 'Created'} failed.`);
                     }

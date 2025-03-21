@@ -13,9 +13,10 @@ interface GridProps {
   FormComponent?: ReactNode;
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  
 };
 
-const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, searchTerm, setSearchTerm }) => {
+const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, searchTerm, setSearchTerm}) => {
   const drawerCheckboxRef = useRef<HTMLInputElement>(null);
   return (
     <div className="flex items-center justify-between ">
