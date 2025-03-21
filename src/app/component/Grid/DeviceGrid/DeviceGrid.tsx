@@ -113,7 +113,7 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
 
     const renderRow = (item: Device) => {
         return (
-            <tr key={item.deviceId} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-purple-100">
+            <tr key={item.deviceId} className="border-b border-gray-200 h-15 text-[16px] font-medium text-sm hover:bg-accent/20">
 
                 {/* <td className="hidden md:table-cell">{item.deviceId}</td> */}
                 <td className="hidden md:table-cell">{item.userName}</td>
