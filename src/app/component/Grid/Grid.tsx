@@ -48,11 +48,12 @@ const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, sear
 
               {/* Dynamic Drawer Content */}
               <div className="drawer-side">
-                <label
-                  htmlFor="my-drawer-4"
-                  aria-label="close sidebar"
-                  className="drawer-overlay"
-                ></label>
+              <label
+      htmlFor="my-drawer-4"
+      aria-label="close sidebar"
+      className="drawer-overlay"
+      onClick={(e) => e.preventDefault()} // Prevents the drawer from closing
+    ></label>
                 <div className="menu bg-base-200 text-base-content min-h-full w-[500px] p-4">
                   {FormComponent ? FormComponent : <p>No content available</p>}
                 </div>

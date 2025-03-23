@@ -28,6 +28,7 @@ const deviceColumns = [
 ];
 interface AddUserFormProps {
     deviceData?: Device | null;
+    
 }
 
 const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
@@ -37,7 +38,7 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(1); // Add page state
 
-    const [selectedUser, setSelectedUser] = useState<Device | null>(null);
+    const [selectedUser, setSelectedUser] = useState<Device | null>(null);  
     const filteredUsers = devices.filter((Device) =>
         Object.values(Device)
             .join(" ")
@@ -130,7 +131,7 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
                             {/* </button> */}
                         </Link>
                         {role === "admin" && (
-                            <button onClick={() => handleEdit(item)} className="btn btn-outline btn-accent">
+                            <button onClick={() => handleEdit(item)} className="text-success hover:scale-150">
                                 <FaEdit />
                             </button>
 
@@ -139,7 +140,7 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
                         {role === "admin" && (
                             <button
                                 onClick={() => handleDelete(item)}
-                                className="btn btn-outline btn-error"
+                                className="text-error hover:scale-150"
                             >
                                 <FaTrash />
                             </button>

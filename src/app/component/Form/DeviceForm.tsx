@@ -51,7 +51,8 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
         e.preventDefault();
         console.log('Device Data:', formData);
         debugger;
-        const deviceRequest = {
+        let deviceRequest;
+         deviceRequest = {
             //deviceId: formData.deviceId,
             username: formData.username,
             deviceSerialNo: formData.devicenumber, // ✅ Ensured consistent naming
@@ -60,6 +61,28 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
             // updatedBy: formData.deviceId > 0 ? formData.updatedBy : '',
             // updatedOn: new Date().toISOString(),
         };
+        if (formData.deviceId > 0) {
+            deviceRequest = {
+                //deviceId: formData.deviceId,
+                username: formData.username,
+                deviceSerialNo: formData.devicenumber, // ✅ Ensured consistent naming
+                // createdBy: formData.createdBy,
+                // createdOn: new Date().toISOString(),
+                // updatedBy: formData.deviceId > 0 ? formData.updatedBy : '',
+                // updatedOn: new Date().toISOString(),
+            };
+        } else {
+
+            deviceRequest = {
+                //deviceId: formData.deviceId,
+                username: formData.username,
+                deviceSerialNo: formData.devicenumber, // ✅ Ensured consistent naming
+                // createdBy: formData.createdBy,
+                // createdOn: new Date().toISOString(),
+                // updatedBy: formData.deviceId > 0 ? formData.updatedBy : '',
+                // updatedOn: new Date().toISOString(),
+            };
+        }
 
         try {
             const response = await api.post('/Device/CreateDevice', deviceRequest);
@@ -112,7 +135,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
             </button>
 
             <h2 className="text-xl font-medium text-center text-black mb-8">
-                Add New Device
+                 {formData.deviceId > 0 ? 'Update Device' : ' Add New Device'}
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -128,7 +151,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
                                 name="username"
                                 value={formData.username}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500"
+                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Enter Your UserName"
                                 required
                             />
@@ -145,7 +168,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
                                 name="devicenumber"
                                 value={formData.devicenumber}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500"
+                               className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Enter Your Device No"
                                 required
                             />

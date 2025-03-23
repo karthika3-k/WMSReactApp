@@ -41,7 +41,7 @@ const UserGrid = () => {
         setIsLoading(true);
         try {
             const response = await api.get('/User/UserList');
-            const data = response.data;            
+            const data = response.data;
             const filteredUsers = data.map((user: any) => ({
                 userId: user.userId,
                 userName: user.userName,
@@ -59,16 +59,16 @@ const UserGrid = () => {
         setIsLoading(false);
     };
     useEffect(() => {
-       
+
         fetchUsers();
     }, []);
 
     const router = useRouter();
 
     const handleAddUser = (newUser: User) => {
-        setUsers((prevUsers) => [newUser, ...prevUsers]);       
+        setUsers((prevUsers) => [newUser, ...prevUsers]);
         fetchUsers();
-      };
+    };
     const handleEdit = (user: User) => {
         setSelectedUser(user);
         debugger;
@@ -85,7 +85,7 @@ const UserGrid = () => {
             };
             const response = await api.delete(`/User/DeleteUser?id=${values.userId}`);
             debugger
-            if (response.status === 200 || response.status == 201) {
+            if (response.status === 200 || response.status == 201 || response.status == 204 ) {
                 if (response.data !== null) {
                     showSuccessToast('User Deleted Successfully');
                 } else {
@@ -140,36 +140,38 @@ const UserGrid = () => {
     const indexOfLastRow = currentPage * rowPerPage;
     const indexOfFirstRow = indexOfLastRow - rowPerPage;
     const currentData = reversedUsers.slice(indexOfFirstRow, indexOfLastRow);
-    
-    const handleDeleteClick = (user:User) => {
+
+    const handleDeleteClick = (user : User) => {
         setSelectedUser(user);
         setIsDialogOpen(true);
-        handleDelete(user);
-      };
-  
-      const handleConfirmDelete = async () => {
+      
+    };
+
+    const handleConfirmDelete = async () => {
+        debugger
         if (!selectedUser) return;
-      
+        debugger
         try {
-          const response = await api.delete(`/User/DeleteUser?id=${selectedUser.userId}`);
-          if (response.status === 200 || response.status === 201) {
-            setUsers(users.filter((u) => u.userId !== selectedUser.userId));
-            showSuccessToast('User Deleted Successfully');
-          } else {
-            showErrorToast('User Deletion Failed');
-          }
+            const response = await api.delete(`/User/DeleteUser?id=${selectedUser.userId}`);
+            if (response.status === 200 || response.status === 201) {
+                setUsers(users.filter((u) => u.userId !== selectedUser.userId));
+                handleDelete(response.data);
+                showSuccessToast('User Deleted Successfully');
+            } else {
+                showErrorToast('User Deletion Failed');
+            }
         } catch (error) {
-          console.error('Error deleting user:', error);
-          showErrorToast('An error occurred');
+            console.error('Error deleting user:', error);
+            showErrorToast('An error occurred');
         } finally {
-          setIsDialogOpen(false);
+            setIsDialogOpen(false);
         }
-      };
-      
-  
+    };
+
+
     const handleCancelDelete = () => {
-      setIsDialogOpen(false);
-      setSelectedUser(null);
+        debugger
+        setIsDialogOpen(false);
     };
     const renderRow = (item: User) => {
         return (
@@ -210,36 +212,37 @@ const UserGrid = () => {
                 </td>
                 <td>
                     <div className="flex items-center gap-2">
-          <Link href={`/Grid/UserGrid/${item.userId}`}>
-            {/* Add an icon or user details here */}
-          </Link>
-          {role === 'admin' && (
-            <>
-              <button
-                className="text-success hover:scale-150"
-                onClick={() => handleEdit(item)}
-              >
-                <FaEdit />
-              </button>
-              <button
-                className="text-error hover:scale-150"
-                onClick={() => handleDeleteClick(item)}
-              >
-                <FaTrash />
-              </button>
-            </>
-          )}
-        
-      <ConfirmDialog
-        isOpen={isDialogOpen}
-        title="Confirm Deletion"
-        message={`Are you sure you want to delete ${selectedUser?.userName}?`}
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCancelDelete}
-      />
-                        
+                        <Link href={`/Grid/UserGrid/${item.userId}`}>
+                            {/* Add an icon or user details here */}
+                        </Link>
+                        {role === 'admin' && (
+                            <>
+                                <button
+                                    className="text-success hover:scale-150"
+                                    onClick={() => handleEdit(item)}
+                                >
+                                    <FaEdit />
+                                </button>
+                                <button
+                                    className="text-error hover:scale-150"
+                                    onClick={() => handleDeleteClick(item)}
+                                >
+                                    <FaTrash />
+                                </button>
+                            </>
+                        )}
+
+                        <ConfirmDialog
+
+                            isOpen={isDialogOpen}
+                            title="Confirm Deletion"
+                            message={`Are you sure you want to delete ${selectedUser?.userName}?`}
+                            onConfirm={handleConfirmDelete}
+                            onCancel={handleCancelDelete}
+                        />
+
                     </div>
-                    
+
                 </td>
             </tr>
         );
