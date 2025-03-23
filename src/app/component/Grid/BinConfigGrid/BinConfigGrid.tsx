@@ -18,9 +18,7 @@ const userColumns = [
     { name: "BinCode", field: "binCode", className: "hidden md:table-cell", visible: true },
     { name: "BinName", field: "binName", className: "hidden md:table-cell", visible: true },
     { name: "Prefix", field: "prefix", className: "hidden md:table-cell", visible: true },
-    { name: "WareHouse", field: "whsCode", className: "hidden md:table-cell", visible: true },
-    { name: "Starting No", field: "startNo", className: "hidden md:table-cell", visible: true },
-    { name: "Ending No", field: "endNo", className: "hidden md:table-cell", visible: true },
+    { name: "WareHouse", field: "whsCode", className: "hidden md:table-cell", visible: true },    
     { name: 'Actions', field: 'actions', visible: true },];
 
 const UserGrid = () => {
@@ -44,9 +42,7 @@ const UserGrid = () => {
                     binCode: binConfig.binCode,
                     binName: binConfig.binName,
                     prefix: binConfig.prefix,
-                    whsCode: binConfig.whsCode,
-                    startNo: binConfig.startNo,
-                    endNo: binConfig.endNo,
+                    whsCode: binConfig.whsCode,                    
                 }));
                 setBinConfg(filteredBinConfig);
             } catch (error) {
@@ -122,9 +118,7 @@ const UserGrid = () => {
                 <td className="hidden md:table-cell">{item.binCode}</td>
                 <td className="hidden md:table-cell">{item.binName}</td>
                 <td className="hidden md:table-cell">{item.prefix}</td>
-                <td className="hidden md:table-cell">{item.whsCode}</td>
-                <td className="hidden md:table-cell">{item.startNo}</td>
-                <td className="hidden md:table-cell">{item.endNo}</td>
+                <td className="hidden md:table-cell">{item.whsCode}</td>               
                 <td>
                     <div className="flex items-center gap-2">
                         <Link href={`/Grid/UserGrid/${item.binConfigId}`}>

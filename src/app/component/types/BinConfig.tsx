@@ -5,6 +5,4 @@ export interface BinCnfg {
     binName: string;
     prefix: string;
     whsCode: string[];
-    startNo:number;
-    endNo:number;
 }
