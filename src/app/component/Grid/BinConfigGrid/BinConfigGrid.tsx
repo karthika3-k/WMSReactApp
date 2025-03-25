@@ -1,97 +1,366 @@
-"use client"
+// "use client";
+// import api from "@/app/services/api";
+// import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
+// import { useRouter } from "next/navigation";
+// import { useEffect, useState } from "react";
+// import Loader from "../../Common/Loader";
+// import { FaEdit, FaTrash } from "react-icons/fa";
+// import Table from "../../Table/Table";
+// import Pagination from "../../Pagination/Pagination";
+// import Grid from "../Grid";
+// import BinConfigForm from "../../Form/BinConfigForm";
+// import { BinCnfg } from "@/app/component/types/BinConfig";
+
+// let role = "admin";
+
+// const userColumns = [
+//     { name: "Warehouse", field: "whsCode", className: "hidden md:table-cell", visible: true },
+//     { name: "Is Active", field: "isActive", className: "hidden md:table-cell", visible: true },
+//     { name: "CreatedOn", field: "createdOn", className: "hidden md:table-cell", visible: true },
+//     { name: "Actions", field: "actions", visible: true },
+// ];
+
+// const BinConfigGrid = () => {
+//     const [binConfg, setBinConfg] = useState<BinCnfg[]>([]);
+//     const [binConfgList, setBinConfgList] = useState<BinCnfg[]>([]);
+//     const [isLoading, setIsLoading] = useState<boolean>(false);
+//     const [currentPage, setCurrentPage] = useState(1);
+//     const [searchTerm, setSearchTerm] = useState<string>("");
+//     const [selectedBinConfig, setSelectedBinConfig] = useState<BinCnfg | null>(null);
+
+//     const rowPerPage = 7;
+//     const router = useRouter();
+
+//     // Fetch BinConfigs List
+//     useEffect(() => {
+//         const fetchBinConfigs = async () => {
+//             setIsLoading(true);
+//             try {
+//                 const response = await api.get("/BinConfig/BinConfigList");
+//                 const data = response.data;
+//                 const filteredBinConfig = data.map((binConfig: any) => ({
+//                     binConfigId: binConfig.binConfigId,
+//                     binCode: binConfig.binCode,
+//                     binName: binConfig.binName,
+//                     prefix: binConfig.prefix,
+//                     whsCode: binConfig.whsCode,
+//                     isActive: binConfig.isActive,
+//                     createdOn: binConfig.createdOn,
+//                 }));
+//                 setBinConfg(filteredBinConfig);
+//             } catch (error) {
+//                 console.error("Error fetching BinConfigs:", error);
+//             }
+//             setIsLoading(false);
+//         };
+//         fetchBinConfigs();
+//     }, []);
+
+//     // Fetch BinConfig List by Warehouse Code
+//     const fetchBinConfigByWhsCode = async (whsCode: string) => {
+//         setIsLoading(true);
+//         try {
+//             const response = await api.get(`/BinConfig/BinConfigListbyWhsCode?whsCode=${whsCode}`);
+//             const data = response.data;
+//             const filteredBinConfigLists = data.map((binConfig: any) => ({
+//                 binConfigId: binConfig.binConfigId,
+//                 binCode: binConfig.binCode,
+//                 binName: binConfig.binName,
+//                 prefix: binConfig.prefix,
+//                 whsCode: binConfig.whsCode,
+//                 isActive: binConfig.isActive,
+//                 createdOn: binConfig.createdOn,
+//             }));
+//             setBinConfgList(filteredBinConfigLists);
+//         } catch (error) {
+//             console.error("Error fetching BinConfig by WhsCode:", error);
+//         }
+//         setIsLoading(false);
+//     };
+
+//     // UseEffect to fetch BinConfig based on selectedBinConfig's whsCode
+//     useEffect(() => {
+//         if (selectedBinConfig && selectedBinConfig.whsCode) {
+//             const whsCode = Array.isArray(selectedBinConfig.whsCode)
+//                 ? selectedBinConfig.whsCode.join(", ")
+//                 : selectedBinConfig.whsCode;
+//             fetchBinConfigByWhsCode(whsCode);
+//         }
+//     }, [selectedBinConfig]);
+
+//     // Handle Add BinConfig
+//     const handleAddBinConfig = (newBin: BinCnfg) => {
+//         setBinConfgList((prevUsers) => [newBin, ...prevUsers]);
+//         let whsCode = Array.isArray(newBin.whsCode) ? newBin.whsCode.join(", ") : newBin.whsCode;
+//         fetchBinConfigByWhsCode(whsCode);
+//     };
+
+//     // Handle Edit BinConfig
+//     const handleEdit = (binCnfg: BinCnfg) => {
+//         setSelectedBinConfig(binCnfg);
+//         setTimeout(() => {
+//             document.getElementById("my-drawer-4")?.click();
+//         }, 100);
+//     };
+
+   
+//     const handleDelete = async (binCnfg: BinCnfg) => {
+//         try {
+//             const response = await api.delete(`/BinConfig/DeleteBinConfig?id=${binCnfg.binConfigId}`);
+//             if (response.status === 200 || response.status === 201) {
+//                 showSuccessToast("BinConfig Deleted Successfully");
+//                 setBinConfg(binConfg.filter((config) => config.binConfigId !== binCnfg.binConfigId));
+    
+//                 const whsCode = Array.isArray(binCnfg.whsCode) ? binCnfg.whsCode.join(", ") : binCnfg.whsCode;
+    
+//                 fetchBinConfigByWhsCode(whsCode); 
+//             } else {
+//                 showErrorToast("BinConfig Deletion Failed");
+//             }
+//         } catch (error) {
+//             console.error("Error deleting BinConfig:", error);
+//             showErrorToast("Error Deleting BinConfig");
+//         }
+//     };
+    
+//     // Filtered BinConfig data
+//     const filteredBinConfigs = binConfg.filter((binConfig) =>
+//         Object.values(binConfig)
+//             .join(" ")
+//             .toLowerCase()
+//             .includes(searchTerm.toLowerCase())
+//     );
+
+//     if (isLoading) return <Loader />;
+
+//     // Paginate Data
+//     const reversedUsers = [...filteredBinConfigs].reverse();
+//     const indexOfLastRow = currentPage * rowPerPage;
+//     const indexOfFirstRow = indexOfLastRow - rowPerPage;
+//     const currentData = reversedUsers.slice(indexOfFirstRow, indexOfLastRow);
+
+//     // Render Table Row
+//     const renderRow = (item: BinCnfg) => {
+//         return (
+//             <tr key={item.binConfigId} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-accent/20">
+//                 <td className="hidden md:table-cell">{item.whsCode}</td>
+//                 <td className="hidden md:table-cell">
+//                     <button className={`btn btn-soft text-[16px] font-medium ${item.isActive ? "btn-success" : "btn-error"}`}>
+//                         {item.isActive ? "Active" : "Inactive"}
+//                     </button>
+//                 </td>
+//                 <td className="hidden md:table-cell">
+//                     {item.createdOn ? new Date(item.createdOn.replace(" ", "T")).toLocaleString() : "N/A"}
+//                 </td>
+//                 <td>
+//                     <div className="flex items-center gap-2">
+//                         {role === "admin" && (
+//                             <button onClick={() => handleEdit(item)} className="text-success hover:scale-150">
+//                                 <FaEdit />
+//                             </button>
+//                         )}
+//                         {role === "admin" && (
+//                             <button onClick={() => handleDelete(item)} className="text-error hover:scale-150">
+//                                 <FaTrash />
+//                             </button>
+//                         )}
+//                     </div>
+//                 </td>
+//             </tr>
+//         );
+//     };
+
+//     return (
+//         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
+//             {/* Header */}
+//             <Grid
+//                 header="All BinConfig"
+//                 role="admin"
+//                 FormComponent={<BinConfigForm onAddUser={handleAddBinConfig} selectedBinConfig={binConfgList || undefined} />}
+//                 searchTerm={searchTerm}
+//                 setSearchTerm={setSearchTerm}
+//             />
+//             {/* Table */}
+//             <Table columns={userColumns} renderRow={renderRow} data={currentData} />
+//             {/* Pagination */}
+//             <Pagination data={binConfg} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+//         </div>
+//     );
+// };
+
+// export default BinConfigGrid;
+
+"use client";
 import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Loader from "../../Common/Loader";
-import { FaEdit, FaPlus, FaTrash } from "react-icons/fa"
+import { FaEdit, FaTrash } from "react-icons/fa";
 import Table from "../../Table/Table";
 import Pagination from "../../Pagination/Pagination";
-import Link from "next/link";
 import Grid from "../Grid";
 import BinConfigForm from "../../Form/BinConfigForm";
 import { BinCnfg } from "@/app/component/types/BinConfig";
+import Link from "next/link";
+import ConfirmDialog from "../../Common/ConfirmDialog";
 
 let role = "admin";
-const userColumns = [
-    // { name: "User Id", field: "userId", visible: true },
-    { name: "BinCode", field: "binCode", className: "hidden md:table-cell", visible: true },
-    { name: "BinName", field: "binName", className: "hidden md:table-cell", visible: true },
-    { name: "Prefix", field: "prefix", className: "hidden md:table-cell", visible: true },
-    { name: "WareHouse", field: "whsCode", className: "hidden md:table-cell", visible: true },    
-    { name: 'Actions', field: 'actions', visible: true },];
 
-const UserGrid = () => {
+const userColumns = [
+    { name: "Warehouse", field: "whsCode", className: "hidden md:table-cell", visible: true },
+    { name: "Is Active", field: "isActive", className: "hidden md:table-cell", visible: true },
+    { name: "CreatedOn", field: "createdOn", className: "hidden md:table-cell", visible: true },
+    { name: "Actions", field: "actions", visible: true },
+];
+
+const BinConfigGrid = () => {
     const [binConfg, setBinConfg] = useState<BinCnfg[]>([]);
+    const [binConfgList, setBinConfgList] = useState<BinCnfg[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [currentPage, setCurrentPage] = useState(1); // Add page state
-    const [searchTerm, setSearchTerm] = useState(""); // Add a search term state
-    const drawerCheckboxRef = useRef<HTMLInputElement>(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const [selectedBinConfig, setSelectedBinConfig] = useState<BinCnfg | null>(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const rowPerPage = 7;
+    const router = useRouter();
+
+    // Fetch BinConfigs List
     useEffect(() => {
         const fetchBinConfigs = async () => {
             setIsLoading(true);
             try {
-                const response = await api.get('/BinConfig/BinConfigList');
-                const data = response.data;
+                const response = await api.get("/BinConfig/BinConfigList");
                 debugger
+                const data = response.data;
                 const filteredBinConfig = data.map((binConfig: any) => ({
                     binConfigId: binConfig.binConfigId,
                     binCode: binConfig.binCode,
                     binName: binConfig.binName,
                     prefix: binConfig.prefix,
-                    whsCode: binConfig.whsCode,                    
+                    whsCode: binConfig.whsCode,
+                    isActive: binConfig.isActive,
+                    createdOn: binConfig.createdOn,
                 }));
+                debugger
                 setBinConfg(filteredBinConfig);
             } catch (error) {
-                console.error("Error fetching users:", error);
+                console.error("Error fetching BinConfigs:", error);
             }
             setIsLoading(false);
         };
         fetchBinConfigs();
     }, []);
 
-    const router = useRouter();
-
-    // const handleAddClick = () => {
-    //     router.push('/pages/adduser');
-    // };
-    const handleEdit = (binCnfg: BinCnfg) => {
-        setSelectedBinConfig(binCnfg);
-        debugger;
-        setTimeout(() => {
-            document.getElementById('my-drawer-4')?.click();
-        }, 100);
-        
+    // Fetch BinConfig List by Warehouse Code
+    const fetchBinConfigByWhsCode = async (whsCode: string) => {
+        debugger
+        setIsLoading(true);
+        try {
+            const response = await api.get(`/BinConfig/BinConfigListbyWhsCode?whsCode=${whsCode}`);
+            debugger
+            const data = response.data;
+            const filteredBinConfigLists = data.map((binConfig: any) => ({
+                binConfigId: binConfig.binConfigId,
+                binCode: binConfig.binCode,
+                binName: binConfig.binName,
+                prefix: binConfig.prefix,
+                whsCode: binConfig.whsCode,
+                isActive: binConfig.isActive,
+                createdOn: binConfig.createdOn,
+            }));
+            setBinConfgList(filteredBinConfigLists);
+        } catch (error) {
+            console.error("Error fetching BinConfig by WhsCode:", error);
+        }
+        setIsLoading(false);
     };
 
+    // UseEffect to fetch BinConfig based on selectedBinConfig's whsCode
+    useEffect(() => {
+        debugger
+        if (selectedBinConfig && selectedBinConfig.whsCode) {
+            const whsCode = Array.isArray(selectedBinConfig.whsCode)
+                ? selectedBinConfig.whsCode.join(", ")
+                : selectedBinConfig.whsCode;
+                debugger
+            fetchBinConfigByWhsCode(whsCode);
+        }
+    }, [selectedBinConfig]);
+
+    // Handle Add BinConfig
+    const handleAddBinConfig = (newBin: BinCnfg) => {
+        setBinConfgList((prevUsers) => [newBin, ...prevUsers]);
+        let whsCode = Array.isArray(newBin.whsCode) ? newBin.whsCode.join(", ") : newBin.whsCode;
+        fetchBinConfigByWhsCode(whsCode);
+        router.refresh();
+    };
+
+    // Handle Edit BinConfig
+    const handleEdit = (binCnfg: BinCnfg) => {
+        debugger
+        setSelectedBinConfig(binCnfg);
+        setTimeout(() => {
+            document.getElementById("my-drawer-4")?.click();
+        }, 100);
+    };
+   
     const handleDelete = async (binCnfg: BinCnfg) => {
         try {
-            const values = {
-                userId: binCnfg.binConfigId,
-            };
-            const response = await api.delete(`/BinConfig/DeleteBinConfig?id=${values.userId}`);
+            const response = await api.delete(`/BinConfig/DeleteBinConfig?whsCode=${binCnfg.whsCode}`);
             debugger
-            if (response.status === 200 || response.status == 201) {
-                if (response.data !== null) {
-                    showSuccessToast('User Deleted Successfully');
-                    router.refresh();
-                } else {
-                    showErrorToast('User Deletion Failed');
-                }
+            if (response.status === 200 || response.status === 201) {
+                showSuccessToast("BinConfig Deleted Successfully");
+                setBinConfg(binConfg.filter((config) => config.whsCode !== binCnfg.whsCode));
+    
+                const whsCode = Array.isArray(binCnfg.whsCode) ? binCnfg.whsCode.join(", ") : binCnfg.whsCode;
+    
+                fetchBinConfigByWhsCode(whsCode); 
             } else {
-                showErrorToast('Error');
+                showErrorToast("BinConfig Deletion Failed");
             }
-            setBinConfg(binConfg.filter((u) => u.binConfigId !== binCnfg.binConfigId));
         } catch (error) {
-            console.error("Error deleting user:", error);
+            console.error("Error deleting BinConfig:", error);
+            showErrorToast("Error Deleting BinConfig");
         }
     };
+    
+    const handleConfirmDelete = async () => {
+        if (!selectedBinConfig) return;
 
-    const filteredUsers = binConfg.filter((binConfg) =>
-        Object.values(binConfg)
+        try {
+            const response = await api.delete(`/BinConfig/DeleteBinConfig?id=${selectedBinConfig.binConfigId}`);
+            if (response.status === 200 || response.status === 201) {
+                showSuccessToast("BinConfig Deleted Successfully");
+                setBinConfg(binConfg.filter((config) => config.binConfigId !== selectedBinConfig.binConfigId));
+    
+                const whsCode = Array.isArray(selectedBinConfig.whsCode) ? selectedBinConfig.whsCode.join(", ") : selectedBinConfig.whsCode;
+    
+                fetchBinConfigByWhsCode(whsCode); 
+            } else {
+                showErrorToast("BinConfig Deletion Failed");
+            }
+        } catch (error) {
+            console.error("Error deleting BinConfig:", error);
+            showErrorToast("Error Deleting BinConfig");
+        }
+        finally {
+            setIsDialogOpen(false);
+        }
+    };
+    const handleDeleteClick = (binCnfg: BinCnfg) => {
+            setSelectedBinConfig(binCnfg);
+            setIsDialogOpen(true);
+            handleDelete(binCnfg);
+        };
+        const handleCancelDelete = () => {
+            setIsDialogOpen(false);
+            setSelectedBinConfig(null);
+        };
+    // Filtered BinConfig data
+    const filteredBinConfigs = binConfg.filter((binConfig) =>
+        Object.values(binConfig)
             .join(" ")
             .toLowerCase()
             .includes(searchTerm.toLowerCase())
@@ -99,48 +368,67 @@ const UserGrid = () => {
 
     if (isLoading) return <Loader />;
 
+    // Paginate Data
+    const reversedUsers = [...filteredBinConfigs].reverse();
     const indexOfLastRow = currentPage * rowPerPage;
     const indexOfFirstRow = indexOfLastRow - rowPerPage;
-    const currentData = filteredUsers.slice(indexOfFirstRow, indexOfLastRow);
+    const currentData = reversedUsers.slice(indexOfFirstRow, indexOfLastRow);
+
+    // Render Table Row
     const renderRow = (item: BinCnfg) => {
         return (
             <tr key={item.binConfigId} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-accent/20">
-                {/* <td className="flex items-center gap-4 p-4">
-                    <Image src="/userlogo.png"
-                        alt=""
-                        width={40}
-                        height={40}
-                        className="md:hidden xl:block w-10 h-10 rounded-full object-cover" />
-                    <div className="flex flex-col">
-                        <h3 className="font-semibold">{item.userName}</h3>
-                    </div>
-                </td> */}
-                <td className="hidden md:table-cell">{item.binCode}</td>
-                <td className="hidden md:table-cell">{item.binName}</td>
-                <td className="hidden md:table-cell">{item.prefix}</td>
-                <td className="hidden md:table-cell">{item.whsCode}</td>               
+                <td className="hidden md:table-cell">{item.whsCode}</td>
+                <td className="hidden md:table-cell">
+                    <button className={`btn btn-soft text-[16px] font-medium ${item.isActive ? "btn-success" : "btn-error"}`}>
+                        {item.isActive ? "Active" : "Inactive"}
+                    </button>
+                </td>
+                <td className="hidden md:table-cell">
+                    {item.createdOn ? new Date(item.createdOn.replace(" ", "T")).toLocaleString() : "N/A"}
+                </td>
                 <td>
-                    <div className="flex items-center gap-2">
-                        <Link href={`/Grid/UserGrid/${item.binConfigId}`}>
-                            {/* <button className="w-7 h-7 flex items-center justify-center rounded-full bg-sky-100"> */}
-                            {/* Add an icon if necessary */}
-                            {/* </button> */}
-                        </Link>
+                    {/* <div className="flex items-center gap-2">
                         {role === "admin" && (
-                            <button onClick={() => handleEdit(item)} className="btn btn-outline btn-accent">
+                            <button onClick={() => handleEdit(item)} className="text-success hover:scale-150">
                                 <FaEdit />
                             </button>
-
                         )}
-
                         {role === "admin" && (
-                            <button
-                                onClick={() => handleDelete(item)}
-                                className="btn btn-outline btn-error"
-                            >
+                            <button onClick={() => handleDelete(item)} className="text-error hover:scale-150">
                                 <FaTrash />
                             </button>
                         )}
+                    </div> */}
+                     <div className="flex items-center gap-2">
+                        <Link href={`/Grid/BinConfigGrid/${item.binConfigId}`}>
+                            {/* Add an icon or user details here */}
+                        </Link>
+                        {role === 'admin' && (
+                            <>
+                                <button
+                                    className="text-success hover:scale-150"
+                                    onClick={() => handleEdit(item)}
+                                >
+                                    <FaEdit />
+                                </button>
+                                <button
+                                    className="text-error hover:scale-150"
+                                    onClick={() => handleDeleteClick(item)}
+                                >
+                                    <FaTrash />
+                                </button>
+                            </>
+                        )}
+
+                        <ConfirmDialog
+                            isOpen={isDialogOpen}
+                            title="Confirm Deletion"
+                            message={`Are you sure you want to delete ${selectedBinConfig?.whsCode}?`}
+                            onConfirm={handleConfirmDelete}
+                            onCancel={handleCancelDelete}
+                        />
+
                     </div>
                 </td>
             </tr>
@@ -149,15 +437,20 @@ const UserGrid = () => {
 
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
-            {/* TOP */}
-            <Grid header="All BinConfig" role="admin" FormComponent={<BinConfigForm binConfigData={selectedBinConfig || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-            {/* LIST */}
+            {/* Header */}
+            <Grid
+                header="All BinConfig"
+                role="admin"
+                FormComponent={<BinConfigForm onAddUser={handleAddBinConfig} selectedBinConfig={binConfgList || undefined} />}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+            />
+            {/* Table */}
             <Table columns={userColumns} renderRow={renderRow} data={currentData} />
-            {/* PAGINATION */}
+            {/* Pagination */}
             <Pagination data={binConfg} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
-
         </div>
     );
 };
 
-export default UserGrid;
+export default BinConfigGrid;

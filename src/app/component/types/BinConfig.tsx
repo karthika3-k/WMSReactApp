@@ -5,4 +5,6 @@ export interface BinCnfg {
     binName: string;
     prefix: string;
     whsCode: string[];
+    isActive: boolean;
+    createdOn:string;
 }
