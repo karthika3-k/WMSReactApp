@@ -333,15 +333,15 @@ type Warehouse = {
 interface BinConfigFormProps {
     binConfigData?: any | null;
     onAddUser: (newBin: BinCnfg) => void;
-    selectedBinConfig: BinCnfg[];  // Add this line to include selectedBinConfig
+    selectedBinConfig: BinCnfg[] | null;
 }
 
 const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, selectedBinConfig }) => {
     const [wareHouse, setWareHouse] = useState<Warehouse[]>([]);
     const [formData, setFormData] = useState({
-        binConfigId: 0,  // Assume binConfigId is 0 for new records
+        binConfigId: 0,
         whsCode: '',
-        isActive: true,  // Shared isActive for all rows
+        isActive: true,
         createdBy: user,
         createdOn: new Date().toISOString(),
         updatedBy: '',
@@ -376,25 +376,25 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
     // }, [selectedBinConfig]);
     useEffect(() => {
         if (selectedBinConfig && selectedBinConfig.length > 0) {
-            // Create an array of 5 bin configurations, including default empty values
+
             const updatedBinConfigs = ['SL1Code', 'SL2Code', 'SL3Code', 'SL4Code', 'SL5Code'].map(binCode => {
-                // Check if selectedBinConfig has the current binCode and return the data, otherwise return an empty object
+
                 const binConfig = selectedBinConfig.find(item => item.binCode === binCode);
                 return {
                     binCode: binCode,
-                    binName: binConfig ? binConfig.binName : '', // If there's no data, use empty string
-                    prefix: binConfig ? binConfig.prefix : ''  // If there's no data, use empty string
+                    binName: binConfig ? binConfig.binName : '',
+                    prefix: binConfig ? binConfig.prefix : ''
                 };
             });
 
             setFormData({
                 ...formData,
-                binConfigId: selectedBinConfig[0].binConfigId,  // Assuming binConfigId is same for all
+                binConfigId: selectedBinConfig[0].binConfigId,
                 whsCode: Array.isArray(selectedBinConfig[0].whsCode) ? selectedBinConfig[0].whsCode[0] : selectedBinConfig[0].whsCode,
+                isActive: selectedBinConfig[0].isActive,
                 binConfigs: updatedBinConfigs,
             });
         } else {
-            // If no selectedBinConfig, ensure all 5 bin codes are present
             setFormData({
                 ...formData,
                 binConfigs: [
@@ -407,7 +407,6 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
             });
         }
     }, [selectedBinConfig]);
-
 
     const wareHouseTypes = async () => {
         try {
@@ -508,7 +507,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
 
             try {
                 let response;
-              debugger
+                debugger
                 if (formData.binConfigId > 0) {
                     debugger
                     response = await api.put(`/BinConfig/UpdateBinConfig`, BinConfigRequest);
@@ -525,7 +524,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                         setTimeout(() => {
                             // handleCancel(); // Handle form cancel logic
                             console.log(message);
-                            onAddUser(response.data);  
+                            onAddUser(response.data);
                         }, 1000);
                         // showSuccessToast(`BinConfig ${formData.binConfigId > 0 ? 'Updated' : 'Created'} Successfully!`);
                         // handleCancel();
@@ -588,8 +587,8 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
     };
     return (
         <div className="w-full p-10 text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden p-4">
-           
-           <button
+
+            <button
                 className="text-red-500 text-3xl absolute top-4 right-4 p-3 rounded-full  hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"
                 onClick={handleBackClick}
                 aria-label="Add User"
@@ -597,7 +596,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                 <span aria-hidden="true">&times;</span>
             </button>
 
-            <h2 className="text-xl font-medium text-center text-black mb-8">
+            <h2 className="text-xl font-medium text-left text-black mb-8">
                 {formData.binConfigId > 0 ? "Update" : "Add"} Bin Config
             </h2>
 
