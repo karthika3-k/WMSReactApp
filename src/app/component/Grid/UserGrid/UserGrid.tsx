@@ -118,7 +118,7 @@ const UserGrid = () => {
         }, 100);
     };
 
-    const   handleDelete = async (user: User) => {
+    const handleDelete = async (user: User) => {
         try {
             debugger
             const values = {
@@ -180,6 +180,7 @@ const UserGrid = () => {
 
     if (isLoading) return <Loader />;
 
+    
     const reversedUsers = [...filteredUsers].reverse();
 
     const indexOfLastRow = currentPage * rowPerPage;

@@ -511,6 +511,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                 } else {
                     debugger
                     response = await api.post('/BinConfig/CreateBinConfig', BinConfigRequest);
+                    debugger
                 }
 
                 // Handle API response
@@ -523,12 +524,12 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                             console.log(message);
                             onAddUser(response.data);
                         }, 1000);
-                        // showSuccessToast(`BinConfig ${formData.binConfigId > 0 ? 'Updated' : 'Created'} Successfully!`);
-                        // handleCancel();
+
                     } else {
                         showErrorToast(`BinConfig ${formData.binConfigId > 0 ? 'Updated' : 'Created'} failed.`);
                     }
                 } else {
+                    console.log(response.data);
                     showErrorToast(`BinConfig ${formData.binConfigId > 0 ? 'Updated' : 'Created'} failed.`);
                 }
             } catch (error) {
@@ -540,9 +541,9 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
 
     const handleCancel = () => {
         setFormData({
-            binConfigId: 0,  // Reset binConfigId to 0 when canceling
+            binConfigId: 0,
             whsCode: '',
-            isActive: false,
+            isActive: true,
             createdBy: user,
             createdOn: new Date().toISOString(),
             updatedBy: '',
@@ -560,7 +561,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
         setFormData({
             binConfigId: 0,  // Reset binConfigId to 0 when canceling
             whsCode: '',
-            isActive: false,
+            isActive: true,
             createdBy: user,
             createdOn: new Date().toISOString(),
             updatedBy: '',
@@ -573,31 +574,28 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                 { binCode: 'SL5Code', binName: '', prefix: '' },
             ]
         });
-        // Retrieve the checkbox element by its ID
         const drawerCheckbox = document.getElementById('my-drawer-4') as HTMLInputElement | null;
 
-        // Check if the element exists
         if (drawerCheckbox) {
-            // Set the checked property to false to close the drawer
             drawerCheckbox.checked = false;
         }
     };
     return (
-        <div className="w-full p-10 text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden p-4">
+        <div className="w-full text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden relative">
+            <div className="flex justify-between items-center p-2">
+            <h2 className="text-xl font-medium text-left text-black ml-2">
+                    {formData.binConfigId > 0 ? "Update" : "Add"} Bin Config
+                </h2>
+                <button
+                   className="text-red-500 text-3xl rounded-full hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"
+                    onClick={handleBackClick}
+                    aria-label="Add User"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
 
-            <button
-                className="text-red-500 text-3xl absolute top-4 right-4 p-3 rounded-full  hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"
-                onClick={handleBackClick}
-                aria-label="Add User"
-            >
-                <span aria-hidden="true">&times;</span>
-            </button>
-
-            <h2 className="text-xl font-medium text-left text-black mb-8">
-                {formData.binConfigId > 0 ? "Update" : "Add"} Bin Config
-            </h2>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 p-4">
                 <div className="grid grid-cols-1 gap-6">
 
                     {/* Warehouse */}
@@ -609,7 +607,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                                 name="whsCode"
                                 value={formData.whsCode}
                                 onChange={(e) => setFormData({ ...formData, whsCode: e.target.value })}
-                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-black-300 focus:ring-indigo-500 focus:outline-none"
+                                className="input input-md w-83 p-2 h-13  rounded-lg border-2 border-black-300 focus:ring-indigo-500 focus:outline-none"
                                 required
                             >
                                 <option value="" disabled>Select Warehouse Code</option>
@@ -635,7 +633,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                                         name="binName"
                                         value={binConfig.binName}
                                         onChange={(e) => handleInputChange(e, index)}
-                                        className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:ring-indigo-500 focus:outline-none"
+                                        className="input input-md w-half p-2 h-13  rounded-lg border-2 border-gray-300 focus:ring-indigo-500 focus:outline-none"
                                         placeholder="Bin Name"
                                         required={index === 0} // Only required for SL1Code
                                     />
@@ -655,7 +653,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                                         name="prefix"
                                         value={binConfig.prefix}
                                         onChange={(e) => handleInputChange(e, index)}
-                                        className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:ring-indigo-500 focus:outline-none"
+                                        className="input input-md w-half p-2 h-13  rounded-lg border-2 border-gray-300 focus:ring-indigo-500 focus:outline-none"
                                         placeholder="Prefix"
                                         required={index === 0} // Only required for SL1Code
                                     />

@@ -10,12 +10,12 @@ interface DeviceFormProps {
     deviceData?: Device | null;
     onAddDevice: (newDevice: Device) => void;
 }
-const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData, onAddDevice}) => {
+const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData, onAddDevice }) => {
     const [formData, setFormData] = useState({
         deviceId: 0,
         username: '',
         devicenumber: '',
-       
+
     });
 
     const [errors, setErrors] = useState({
@@ -33,13 +33,13 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData, onAddDevice}) => {
                     deviceId: deviceData.deviceId || 0,
                     username: deviceData.userName || "",
                     devicenumber: deviceData.deviceSerialNo || "",
-                    
+
                 });
             }
         }
     }, [deviceData]);
 
-  
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
 
@@ -54,7 +54,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData, onAddDevice}) => {
         console.log('Device Data:', formData);
         debugger;
         let deviceRequest;
-         deviceRequest = {
+        deviceRequest = {
             deviceId: formData.deviceId,
             username: formData.username,
             deviceSerialNo: formData.devicenumber, // ✅ Ensured consistent naming
@@ -99,7 +99,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData, onAddDevice}) => {
             else {
                 response = await api.post('/Device/CreateDevice', deviceRequest);
             }
-            
+
 
             if (response.status === 200 || response.status === 201) {
                 const message = `Device ${formData.deviceId > 0 ? 'Updated' : 'Created'} Successfully!`;
@@ -143,21 +143,21 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData, onAddDevice}) => {
     };
 
     return (
-        <div className="w-full p-10 text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden bg-slate-100 shadow-xl max-w-4xl mx-auto mt-10">
+        <div className="w-full text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden relative">
+            <div className="flex justify-between items-center p-2">
+            <h2 className="text-xl font-medium text-left text-black ml-2">
+                    {formData.deviceId > 0 ? 'Update Device' : ' Add New Device'}
+                </h2>
+                <button
+                    className="text-red-500 text-3xl rounded-full hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"
+                    onClick={handleBackClick}
+                    aria-label="Back"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
 
-            <button
-                className="text-red-500 text-3xl absolute top-4 right-4 p-3 rounded-full hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"
-                onClick={handleBackClick}
-                aria-label="Back"
-            >
-                <span aria-hidden="true">&times;</span>
-            </button>
-
-            <h2 className="text-xl font-medium text-center text-black mb-8">
-                 {formData.deviceId > 0 ? 'Update Device' : ' Add New Device'}
-            </h2>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 p-4">
                 <div className="grid grid-cols-1 gap-6">
 
                     {/* Username */}
@@ -170,7 +170,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData, onAddDevice}) => {
                                 name="username"
                                 value={formData.username}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Enter Your UserName"
                                 required
                             />
@@ -187,7 +187,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData, onAddDevice}) => {
                                 name="devicenumber"
                                 value={formData.devicenumber}
                                 onChange={handleInputChange}
-                               className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Enter Your Device No"
                                 required
                             />

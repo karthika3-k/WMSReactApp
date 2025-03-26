@@ -75,7 +75,10 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
 
         fetchDevices();
     }, []);
-
+    // Reset pagination when the search term changes
+    useEffect(() => {
+        setCurrentPage(1); // Reset to first page when search term changes
+    }, [searchTerm]);
     const router = useRouter();
 
     const handleAddDevice = (newDevice: Device) => {
@@ -141,7 +144,7 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
         } catch (error) {
             console.error('Error deleting user:', error);
             showErrorToast('An error occurred');
-        }finally{
+        } finally {
             setIsDialogOpen(false);
         }
     };
@@ -208,7 +211,7 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
             {/* LIST */}
             <Table columns={deviceColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}
-            <Pagination data={devices} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            <Pagination data={filteredUsers} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
         </div>
     );
 };

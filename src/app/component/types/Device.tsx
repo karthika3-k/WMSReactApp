@@ -1,8 +1,5 @@
-export interface Device {
-
-   
+export interface Device {   
     deviceId: number;
     userName: string;
-    deviceSerialNo: string;
-    
+    deviceSerialNo: string;    
 }

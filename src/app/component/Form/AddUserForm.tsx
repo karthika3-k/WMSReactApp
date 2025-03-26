@@ -6,6 +6,8 @@ import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 import { User } from "@/app/component/types/User";
 import { ToastContainer } from "react-toastify";
 import UserGrid from "../Grid/UserGrid/UserGrid";
+import { Warehouse } from "../types/Warehouse";
+import { Device } from "../types/Device";
 //const user = localStorage.getItem("userName");
 let user = null
 if (typeof window !== "undefined") {
@@ -49,6 +51,8 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
     const router = useRouter();
     const [parsedUserData, setParsedUserData] = useState<UserData | null>(null);
     const searchParams = useSearchParams();
+    const [wareHouse, setWareHouse] = useState<Warehouse[]>([]);
+    const [device, setdevice] = useState<Device[]>([]);
 
     const role = ['User', 'Admin'];
 
@@ -109,7 +113,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
 
         if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = "Passwords do not match";
-            showErrorToast(`Password Mismatching`);
+            showErrorToast(`Passwords do not match`);
             isValid = false;
         }
         if (!formData.role) {
@@ -133,6 +137,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
         e.preventDefault();
 
         if (validateForm()) {
+            debugger
 
             console.log('UserForm Submitted:', formData);
             let userRequest;
@@ -172,7 +177,6 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
 
                 let response;
                 if (formData.userId > 0) {
-
                     const values = {
                         userId: userRequest.userId,
                     };
@@ -217,7 +221,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
             wareHouse: '',
             role: '',
             deviceId: '',
-            isActive: false,
+            isActive: true,
             createdBy: user,
             createdOn: '',
             updatedBy: '',
@@ -236,7 +240,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
             wareHouse: '',
             role: '',
             deviceId: '',
-            isActive: false,
+            isActive: true,
             createdBy: user,
             createdOn: '',
             updatedBy: '',
@@ -253,169 +257,226 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
         }
     };
 
+    const wareHouseTypes = async () => {
+        try {
+            const response = await api.get('/WareHouse/WareHouseList');
+            const wareHouseData = response.data;
+            const wareHouseNames = wareHouseData.map((item: { whsCode: string, whsName: string }) => ({
+                whsCode: item.whsCode,
+                whsName: item.whsName
+            }));
+            return wareHouseNames;
+        } catch (error) {
+            console.error("Error fetching warehouse types:", error);
+            return [];
+        }
+    };
+
+    useEffect(() => {
+        const fetchWareHouse = async () => {
+            const fetchWareHouseData = await wareHouseTypes();
+            setWareHouse(fetchWareHouseData);
+        };
+        fetchWareHouse();
+    }, []);
+
+    //device
+    const deviceTypes = async () => {
+        try {
+            const response = await api.get('/Device/DevicedropdownList');
+            debugger
+            const deviceData = response.data;
+            const deviceNames = deviceData.map((item: { deviceId: number, deviceSerialNo: string }) => ({
+                deviceId: item.deviceId,
+                deviceSerialNo: item.deviceSerialNo
+            }));
+            return deviceNames;
+        } catch (error) {
+            console.error("Error fetching warehouse types:", error);
+            return [];
+        }
+    };
+
+    useEffect(() => {
+        const fetchDevice = async () => {
+            const fetchDeviceData = await deviceTypes();
+            setdevice(fetchDeviceData);
+        };
+        fetchDevice();
+    }, []);
+
     return (
-        <div className="w-full p-10 text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden p-4">
-
-            <button
-                className="text-red-500 text-3xl absolute top-4 right-4 p-3 rounded-full  hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"
-                onClick={handleBackClick}
-                aria-label="Add User"
-            >
-                <span aria-hidden="true">&times;</span>
-            </button>
-
-
-            <h2 className="text-xl font-medium text-center text-black mb-8">
-                {formData.userId > 0 ? 'Update User' : 'Add New User'}
-            </h2>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 gap-6">  {/* Updated grid structure */}
-
-                    {/* Username */}
-                    <div className="relative">
-                        <label className="floating-label text-black font-medium">
-                            <span>Username</span>
-                            <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                value={formData.username}
-                                onChange={handleInputChange}
-                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
-                                placeholder="Username"
-                                required
-                            />
-                        </label>
-
-                    </div>
-
-                    {/* Password */}
-                    <div className="relative">
-                        <label className="floating-label text-black font-medium">
-                            <span>Password</span>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleInputChange}
-                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
-                                placeholder="Password"
-                                required
-                            />
-                        </label>
-                    </div>
-
-                    {/* Confirm Password */}
-                    <div className="relative">
-                        <label className="floating-label text-black font-medium">
-                            <span>Confirm Password</span>
-                            <input
-                                type="password"
-                                id="confirmPassword"
-                                name="confirmPassword"
-                                value={formData.confirmPassword}
-                                onChange={handleInputChange}
-                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
-                                placeholder="Confirm Password"
-                                required
-                            />
-                        </label>
-                    </div>
-
-                    {/* Role Type */}
-                    <div className="relative">
-                        <label className="floating-label text-black font-medium">
-                            <span>Role Type</span>
-                            <select
-                                id="role"
-                                name="role"
-                                value={formData.role}
-                                onChange={handleInputChange}
-                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
-                                required
-                            >
-                                <option value="" disabled>Select User Type</option>
-                                {role.map((type) => (
-                                    <option key={type} value={type}>{type}</option>
-                                ))}
-                            </select>
-                        </label>
-                    </div>
-
-                    {/* Warehouse */}
-                    <div className="relative">
-                        <label className="floating-label text-black font-medium">
-                            <span>Warehouse</span>
-                            <input
-                                type="text"
-                                id="wareHouse"
-                                name="wareHouse"
-                                value={formData.wareHouse}
-                                onChange={handleInputChange}
-                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
-                                placeholder="Warehouse"
-                                required
-                            />
-                        </label>
-                    </div>
-
-                    {/* Device ID */}
-                    <div className="relative">
-                        <label className="floating-label text-black font-medium">
-                            <span>Device ID</span>
-                            <input
-                                type="text"
-                                id="deviceId"
-                                name="deviceId"
-                                value={formData.deviceId}
-                                onChange={handleInputChange}
-                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
-                                placeholder="Device ID"
-                                required
-                            />
-                        </label>
-                    </div>
-
-
-                    {/* Is Active */}
-                    <div className="flex items-center space-x-3">
-                        <input
-                            type="checkbox"
-                            id="isActive"
-                            name="isActive"
-                            checked={formData.isActive}
-                            onChange={handleInputChange}
-                            className="h-4 w-4 rounded border-indigo-300 text-black focus:ring-2 focus:ring-blue-400"
-                        />
-                        <label htmlFor="isActive" className="text-sm font-medium text-black">
-                            Is Active
-                        </label>
-                    </div>
-                </div>
-
-                {/* Submit and Cancel Buttons */}
-                <div className="flex justify-end gap-4 mt-6">
-                    <button
-                        type="submit"
-                        className="btn btn-accent text-white font-inter"
-                    >
-                        {formData.userId > 0 ? 'Update' : 'Save'}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={handleCancel}
-                        className="btn btn-outline btn-error hover:bg-red-100 hover:text-red-600 font-inter"
-                    >
-                        Clear
-                    </button>
-                </div>
-            </form>
-            <ToastContainer />
+        <div className="w-full text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden relative">
+        {/* Header and Close Button */}
+        <div className="flex justify-between items-center p-2">
+          <h2 className="text-xl font-medium text-left text-black ml-2">
+            {formData.userId > 0 ? 'Update User' : 'Add New User'}
+          </h2>
+          <button
+            className="text-red-500 text-3xl rounded-full hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"
+            onClick={handleBackClick}
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-
-
+      
+        
+      
+        <form onSubmit={handleSubmit} className="space-y-6 p-4 ">
+          <div className="grid grid-cols-1 gap-6">
+      
+            {/* Username */}
+            <div className="relative">
+              <label className="floating-label text-black font-medium">
+                <span>Username</span>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
+                  placeholder="Username"
+                  required
+                />
+              </label>
+            </div>
+      
+            {/* Password */}
+            <div className="relative">
+              <label className="floating-label text-black font-medium">
+                <span>Password</span>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
+                  placeholder="Password"
+                  required
+                />
+              </label>
+            </div>
+      
+            {/* Confirm Password */}
+            <div className="relative">
+              <label className="floating-label text-black font-medium">
+                <span>Confirm Password</span>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
+                  placeholder="Confirm Password"
+                  required
+                />
+              </label>
+            </div>
+      
+            {/* Role Type */}
+            <div className="relative">
+              <label className="floating-label text-black font-medium">
+                <span>Role Type</span>
+                <select
+                  id="role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleInputChange}
+                  className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
+                  required
+                >
+                  <option value="" disabled>Select Role</option>
+                  {role.map((type) => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+      
+            {/* Warehouse */}
+            <div className="relative">
+              <label className="floating-label text-black font-medium">
+                <span>Warehouse</span>
+                <select
+                  id="whsCode"
+                  name="whsCode"
+                  value={formData.wareHouse}
+                  onChange={(e) => setFormData({ ...formData, wareHouse: e.target.value })}
+                  className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
+                  required
+                >
+                  <option value="" disabled>Select Warehouse</option>
+                  {wareHouse.map((item, index) => (
+                    <option key={index} value={item.whsCode}>
+                      {item.whsName}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+      
+            {/* Device ID */}
+            <div className="relative">
+              <label className="floating-label text-black font-medium">
+                <span>Device</span>
+                <select
+                  id="deviceId"
+                  name="deviceId"
+                  value={formData.deviceId}
+                  onChange={(e) => setFormData({ ...formData, deviceId: e.target.value })}
+                  className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-indigo-500 focus:outline-none"
+                  required
+                >
+                  <option value="" disabled>Select Device</option>
+                  {device.map((item, index) => (
+                    <option key={index} value={item.deviceId}>
+                      {item.deviceSerialNo}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+      
+            {/* Is Active */}
+            <div className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                id="isActive"
+                name="isActive"
+                checked={formData.isActive}
+                onChange={handleInputChange}
+                className="h-4 w-4 rounded border-indigo-300 text-indigo-600 focus:ring-2 focus:ring-indigo-500"
+              />
+              <label htmlFor="isActive" className="text-sm font-medium text-black">
+                Is Active
+              </label>
+            </div>
+          </div>
+      
+          {/* Submit and Cancel Buttons */}
+          <div className="flex justify-end gap-4 mt-6">
+            <button
+              type="submit"
+              className="btn btn-accent text-white font-inter py-2 px-4 rounded-md"
+            >
+              {formData.userId > 0 ? 'Update' : 'Save'}
+            </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="btn btn-outline btn-error hover:bg-red-100 hover:text-red-600 font-inter py-2 px-4 rounded-md"
+            >
+              Clear
+            </button>
+          </div>
+        </form>
+        <ToastContainer />
+      </div>
+      
     );
 
 };
