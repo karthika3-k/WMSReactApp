@@ -18,8 +18,8 @@ import ConfirmDialog from "../../Common/ConfirmDialog";
 let role = "admin";
 const deviceColumns = [
     //{ name: "DeviceId", field: "deviceId", visible: false },
-    { name: "UserName", field: "userName", className: "hidden md:table-cell", visible: true },
-    { name: "DeviceSerialNo", field: "deviceSerialNo", className: "hidden md:table-cell", visible: true },
+    { name: "User Name", field: "userName", className: "hidden md:table-cell", visible: true },
+    { name: "Device SerialNo", field: "deviceSerialNo", className: "hidden md:table-cell", visible: true },
     // { name: "CreatedBy", field: "CreatedBy",className: "hidden md:table-cell", visible: true },
     // { name: "CreatedOn", field: "CreatedOn", className: "hidden md:table-cell",visible: true },
     // { name: "UpdatedBy", field: "UpdatedBy", className: "hidden md:table-cell",visible: true },

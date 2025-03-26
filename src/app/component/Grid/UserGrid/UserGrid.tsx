@@ -19,12 +19,12 @@ import { MdOutlineAirplanemodeActive, MdOutlineAirplanemodeInactive } from "reac
 let role = "admin";
 const userColumns = [
     // { name: "User Id", field: "userId", visible: true },
-    { name: "UserName", field: "userName", className: "hidden md:table-cell", visible: true },
+    { name: "User Name", field: "userName", className: "hidden md:table-cell", visible: true },
     // { name: "Password", field: "password", className: "hidden md:table-cell", visible: true },
-    { name: "WareHouse", field: "wareHouse", className: "hidden md:table-cell", visible: true },
+    { name: "Warehouse", field: "wareHouse", className: "hidden md:table-cell", visible: true },
     { name: "Role", field: "role", className: "hidden md:table-cell", visible: true },
     { name: "Device ID", field: "deviceId", className: "hidden md:table-cell", visible: true },
-    { name: "IsActive", field: "isActive", className: "hidden md:table-cell", visible: true },
+    { name: "Is Active", field: "isActive", className: "hidden md:table-cell", visible: true },
     { name: 'Actions', field: 'actions', visible: true },];
 
 const UserGrid = () => {

@@ -517,10 +517,10 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                 // Handle API response
                 if (response.status === 200 || response.status === 201) {
                     if (response.data !== null) {
-                        const message = `BinConfig ${formData.binConfigId > 0 ? 'Updated' : 'Created'} Successfully!`;
+                        const message = response.data;
                         showSuccessToast(message);
                         setTimeout(() => {
-                            handleCancel(); // Handle form cancel logic
+                            handleCancel(); 
                             console.log(message);
                             onAddUser(response.data);
                         }, 1000);
@@ -529,7 +529,6 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                         showErrorToast(`BinConfig ${formData.binConfigId > 0 ? 'Updated' : 'Created'} failed.`);
                     }
                 } else {
-                    console.log(response.data);
                     showErrorToast(`BinConfig ${formData.binConfigId > 0 ? 'Updated' : 'Created'} failed.`);
                 }
             } catch (error) {

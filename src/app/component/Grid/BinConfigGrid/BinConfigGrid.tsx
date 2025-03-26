@@ -268,7 +268,7 @@ const BinConfigGrid = () => {
                 createdOn: binConfig.createdOn,
             }));
             setBinConfgList(filteredBinConfigLists);
-           
+
         } catch (error) {
             console.error("Error fetching BinConfig by WhsCode:", error);
         }
@@ -288,13 +288,13 @@ const BinConfigGrid = () => {
     const handleAddBinConfig = async (newBin: BinCnfg) => {
         // Optimistically update the local state by adding the new bin config
         setBinConfg((prevConfigs) => [newBin, ...prevConfigs]);
-    debugger
+        debugger
         try {
             // Fetch the updated list of BinConfigs
             const response = await api.get("/BinConfig/BinConfigList");
             debugger
             const data = response.data;
-    
+
             // Map the response to a standardized format
             const filteredBinConfig = data.map((binConfig: any) => ({
                 binConfigId: binConfig.binConfigId,
@@ -305,18 +305,17 @@ const BinConfigGrid = () => {
                 isActive: binConfig.isActive,
                 createdOn: binConfig.createdOn,
             }));
-    
+
             // Update the state with the freshly fetched bin configurations
             setBinConfg(filteredBinConfig);
-    
+
         } catch (error) {
             console.error("Error fetching BinConfigs:", error);
         }
-    debugger
-        // If you want to refresh the page or specific part, use router.refresh()
+
         router.refresh();
     };
-    
+
     const handleEdit = async (binConfig: BinCnfg) => {
         try {
             if (binConfig.whsCode) {
@@ -334,7 +333,7 @@ const BinConfigGrid = () => {
                 }));
                 setBinConfgList(filteredBinConfigLists);
                 setTimeout(() => {
-                    document.getElementById("my-drawer-4")?.click(); 
+                    document.getElementById("my-drawer-4")?.click();
                 }, 100);
             }
         } catch (error) {
@@ -368,7 +367,7 @@ const BinConfigGrid = () => {
         setSelectedBinConfig(binCnfg);
         setIsDialogOpen(false);
         handleDelete(binCnfg);
-        
+
     };
 
     const handleCancelDelete = () => {
@@ -395,7 +394,7 @@ const BinConfigGrid = () => {
     // Render Table Row
     const renderRow = (item: BinCnfg) => {
         return (
-            <tr key={item.binConfigId} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-accent/20">
+            <tr key={item.binConfigId} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-accent/20 ">
                 <td className="hidden md:table-cell">{item.whsCode}</td>
                 <td className="hidden md:table-cell">
                     <button className={`btn btn-soft text-[16px] font-medium ${item.isActive ? "btn-success" : "btn-error"}`}>
@@ -419,8 +418,8 @@ const BinConfigGrid = () => {
                                 <button
                                     className="text-error hover:scale-150"
                                     onClick={() => {
-                                        setSelectedBinConfig(item); 
-                                        setIsDialogOpen(true); 
+                                        setSelectedBinConfig(item);
+                                        setIsDialogOpen(true);
                                     }}
                                 >
                                     <FaTrash />
@@ -449,7 +448,7 @@ const BinConfigGrid = () => {
                 FormComponent={<BinConfigForm onAddUser={handleAddBinConfig} selectedBinConfig={binConfgList} />}
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
-                showAddButton ={true}
+                showAddButton={true}
             />
             {/* Table */}
             <Table columns={userColumns} renderRow={renderRow} data={currentData} />
