@@ -5,7 +5,7 @@ const addbinconfig: React.FC = () => {
     return (        
             <Dashboard>
                  <Suspense fallback={<div>Loading...</div>}>
-                <BinConfigForm />
+                {/* <BinConfigForm /> */}
                 </Suspense>
             </Dashboard>      
     );

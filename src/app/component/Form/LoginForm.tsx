@@ -25,12 +25,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, usernameError, password
                         className="object-cover absolute inset-0"
                         src="/wms2.jpg"
                         alt="background image"
-                        layout="fill"
+                        layout="fill"   
                     />
                 </div>
                 <div className="bg-[#16202a] text-white flex items-center justify-center flex-col py-10 px-6 md:px-16">
                     <div>
-                    <Image
+                    <Image  
                                   src="/Techativelogo.png"
                                   alt="background image"
                                   width={130}

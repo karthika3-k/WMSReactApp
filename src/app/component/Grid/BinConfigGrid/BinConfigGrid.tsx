@@ -345,6 +345,7 @@ const BinConfigGrid = () => {
 
     const handleDelete = async (binCnfg: BinCnfg) => {
         try {
+            debugger
             const response = await api.delete(`/BinConfig/DeleteBinConfig?whsCode=${binCnfg.whsCode}`);
             if (response.status === 200 || response.status === 201 || response.status === 204) {
                 showSuccessToast("BinConfig Deleted Successfully");
@@ -367,6 +368,7 @@ const BinConfigGrid = () => {
         setSelectedBinConfig(binCnfg);
         setIsDialogOpen(false);
         handleDelete(binCnfg);
+        
     };
 
     const handleCancelDelete = () => {
@@ -447,6 +449,7 @@ const BinConfigGrid = () => {
                 FormComponent={<BinConfigForm onAddUser={handleAddBinConfig} selectedBinConfig={binConfgList} />}
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
+                showAddButton ={true}
             />
             {/* Table */}
             <Table columns={userColumns} renderRow={renderRow} data={currentData} />

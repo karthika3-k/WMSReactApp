@@ -13,38 +13,40 @@ interface GridProps {
   FormComponent?: ReactNode;
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
-
+  showAddButton : boolean;
 };
 
-const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, searchTerm, setSearchTerm }) => {
+const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, searchTerm, setSearchTerm,showAddButton}) => {
   const drawerCheckboxRef = useRef<HTMLInputElement>(null);
   return (
     <div className="flex items-center justify-between ">
       <h1 className="hidden md:block text-lg font-semibold">{header}</h1>
       <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
         <TableSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        <div className="flex items-center gap-4  self-end">
-          {role === "admin" && (
-            <div className="drawer drawer-end">
-              <input
-                id="my-drawer-4"
-                type="checkbox"
-                ref={drawerCheckboxRef}
-                className="drawer-toggle"
-              />
+        <div className="flex items-center gap-4 self-end">
+  {role === "admin" && (
+    <div className="drawer drawer-end">
+      <input
+        id="my-drawer-4"
+        type="checkbox"
+        ref={drawerCheckboxRef}
+        className="drawer-toggle"
+      />
 
-              <div className="drawer-content">
-                <button
-                  onClick={() => {
-                    if (drawerCheckboxRef.current) {
-                      drawerCheckboxRef.current.checked = true;
-                    }
-                  }}
-                  className="btn btn-outline btn-accent"
-                >
-                  <FaPlus />
-                </button>
-              </div>
+      <div className="drawer-content">
+        {showAddButton && ( // Only applies to the button
+          <button
+            onClick={() => {
+              if (drawerCheckboxRef.current) {
+                drawerCheckboxRef.current.checked = true;
+              }
+            }}
+            className="btn btn-outline border-[#8c57ff] text-[#8c57ff] hover:bg-[#8c57ff] hover:text-white"
+          >
+            <FaPlus />
+          </button>
+        )}
+      </div>
 
               {/* Dynamic Drawer Content */}
               <div className="drawer-side">

@@ -36,7 +36,7 @@ const Sidebar: React.FC = () => {
 
     const masterSubMenuItems = [
         { name: 'Bin Configuration', path: '/pages/binconfiggrid', icon: <FaRecycle /> },
-        { name: 'Bin Master', path: '', icon: <FaRulerCombined /> },
+        { name: 'Bin Master', path: '/pages/binmastergrid', icon: <FaRulerCombined /> },
         { name: 'Device', path: '/pages/devicegrid', icon: <FaMobileAlt /> },
     ];
 

@@ -13,6 +13,7 @@ import DeviceForm from "../../Form/DeviceForm";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
 import { Device } from "@/app/component/types/Device";
+import ConfirmDialog from "../../Common/ConfirmDialog";
 
 let role = "admin";
 const deviceColumns = [
@@ -28,7 +29,7 @@ const deviceColumns = [
 ];
 interface AddUserFormProps {
     deviceData?: Device | null;
-    
+
 }
 
 const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
@@ -37,8 +38,9 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
     const [devices, setDevices] = useState<Device[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(1); // Add page state
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    const [selectedUser, setSelectedUser] = useState<Device | null>(null);  
+    const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
     const filteredUsers = devices.filter((Device) =>
         Object.values(Device)
             .join(" ")
@@ -48,58 +50,63 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
     const indexOfLastRow = currentPage * rowPerPage;
     const indexOfFirstRow = indexOfLastRow - rowPerPage;
     const currentData = filteredUsers.slice(indexOfFirstRow, indexOfLastRow);
-    useEffect(() => {
-        const fetchDevices = async () => {
-            setIsLoading(true);
-            try {
+    const fetchDevices = async () => {
+        setIsLoading(true);
+        try {
 
-                const response = await api.get('/Device/DeviceList');
-                const data = response.data;
-                const filteredDevices = data.map((device: any) => ({
-                    deviceId: device.deviceId,
-                    userName: device.userName,
-                    deviceSerialNo: device.deviceSerialNo,
-                    // CreatedBy: device.CreatedBy,
-                    // CreatedOn: device.CreatedOn,
-                    // UpdatedBy: device.UpdatedBy,
-                    // UpdatedOn: device.UpdatedOn,
-                }));
-                setDevices(filteredDevices);
-            } catch (error) {
-                console.error("Error fetching users:", error);
-            }
-            setIsLoading(false);
-        };
+            const response = await api.get('/Device/DeviceList');
+            const data = response.data;
+            const filteredDevices = data.map((device: any) => ({
+                deviceId: device.deviceId,
+                userName: device.userName,
+                deviceSerialNo: device.deviceSerialNo,
+                // CreatedBy: device.CreatedBy,
+                // CreatedOn: device.CreatedOn,
+                // UpdatedBy: device.UpdatedBy,
+                // UpdatedOn: device.UpdatedOn,
+            }));
+            setDevices(filteredDevices);
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+        setIsLoading(false);
+    };
+    useEffect(() => {
+
         fetchDevices();
     }, []);
 
     const router = useRouter();
 
-    const handleAddClick = () => {
-        router.push('/pages/adddevice');
+    const handleAddDevice = (newDevice: Device) => {
+        debugger
+        setDevices((prevDevices) => [newDevice, ...prevDevices]);
+        fetchDevices();
     };
 
-   const handleEdit = (device: Device) => {
-    debugger
-           setSelectedUser(device);
-           debugger;
-           setTimeout(() => {
-               document.getElementById('my-drawer-4')?.click();
-           }, 100);
-   
-       };
+    const handleEdit = (device: Device) => {
+        debugger
+        setSelectedDevice(null);
+        debugger;
+        setTimeout(() => {
+            setSelectedDevice(device);
+            document.getElementById('my-drawer-4')?.click();
+        }, 100);
+
+    };
 
     const handleDelete = async (device: Device) => {
         try {
+            debugger
             const values = {
                 DeviceId: device.deviceId,
             };
-            const response = await api.post(`/User/DeleteUser?id=${values.DeviceId}`);
+            const response = await api.delete(`/Device/DeleteDevice?id=${values.DeviceId}`);
             if (response.status === 200) {
                 if (response.data.ErrorCode === 200) {
-                    showSuccessToast('User Deleted Successfully');
+                    showSuccessToast('Device Deleted Successfully');
                 } else {
-                    showErrorToast('User Deletion Failed');
+                    showErrorToast('Device Deletion Failed');
                 }
             } else {
                 showErrorToast('Error');
@@ -107,8 +114,43 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
             setDevices(devices.filter((u) => u.deviceId !== device.deviceId));
         } catch (error) {
             console.error("Error deleting user:", error);
+        } finally {
+            setIsDialogOpen(false);
         }
     };
+    const handleCancelDelete = () => {
+        debugger
+        setIsDialogOpen(false);
+    };
+    const handleConfirmDelete = async () => {
+
+
+        debugger
+        if (!selectedDevice) return;
+
+        try {
+            const response = await api.delete(`/Device/DeleteDevice?id=${selectedDevice.deviceId}`);
+            if (response.status === 200 || response.status === 201 || response.status === 204) {
+                setDevices(devices.filter((u) => u.deviceId !== selectedDevice.deviceId));
+                //handleDelete(response.data);
+                showSuccessToast('Device Deleted Successfully');
+                fetchDevices();
+            } else {
+                showErrorToast('Device Deletion Failed');
+            }
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            showErrorToast('An error occurred');
+        }finally{
+            setIsDialogOpen(false);
+        }
+    };
+    const handleDeleteClick = (device: Device) => {
+        setSelectedDevice(device);
+        setIsDialogOpen(true);
+        //handleConfirmDelete();
+    };
+
 
     if (isLoading) return <Loader />;
 
@@ -139,12 +181,20 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
 
                         {role === "admin" && (
                             <button
-                                onClick={() => handleDelete(item)}
+                                onClick={() => handleDeleteClick(item)}
                                 className="text-error hover:scale-150"
                             >
                                 <FaTrash />
                             </button>
                         )}
+                        <ConfirmDialog
+
+                            isOpen={isDialogOpen}
+                            title="Confirm Deletion"
+                            message={`Are you sure you want to delete ${selectedDevice?.userName}?`}
+                            onConfirm={handleConfirmDelete}
+                            onCancel={handleCancelDelete}
+                        />
                     </div>
                 </td>
             </tr>
@@ -154,7 +204,7 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
             {/* TOP */}
-            <Grid header="All Devices" role="admin" FormComponent={<DeviceForm deviceData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <Grid header="All Devices" role="admin" FormComponent={<DeviceForm onAddDevice={handleAddDevice} deviceData={selectedDevice || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} showAddButton={true} />
             {/* LIST */}
             <Table columns={deviceColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}

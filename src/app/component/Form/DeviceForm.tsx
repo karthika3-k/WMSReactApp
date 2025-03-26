@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 import { Device } from "@/app/component/types/Device";
+import { ToastContainer } from "react-toastify";
 
 interface DeviceFormProps {
     deviceData?: Device | null;
+    onAddDevice: (newDevice: Device) => void;
 }
-const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
+const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData, onAddDevice}) => {
     const [formData, setFormData] = useState({
         deviceId: 0,
         username: '',
@@ -53,7 +55,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
         debugger;
         let deviceRequest;
          deviceRequest = {
-            //deviceId: formData.deviceId,
+            deviceId: formData.deviceId,
             username: formData.username,
             deviceSerialNo: formData.devicenumber, // ✅ Ensured consistent naming
             // createdBy: formData.createdBy,
@@ -63,7 +65,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
         };
         if (formData.deviceId > 0) {
             deviceRequest = {
-                //deviceId: formData.deviceId,
+                deviceId: formData.deviceId,
                 username: formData.username,
                 deviceSerialNo: formData.devicenumber, // ✅ Ensured consistent naming
                 // createdBy: formData.createdBy,
@@ -74,7 +76,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
         } else {
 
             deviceRequest = {
-                //deviceId: formData.deviceId,
+                deviceId: formData.deviceId,
                 username: formData.username,
                 deviceSerialNo: formData.devicenumber, // ✅ Ensured consistent naming
                 // createdBy: formData.createdBy,
@@ -85,11 +87,28 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
         }
 
         try {
-            const response = await api.post('/Device/CreateDevice', deviceRequest);
+            let response;
+            if (formData.deviceId > 0) {
+
+                const values = {
+                    deviceId: deviceRequest.deviceId,
+                };
+                response = await api.put(`/Device/UpdateDevice?id=${values.deviceId}`, deviceRequest);
+                console.log(response);
+            }
+            else {
+                response = await api.post('/Device/CreateDevice', deviceRequest);
+            }
+            
 
             if (response.status === 200 || response.status === 201) {
-                showSuccessToast(`Device ${formData.deviceId > 0 ? 'Updated' : 'Created'} Successfully!`);
-                handleCancel();
+                const message = `Device ${formData.deviceId > 0 ? 'Updated' : 'Created'} Successfully!`;
+                showSuccessToast(message);
+                setTimeout(() => {
+                    handleBackClick();
+                    console.log(message);
+                    onAddDevice(response.data);
+                }, 1000);
                 //router.push('/pages/adddevie');
             } else {
                 showErrorToast(`Device ${formData.deviceId > 0 ? 'Updated' : 'Created'} failed.`);
@@ -193,6 +212,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
                     </button>
                 </div>
             </form>
+            <ToastContainer />
         </div>
     );
 

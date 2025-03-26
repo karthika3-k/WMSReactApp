@@ -319,16 +319,13 @@ import api from "@/app/services/api";
 import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 import { BinCnfg } from "../types/BinConfig";
 import { ToastContainer } from "react-toastify";
+import { Warehouse } from "../types/Warehouse";
 
 let user = null;
 if (typeof window !== "undefined") {
     user = localStorage.getItem("userName");
 }
 
-type Warehouse = {
-    whsCode: string;
-    whsName: string;
-};
 
 interface BinConfigFormProps {
     binConfigData?: any | null;

@@ -13,6 +13,7 @@ import Grid from "../Grid";
 import AddUserForm from "../../Form/AddUserForm";
 import { User } from "@/app/component/types/User";
 import ConfirmDialog from "../../Common/ConfirmDialog";
+import { MdOutlineAirplanemodeActive, MdOutlineAirplanemodeInactive } from "react-icons/md";
 
 
 let role = "admin";
@@ -65,38 +66,82 @@ const UserGrid = () => {
 
     const router = useRouter();
 
+     const [formData, setFormData] = useState({
+            userId: 0,
+            username: '',
+            password: '',
+            confirmPassword: '',
+            wareHouse: '',
+            role: '',
+            deviceId: '',
+            isActive: true,
+            createdBy: '',
+            createdOn: '',
+            updatedBy: '',
+            updatedOn: '',
+            isDeleted: false,
+        });
+
+        const handleCancel = () => {
+            //setFormData(null);
+            setFormData({
+                userId: 0,
+                username: '',
+                password: '',
+                confirmPassword: '',
+                wareHouse: '',
+                role: '',
+                deviceId: '',
+                isActive: false,
+                createdBy: '',
+                createdOn: '',
+                updatedBy: '',
+                updatedOn: '',
+                isDeleted: false,
+            });
+            //router.push('/pages/adduser');
+        };
+
     const handleAddUser = (newUser: User) => {
+        debugger
         setUsers((prevUsers) => [newUser, ...prevUsers]);
         fetchUsers();
+        router.refresh();
     };
     const handleEdit = (user: User) => {
-        setSelectedUser(user);
         debugger;
+        setSelectedUser(null); // Reset state to trigger re-render
+
         setTimeout(() => {
+            setSelectedUser(user); // Set new selected user after reset
             document.getElementById('my-drawer-4')?.click();
         }, 100);
-
     };
 
-    const handleDelete = async (user: User) => {
+    const   handleDelete = async (user: User) => {
         try {
+            debugger
             const values = {
                 userId: user.userId,
             };
             const response = await api.delete(`/User/DeleteUser?id=${values.userId}`);
             debugger
-            if (response.status === 200 || response.status == 201 || response.status == 204 ) {
+            if (response.status === 200 || response.status == 201 || response.status == 204) {
                 if (response.data !== null) {
+                    setUsers(users.filter((u) => u.userId !== response.data.userId));
                     showSuccessToast('User Deleted Successfully');
+                    fetchUsers();
                 } else {
                     showErrorToast('User Deletion Failed');
                 }
             } else {
                 showErrorToast('Error');
             }
-            setUsers(users.filter((u) => u.userId !== user.userId));
+            //setUsers(users.filter((u) => u.userId !== user.userId));
         } catch (error) {
             console.error("Error deleting user:", error);
+        }finally{
+           // setIsDialogOpen(false);
         }
     };
 
@@ -142,9 +187,12 @@ const UserGrid = () => {
     const currentData = reversedUsers.slice(indexOfFirstRow, indexOfLastRow);
 
     const handleDeleteClick = (user : User) => {
+        
         setSelectedUser(user);
         setIsDialogOpen(true);
-      
+        //handleConfirmDelete();
+        //handleDelete(user);
+        //handleCancel();
     };
 
     const handleConfirmDelete = async () => {
@@ -153,10 +201,12 @@ const UserGrid = () => {
         debugger
         try {
             const response = await api.delete(`/User/DeleteUser?id=${selectedUser.userId}`);
-            if (response.status === 200 || response.status === 201) {
+            if (response.status === 200 || response.status === 201 || response.status === 204) {
                 setUsers(users.filter((u) => u.userId !== selectedUser.userId));
-                handleDelete(response.data);
+                //handleDelete(response.data);
                 showSuccessToast('User Deleted Successfully');
+                handleCancel();
+                fetchUsers();
             } else {
                 showErrorToast('User Deletion Failed');
             }
@@ -168,7 +218,10 @@ const UserGrid = () => {
         }
     };
 
-
+    const handleClose = () => {
+        debugger
+        setIsDialogOpen(false);
+    };
     const handleCancelDelete = () => {
         debugger
         setIsDialogOpen(false);
@@ -204,11 +257,11 @@ const UserGrid = () => {
                 </td>
                 <td className="hidden md:table-cell">{item.deviceId}</td>
                 <td className="hidden md:table-cell">
-                    <button
-                        className={`btn btn-soft  text-[16px] font-medium ${item.isActive ? 'btn-success' : 'btn-error'}`}
-                    >
-                        {item.isActive ? 'Active' : 'Inactive'}
-                    </button>
+                    {item.isActive ? (
+                        <MdOutlineAirplanemodeActive className="text-[#8c57ff] text-xl" />
+                    ) : (
+                        <MdOutlineAirplanemodeInactive className="text-[#ff5757] text-xl" />
+                    )}
                 </td>
                 <td>
                     <div className="flex items-center gap-2">
@@ -225,14 +278,14 @@ const UserGrid = () => {
                                 </button>
                                 <button
                                     className="text-error hover:scale-150"
-                                    onClick={() => handleDeleteClick(item)}
+                                    onClick={() =>handleDeleteClick(item)}
                                 >
                                     <FaTrash />
                                 </button>
                             </>
                         )}
 
-                        <ConfirmDialog
+                        <ConfirmDialog  
 
                             isOpen={isDialogOpen}
                             title="Confirm Deletion"
@@ -245,13 +298,15 @@ const UserGrid = () => {
 
                 </td>
             </tr>
+
+      
         );
     };
 
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
             {/* TOP */}
-            <Grid header="User List" role="admin" FormComponent={<AddUserForm onAddUser={handleAddUser} userData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <Grid header="User List" role="admin" FormComponent={<AddUserForm onAddUser={handleAddUser} userData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm}  showAddButton ={true} />
             {/* LIST */}
             <Table columns={userColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}
