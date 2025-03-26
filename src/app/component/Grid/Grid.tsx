@@ -2,7 +2,7 @@
 
 import React, { ReactNode, useRef } from "react";
 import TableSearch from "../TableSearch/TableSearch";
-import { FaPlus } from "react-icons/fa"; 
+import { FaPlus } from "react-icons/fa";
 import { User } from "@/app/component/types/User";
 
 
@@ -13,10 +13,10 @@ interface GridProps {
   FormComponent?: ReactNode;
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
-  
+
 };
 
-const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, searchTerm, setSearchTerm}) => {
+const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, searchTerm, setSearchTerm }) => {
   const drawerCheckboxRef = useRef<HTMLInputElement>(null);
   return (
     <div className="flex items-center justify-between ">
@@ -37,10 +37,10 @@ const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, sear
                 <button
                   onClick={() => {
                     if (drawerCheckboxRef.current) {
-                      drawerCheckboxRef.current.checked = true; 
+                      drawerCheckboxRef.current.checked = true;
                     }
                   }}
-                 className="btn btn-outline btn-accent"
+                  className="btn btn-outline btn-accent"
                 >
                   <FaPlus />
                 </button>
@@ -48,13 +48,13 @@ const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, sear
 
               {/* Dynamic Drawer Content */}
               <div className="drawer-side">
-              <label
-      htmlFor="my-drawer-4"
-      aria-label="close sidebar"
-      className="drawer-overlay"
-      onClick={(e) => e.preventDefault()} // Prevents the drawer from closing
-    ></label>
-                <div className="menu bg-base-200 text-base-content min-h-full w-[500px] p-4">
+                <label
+                  htmlFor="my-drawer-4"
+                  aria-label="close sidebar"
+                  className="drawer-overlay"
+                  onClick={(e) => e.preventDefault()} // Prevents the drawer from closing
+                ></label>
+                <div className="menu bg-base-200 text-base-content min-h-full w-[400px] p-4">
                   {FormComponent ? FormComponent : <p>No content available</p>}
                 </div>
               </div>

@@ -282,7 +282,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
                                 name="username"
                                 value={formData.username}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
+                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Username"
                                 required
                             />
@@ -300,7 +300,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
                                 name="password"
                                 value={formData.password}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
+                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Password"
                                 required
                             />
@@ -317,7 +317,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
                                 name="confirmPassword"
                                 value={formData.confirmPassword}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
+                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Confirm Password"
                                 required
                             />
@@ -333,7 +333,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
                                 name="role"
                                 value={formData.role}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
+                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 required
                             >
                                 <option value="" disabled>Select User Type</option>
@@ -354,7 +354,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
                                 name="wareHouse"
                                 value={formData.wareHouse}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
+                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Warehouse"
                                 required
                             />
@@ -371,7 +371,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
                                 name="deviceId"
                                 value={formData.deviceId}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
+                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Device ID"
                                 required
                             />
@@ -408,7 +408,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
                         onClick={handleCancel}
                         className="btn btn-outline btn-error hover:bg-red-100 hover:text-red-600 font-inter"
                     >
-                        Cancel
+                        Clear
                     </button>
                 </div>
             </form>

@@ -22,9 +22,17 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
       </Link>
       <Sidebar/>
     </div>
-    <div className='w-[86%] md:w-[92%] lg:w-[84%] xl:w-[86%] bg-[#F7F8FA] overflow-scroll'>
+    <div className='fixed w-full'>
       <Navbar/>
+      </div>
+    
+    <div className='w-[86%] md:w-[92%] lg:w-[84%] xl:w-[86%] bg-[#F7F8FA] '>
+    {/* Fixed Navbar with left padding */}
+   
+    {/* Add padding to the content below the navbar to avoid overlap */}
+    <div className="pt-[70px]"> {/* Adjust this based on the navbar height */}
       {children}
+    </div>
     </div>
   </div>  
   );

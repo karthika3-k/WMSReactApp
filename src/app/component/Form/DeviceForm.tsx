@@ -151,7 +151,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
                                 name="username"
                                 value={formData.username}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
+                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Enter Your UserName"
                                 required
                             />
@@ -168,7 +168,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
                                 name="devicenumber"
                                 value={formData.devicenumber}
                                 onChange={handleInputChange}
-                               className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
+                               className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
                                 placeholder="Enter Your Device No"
                                 required
                             />
@@ -189,7 +189,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData }) => {
                         onClick={handleCancel}
                         className="btn btn-outline btn-error hover:bg-red-100 hover:text-red-600 font-inter"
                     >
-                        Cancel
+                        Clear
                     </button>
                 </div>
             </form>

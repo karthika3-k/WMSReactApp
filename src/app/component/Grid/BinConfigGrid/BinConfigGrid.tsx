@@ -416,7 +416,10 @@ const BinConfigGrid = () => {
                                 </button>
                                 <button
                                     className="text-error hover:scale-150"
-                                    onClick={() => setIsDialogOpen(true)}
+                                    onClick={() => {
+                                        setSelectedBinConfig(item); 
+                                        setIsDialogOpen(true); 
+                                    }}
                                 >
                                     <FaTrash />
                                 </button>
@@ -425,7 +428,7 @@ const BinConfigGrid = () => {
                         <ConfirmDialog
                             isOpen={isDialogOpen}
                             title="Confirm Deletion"
-                            message={`Are you sure you want to delete ${selectedBinConfig?.whsCode}?`}
+                            message={`Are you sure you want to delete ${selectedBinConfig?.whsCode || "this BinConfig"}?`}
                             onConfirm={() => handleDeleteClick(item)}
                             onCancel={handleCancelDelete}
                         />

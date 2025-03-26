@@ -522,7 +522,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                         const message = `BinConfig ${formData.binConfigId > 0 ? 'Updated' : 'Created'} Successfully!`;
                         showSuccessToast(message);
                         setTimeout(() => {
-                            // handleCancel(); // Handle form cancel logic
+                            handleCancel(); // Handle form cancel logic
                             console.log(message);
                             onAddUser(response.data);
                         }, 1000);
@@ -612,7 +612,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                                 name="whsCode"
                                 value={formData.whsCode}
                                 onChange={(e) => setFormData({ ...formData, whsCode: e.target.value })}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-black-300 focus:ring-indigo-500 focus:outline-none"
+                                className="input input-md w-full p-2 h-11 rounded-lg border-2 border-black-300 focus:ring-indigo-500 focus:outline-none"
                                 required
                             >
                                 <option value="" disabled>Select Warehouse Code</option>
@@ -638,7 +638,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                                         name="binName"
                                         value={binConfig.binName}
                                         onChange={(e) => handleInputChange(e, index)}
-                                        className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:ring-indigo-500 focus:outline-none"
+                                        className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:ring-indigo-500 focus:outline-none"
                                         placeholder="Bin Name"
                                         required={index === 0} // Only required for SL1Code
                                     />
@@ -658,7 +658,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                                         name="prefix"
                                         value={binConfig.prefix}
                                         onChange={(e) => handleInputChange(e, index)}
-                                        className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:ring-indigo-500 focus:outline-none"
+                                        className="input input-md w-full p-2 h-11 rounded-lg border-2 border-gray-300 focus:ring-indigo-500 focus:outline-none"
                                         placeholder="Prefix"
                                         required={index === 0} // Only required for SL1Code
                                     />
@@ -699,7 +699,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                         onClick={handleCancel}
                         className="btn btn-outline btn-error hover:bg-red-100 hover:text-red-600"
                     >
-                        Cancel
+                        Clear
                     </button>
                 </div>
                 <ToastContainer />
