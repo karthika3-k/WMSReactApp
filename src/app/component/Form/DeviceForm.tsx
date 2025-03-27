@@ -143,13 +143,13 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData, onAddDevice }) => {
     };
 
     return (
-        <div className="w-full text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden relative">
-            <div className="flex justify-between items-center p-2">
-            <h2 className="text-xl font-medium text-left text-black ml-2">
+        <div className="w-full text-indigo-800 rounded-xl max-h-[900px] overflow-y-auto overflow-x-hidden relative">
+            <div className="flex justify-between items-center p-6">
+                <h2 className="text-xl font-medium text-left text-black ml-2">
                     {formData.deviceId > 0 ? 'Update Device' : ' Add New Device'}
                 </h2>
                 <button
-                    className="text-red-500 text-3xl rounded-full hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"
+                    className="text-red-500 text-3xl rounded-full hover:scale-125  transition-transform duration-200 ease-in-out focus:outline-none"
                     onClick={handleBackClick}
                     aria-label="Back"
                 >
@@ -170,7 +170,7 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData, onAddDevice }) => {
                                 name="username"
                                 value={formData.username}
                                 onChange={handleInputChange}
-                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black  focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Enter Your UserName"
                                 required
                             />
@@ -196,17 +196,17 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData, onAddDevice }) => {
                 </div>
 
                 {/* Submit and Cancel Buttons */}
-                <div className="flex justify-end gap-4 mt-6">
+                <div className="flex justify-end gap-4 mt-4 p-4">
                     <button
                         type="submit"
-                        className="btn btn-accent text-white font-inter"
+                        className="btn btn-soft bg-[#b08aff] text-white flex items-center gap-2 hover:bg-[#8c57ff]"
                     >
                         {formData.deviceId > 0 ? 'Update' : 'Save'}
                     </button>
                     <button
                         type="button"
                         onClick={handleCancel}
-                        className="btn btn-outline btn-error hover:bg-red-100 hover:text-red-600 font-inter"
+                        className="btn btn-outline btn-error hover:text-white"
                     >
                         Clear
                     </button>

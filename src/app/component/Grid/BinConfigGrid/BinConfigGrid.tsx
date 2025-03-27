@@ -226,29 +226,28 @@ const BinConfigGrid = () => {
 
     const rowPerPage = 7;
     const router = useRouter();
-
+    const fetchBinConfigs = async () => {
+        setIsLoading(true);
+        try {
+            const response = await api.get("/BinConfig/BinConfigList");
+            const data = response.data;
+            const filteredBinConfig = data.map((binConfig: any) => ({
+                binConfigId: binConfig.binConfigId,
+                binCode: binConfig.binCode,
+                binName: binConfig.binName,
+                prefix: binConfig.prefix,
+                whsCode: binConfig.whsCode,
+                isActive: binConfig.isActive,
+                createdOn: binConfig.createdOn,
+            }));
+            setBinConfg(filteredBinConfig);
+        } catch (error) {
+            console.error("Error fetching BinConfigs:", error);
+        }
+        setIsLoading(false);
+    };
     // Fetch BinConfigs List
-    useEffect(() => {
-        const fetchBinConfigs = async () => {
-            setIsLoading(true);
-            try {
-                const response = await api.get("/BinConfig/BinConfigList");
-                const data = response.data;
-                const filteredBinConfig = data.map((binConfig: any) => ({
-                    binConfigId: binConfig.binConfigId,
-                    binCode: binConfig.binCode,
-                    binName: binConfig.binName,
-                    prefix: binConfig.prefix,
-                    whsCode: binConfig.whsCode,
-                    isActive: binConfig.isActive,
-                    createdOn: binConfig.createdOn,
-                }));
-                setBinConfg(filteredBinConfig);
-            } catch (error) {
-                console.error("Error fetching BinConfigs:", error);
-            }
-            setIsLoading(false);
-        };
+    useEffect(() => {       
         fetchBinConfigs();
     }, []);
 
@@ -284,40 +283,15 @@ const BinConfigGrid = () => {
         }
     }, [selectedBinConfig]);
 
-    // Handle Add BinConfig
+   
     const handleAddBinConfig = async (newBin: BinCnfg) => {
-        // Optimistically update the local state by adding the new bin config
         setBinConfg((prevConfigs) => [newBin, ...prevConfigs]);
-        debugger
-        try {
-            // Fetch the updated list of BinConfigs
-            const response = await api.get("/BinConfig/BinConfigList");
-            debugger
-            const data = response.data;
-
-            // Map the response to a standardized format
-            const filteredBinConfig = data.map((binConfig: any) => ({
-                binConfigId: binConfig.binConfigId,
-                binCode: binConfig.binCode,
-                binName: binConfig.binName,
-                prefix: binConfig.prefix,
-                whsCode: binConfig.whsCode,
-                isActive: binConfig.isActive,
-                createdOn: binConfig.createdOn,
-            }));
-
-            // Update the state with the freshly fetched bin configurations
-            setBinConfg(filteredBinConfig);
-
-        } catch (error) {
-            console.error("Error fetching BinConfigs:", error);
-        }
-
+        fetchBinConfigs();
         router.refresh();
     };
-
+    
      useEffect(() => {
-            setCurrentPage(1); // Reset to first page when search term changes
+            setCurrentPage(1); 
         }, [searchTerm]);
     
     const handleEdit = async (binConfig: BinCnfg) => {
@@ -379,7 +353,6 @@ const BinConfigGrid = () => {
         setSelectedBinConfig(null);
     };
 
-    // Filtered BinConfig data
     const filteredBinConfigs = binConfg.filter((binConfig) =>
         Object.values(binConfig)
             .join(" ")
@@ -389,13 +362,11 @@ const BinConfigGrid = () => {
 
     if (isLoading) return <Loader />;
 
-    // Paginate Data
     const reversedUsers = [...filteredBinConfigs].reverse();
     const indexOfLastRow = currentPage * rowPerPage;
     const indexOfFirstRow = indexOfLastRow - rowPerPage;
     const currentData = reversedUsers.slice(indexOfFirstRow, indexOfLastRow);
 
-    // Render Table Row
     const renderRow = (item: BinCnfg) => {
         return (
             <tr key={item.binConfigId} className="border-b border-gray-200 h-15  even:bg-slate-50 text-[14px]  hover:bg-[#8c57ff]/20 ">

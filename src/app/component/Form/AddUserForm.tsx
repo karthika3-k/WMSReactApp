@@ -308,7 +308,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
     return (
         <div className="w-full text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden relative">
         {/* Header and Close Button */}
-        <div className="flex justify-between items-center p-2">
+        <div className="flex justify-between items-center p-3">
           <h2 className="text-xl font-medium text-left text-black ml-2">
             {formData.userId > 0 ? 'Update User' : 'Add New User'}
           </h2>
@@ -458,17 +458,17 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
           </div>
       
           {/* Submit and Cancel Buttons */}
-          <div className="flex justify-end gap-4 mt-6">
+          <div className="flex justify-end gap-4 mt-4 p-4">
             <button
               type="submit"
-              className="btn btn-accent text-white font-inter py-2 px-4 rounded-md"
+              className="btn btn-soft bg-[#b08aff] text-white flex items-center gap-2 hover:bg-[#8c57ff]"
             >
               {formData.userId > 0 ? 'Update' : 'Save'}
             </button>
             <button
               type="button"
               onClick={handleCancel}
-              className="btn btn-outline btn-error hover:bg-red-100 hover:text-red-600 font-inter py-2 px-4 rounded-md"
+              className="btn btn-outline btn-error hover:text-white"
             >
               Clear
             </button>

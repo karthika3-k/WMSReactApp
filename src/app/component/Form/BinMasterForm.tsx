@@ -430,7 +430,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 id="height"
                                 name="height"
                                 value={formData.height}
-                                    onChange={(e) => {
+                                onChange={(e) => {
                                     const value = Math.max(0, Number(e.target.value)).toString(); // Convert back to string
                                     handleInputChange({ target: { name: "height", value } } as React.ChangeEvent<HTMLInputElement>);
                                 }}
@@ -454,10 +454,10 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 onChange={(e) => {
                                     const value = Math.max(0, Number(e.target.value)).toString(); // Convert back to string
                                     handleInputChange({ target: { name: "width", value } } as React.ChangeEvent<HTMLInputElement>);
-                                  }}
+                                }}
                                 className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Width"
- min="0"
+                                min="0"
                             />
                         </label>
                     </div>
@@ -474,10 +474,10 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 onChange={(e) => {
                                     const value = Math.max(0, Number(e.target.value)).toString(); // Convert back to string
                                     handleInputChange({ target: { name: "length", value } } as React.ChangeEvent<HTMLInputElement>);
-                                  }}
+                                }}
                                 className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Length"
- min="0"
+                                min="0"
                             />
                         </label>
                     </div>
@@ -548,7 +548,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 }}
                                 className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Quantity"
- min="0"
+                                min="0"
                             />
                         </label>
                     </div>
@@ -568,7 +568,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 }}
                                 className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Level"
- min="0"
+                                min="0"
                             />
                         </label>
                     </div>
@@ -593,7 +593,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                 {/* Submit and Cancel Buttons */}
                 <div className="flex justify-end gap-4 mt-6">
                     <button type="submit" className="btn btn-soft bg-[#b08aff] text-white flex items-center gap-2 hover:bg-[#8c57ff]">
-                        Update
+                    {formData.binID > 0 ? 'Update' : 'Save'}
                     </button>
                     <button type="button" onClick={handleCancel} className="btn btn-outline btn-error hover:text-white"
                     >

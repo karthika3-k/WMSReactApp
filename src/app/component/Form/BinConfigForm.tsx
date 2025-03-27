@@ -357,20 +357,6 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
         binConfigs: [] as any[]
     });
 
-    // useEffect(() => {
-    //     if (selectedBinConfig && selectedBinConfig.length > 0) {
-    //         setFormData({
-    //             ...formData,
-    //             binConfigId: selectedBinConfig[0].binConfigId,  // Example of setting ID from selectedBinConfig
-    //             whsCode: Array.isArray(selectedBinConfig[0].whsCode) ? selectedBinConfig[0].whsCode[0] : selectedBinConfig[0].whsCode,
-    //             binConfigs: selectedBinConfig.map(binConfig => ({
-    //                 binCode: binConfig.binCode,
-    //                 binName: binConfig.binName,
-    //                 prefix: binConfig.prefix
-    //             })),
-    //         });
-    //     }
-    // }, [selectedBinConfig]);
     useEffect(() => {
         if (selectedBinConfig && selectedBinConfig.length > 0) {
 
@@ -434,23 +420,20 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
     ) => {
         const { name, value, type } = e.target;
 
-        // If it's a checkbox for bin configs, update the state with its checked status
         if (type === 'checkbox') {
             const updatedBinConfigs = [...formData.binConfigs];
             updatedBinConfigs[index] = {
                 ...updatedBinConfigs[index],
-                [name]: (e.target as HTMLInputElement).checked // Typecast e.target to HTMLInputElement
+                [name]: (e.target as HTMLInputElement).checked
             };
             setFormData({ ...formData, binConfigs: updatedBinConfigs });
         } else {
-            // For text inputs and selects, update the value as usual
             const updatedBinConfigs = [...formData.binConfigs];
             updatedBinConfigs[index] = { ...updatedBinConfigs[index], [name]: value };
             setFormData({ ...formData, binConfigs: updatedBinConfigs });
         }
     };
 
-    // Handler for the 'isActive' checkbox (common for all rows)
     const handleIsActiveChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, isActive: e.target.checked });
     };
@@ -459,7 +442,6 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
         let isValid = true;
         const newErrors: any = { binConfigs: [] };
 
-        // Validate only SL1Code (first binConfig)
         if (!formData.binConfigs[0].binName) {
             newErrors.binConfigs[0] = { ...newErrors.binConfigs[0], binName: "Bin Name for SL1Code is required" };
             isValid = false;
@@ -470,7 +452,6 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
             isValid = false;
         }
 
-        // Validate warehouse code
         if (!formData.whsCode) {
             newErrors.wareHouse = "WareHouse is required";
             isValid = false;
@@ -483,22 +464,20 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (validateForm()) {
-            // Filter out the empty bin configurations before sending to the API
             const filteredBinConfigs = formData.binConfigs.filter(binConfig =>
                 binConfig.binName !== '' && binConfig.prefix !== ''
             );
 
-            // Prepare data to match the expected structure for the API
             const BinConfigRequest = filteredBinConfigs.map(binConfig => ({
-                binConfigId: formData.binConfigId, // Use formData.binConfigId for update
+                binConfigId: formData.binConfigId,
                 binCode: binConfig.binCode,
                 binName: binConfig.binName,
                 prefix: binConfig.prefix,
                 whsCode: formData.whsCode,
-                isActive: formData.isActive, // Shared 'isActive'
+                isActive: formData.isActive,
                 createdBy: formData.createdBy,
                 createdOn: formData.createdOn,
-                updatedBy: formData.updatedBy || "string", // You can customize this if needed
+                updatedBy: formData.updatedBy || "string",
                 updatedOn: formData.updatedOn,
             }));
 
@@ -514,13 +493,12 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                     debugger
                 }
 
-                // Handle API response
                 if (response.status === 200 || response.status === 201) {
                     if (response.data !== null) {
                         const message = response.data;
                         showSuccessToast(message);
                         setTimeout(() => {
-                            handleCancel(); 
+                            //handleCancel(); 
                             console.log(message);
                             onAddUser(response.data);
                         }, 1000);
@@ -582,11 +560,11 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
     return (
         <div className="w-full text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden relative">
             <div className="flex justify-between items-center p-2">
-            <h2 className="text-xl font-medium text-left text-black ml-2">
+                <h2 className="text-xl font-medium text-left text-black ml-2">
                     {formData.binConfigId > 0 ? "Update" : "Add"} Bin Config
                 </h2>
                 <button
-                   className="text-red-500 text-3xl rounded-full hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"
+                    className="text-red-500 text-3xl rounded-full hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"
                     onClick={handleBackClick}
                     aria-label="Add User"
                 >
@@ -654,7 +632,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                                         onChange={(e) => handleInputChange(e, index)}
                                         className="input input-md w-half p-2 h-13  rounded-lg border-2 border-gray-300 focus:ring-indigo-500 focus:outline-none"
                                         placeholder="Prefix"
-                                        required={index === 0} // Only required for SL1Code
+                                        required={index === 0}
                                     />
                                 </label>
                                 {errors.binConfigs[index]?.prefix && (
