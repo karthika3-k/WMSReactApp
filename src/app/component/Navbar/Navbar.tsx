@@ -15,7 +15,7 @@ const ConfirmationDialog: React.FC<{ onConfirm: () => void; onCancel: () => void
                 <button onClick={onCancel} className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
                     Cancel
                 </button>
-                <button onClick={onConfirm} className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-teal-700">
+                <button onClick={onConfirm} className="bg-[#b08aff] text-white px-4 py-2 rounded-lg hover:bg-teal-700">
                     Logout
                 </button>
             </div>
@@ -117,7 +117,7 @@ const PasswordChangeForm: React.FC<{ onCancel: () => void }> = ({ onCancel }) =>
                         </button>
                         <button
                             type="submit"
-                            className="bg-purple-500 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition duration-200"
+                            className="bg-[#b08aff] text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition duration-200"
                         >
                             Change Password
                         </button>
@@ -175,7 +175,7 @@ const Navbar: React.FC = () => {
 
                     {/* Dropdown Menu with Casual Background Color */}
                     {isDropdownOpen && (
-                        <div className="absolute right-0 mt-3 w-56 bg-purple-500 rounded-lg z-10 shadow-lg p-3">
+                        <div className="absolute right-0 mt-3 w-56 bg-[#b08aff] rounded-lg z-10 shadow-lg p-3">
                             <ul className="space-y-2">
                                 {/* Profile */}
                                 <li className="text-center text-white font-semibold">

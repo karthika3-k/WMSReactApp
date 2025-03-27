@@ -211,7 +211,7 @@ let role = "admin";
 const userColumns = [
     { name: "Warehouse", field: "whsCode", className: "hidden md:table-cell", visible: true },
     { name: "Is Active", field: "isActive", className: "hidden md:table-cell", visible: true },
-    { name: "CreatedOn", field: "createdOn", className: "hidden md:table-cell", visible: true },
+    { name: "Created On", field: "createdOn", className: "hidden md:table-cell", visible: true },
     { name: "Actions", field: "actions", visible: true },
 ];
 
@@ -381,7 +381,7 @@ const BinConfigGrid = () => {
                     </button>
                 </td>
                 <td className="hidden md:table-cell">
-                    {item.createdOn ? new Date(item.createdOn.replace(" ", "T")).toLocaleString() : "N/A"}
+                {item.createdOn ? new Date(item.createdOn.replace(" ", "T")).toLocaleDateString('en-GB') : "N/A"}
                 </td>
                 <td>
                     <div className="flex items-center gap-2">
