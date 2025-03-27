@@ -1,7 +1,10 @@
 "use client"
-import { FaSearch, FaComments, FaLock, FaSignOutAlt, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaSearch, FaComments, FaLock, FaSignOutAlt, FaEye, FaEyeSlash, FaChevronDown } from "react-icons/fa";
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
+import api from "@/app/services/api";
+import { showSuccessToast } from "@/app/utils/toastConfig";
+import { ToastContainer } from "react-toastify";
 
 // A simple confirmation dialog component
 const ConfirmationDialog: React.FC<{ onConfirm: () => void; onCancel: () => void }> = ({ onConfirm, onCancel }) => (
@@ -28,18 +31,25 @@ const PasswordChangeForm: React.FC<{ onCancel: () => void }> = ({ onCancel }) =>
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
+        debugger
         e.preventDefault();
         if (newPassword === confirmPassword) {
-            const userID = typeof window !== "undefined" ? localStorage.getItem("userName") : null;
-
+            const userID = typeof window !== "undefined" ? localStorage.getItem("userID") : null;
+            const username = typeof window !== 'undefined' ? localStorage.getItem("userName") : null;
             if (userID) {
-                // Call your API to change the password here
-                // Example:
-                // const response = await axios.post('/path-to-change-password', { userID, password: newPassword });
+               
+                const response = await api.put(`/Login/UpdateUserPwd?id=${userID}&userName=${username}&password=${newPassword}`);
+                debugger
+                const da = response.status;
+                if (response.status === 200 || response.status === 201) {
+                        const message = `Psssword Updated Successfully!`;
+                        showSuccessToast(message);
+                        setNewPassword("");
+                        setConfirmPassword(""); 
+                        onCancel(); 
+                   
+                }
 
-                setNewPassword(""); // Clear form fields after successful password change
-                setConfirmPassword(""); // Clear form fields after successful password change
-                onCancel(); // Close the form
             } else {
                 alert("No user ID found");
             }
@@ -145,7 +155,7 @@ const Navbar: React.FC = () => {
     const closePasswordChangeForm = () => setPasswordChangeOpen(false);
     return (
         <div className="flex items-center justify-between p-4 w-full">
-           <h1 className="flex-grow text-center uppercase tracking-wide text-purple-600 text-shadow z-10">Warehouse Management System</h1>
+            <h1 className="flex-grow text-center uppercase tracking-wide text-purple-600 text-shadow z-10">Warehouse Management System</h1>
             <div className="flex items-center gap-6 justify-end">
                 <div className="bg-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer">
                     <FaComments />
@@ -154,16 +164,20 @@ const Navbar: React.FC = () => {
                     <span className="text-xs leading-3 font-medium">{username}</span>
                     <span className="text-[10px] text-black-100 text-right">{userRole}</span>
                 </div>
-                <img
-                    src={profileImageUrl}
-                    alt="Profile"
-                    className="w-10 h-10 rounded-full border-2 border-indigo-100 cursor-pointer"
-                    onClick={toggleDropdown}
-                />
-                <div>
+
+                <div className="relative">
+                    <img
+                        src={profileImageUrl}
+                        alt="Profile"
+                        className="w-10 h-10 rounded-full border-2 border-indigo-100 cursor-pointer"
+                        onClick={toggleDropdown}
+                    />
+
+                    {/* Dropdown Menu with Casual Background Color */}
                     {isDropdownOpen && (
-                        <div className="absolute right-0 mt-2 w-48 bg-blue-400 text-teal-100 rounded-lg shadow-lg z-10"> {/* z-10 ensures the dropdown is above other elements */}
+                        <div className="absolute right-0 mt-2 w-48 bg-blue-400 text-gray-100 rounded-lg shadow-lg">
                             <ul>
+                                {/* Change Password */}
                                 <li
                                     onClick={openPasswordChangeForm}
                                     className="flex items-center px-4 py-2 hover:bg-blue-300 cursor-pointer"
@@ -171,6 +185,7 @@ const Navbar: React.FC = () => {
                                     <FaLock className="w-5 h-5 mr-2" />
                                     Change Password
                                 </li>
+                                {/* Logout */}
                                 <li
                                     onClick={handleLogout}
                                     className="flex items-center px-4 py-2 hover:bg-blue-300 cursor-pointer"
@@ -190,7 +205,8 @@ const Navbar: React.FC = () => {
 
             {/* Render Change Password Form */}
             {isPasswordChangeOpen && <PasswordChangeForm onCancel={closePasswordChangeForm} />}
-        </div>
+            <ToastContainer />
+        </div>        
     );
 };
 export default Navbar;

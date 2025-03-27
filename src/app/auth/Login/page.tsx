@@ -42,8 +42,9 @@ const LoginPage: React.FC = () => {
                 showErrorToast('Login Failed');
             }
             else {
-                localStorage.setItem('userName', username)
+                localStorage.setItem('userName', username);
                 // localStorage.setItem('userRole', "Admin")
+                localStorage.setItem('userID', responsedata.login.userId);
                 router.push('/pages/admin');
             }
 
@@ -55,7 +56,7 @@ const LoginPage: React.FC = () => {
     return (
         <div>
             <div>
-                {errorMessage && <div className="text-red-500 text-center mb-4">{errorMessage}</div>}
+               
                 <LoginForm
                     onSubmit={handleLogin}
                     usernameError={usernameError}
