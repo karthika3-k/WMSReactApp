@@ -179,6 +179,9 @@ const BinMastserGrid = () => {
             setIsVisible(true);
         };
     };
+    useEffect(() => {
+        setCurrentPage(1); // Reset to first page when search term changes
+    }, [searchTerm]);
 
     const router = useRouter();
 
@@ -509,7 +512,7 @@ const BinMastserGrid = () => {
             {/* LIST */}
             <Table columns={binMasterColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}
-            <Pagination data={binMaster} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            <Pagination data={filteredUsers} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
             <div className="flex justify-end mb-4">
                 {isVisible && (
                     <button

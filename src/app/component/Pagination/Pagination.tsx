@@ -40,7 +40,7 @@ const Pagination = ({ rowPerPage, data, currentPage, setCurrentPage }: Paginatio
       <button
         onClick={() => paginate(currentPage + 1)}
         disabled={isNextDisabled}
-        className="btn btn-outline btn-accent"
+        className="btn btn-outline btn-purple-500"
       >
        <FaArrowRight />
       </button>

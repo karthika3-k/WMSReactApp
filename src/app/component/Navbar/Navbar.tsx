@@ -15,7 +15,7 @@ const ConfirmationDialog: React.FC<{ onConfirm: () => void; onCancel: () => void
                 <button onClick={onCancel} className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
                     Cancel
                 </button>
-                <button onClick={onConfirm} className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700">
+                <button onClick={onConfirm} className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-teal-700">
                     Logout
                 </button>
             </div>
@@ -37,17 +37,17 @@ const PasswordChangeForm: React.FC<{ onCancel: () => void }> = ({ onCancel }) =>
             const userID = typeof window !== "undefined" ? localStorage.getItem("userID") : null;
             const username = typeof window !== 'undefined' ? localStorage.getItem("userName") : null;
             if (userID) {
-               
+
                 const response = await api.put(`/Login/UpdateUserPwd?id=${userID}&userName=${username}&password=${newPassword}`);
                 debugger
                 const da = response.status;
                 if (response.status === 200 || response.status === 201) {
-                        const message = `Psssword Updated Successfully!`;
-                        showSuccessToast(message);
-                        setNewPassword("");
-                        setConfirmPassword(""); 
-                        onCancel(); 
-                   
+                    const message = `Psssword Updated Successfully!`;
+                    showSuccessToast(message);
+                    setNewPassword("");
+                    setConfirmPassword("");
+                    onCancel();
+
                 }
 
             } else {
@@ -117,7 +117,7 @@ const PasswordChangeForm: React.FC<{ onCancel: () => void }> = ({ onCancel }) =>
                         </button>
                         <button
                             type="submit"
-                            className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition duration-200"
+                            className="bg-purple-500 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition duration-200"
                         >
                             Change Password
                         </button>
@@ -175,12 +175,17 @@ const Navbar: React.FC = () => {
 
                     {/* Dropdown Menu with Casual Background Color */}
                     {isDropdownOpen && (
-                        <div className="absolute right-0 mt-2 w-48 bg-blue-400 text-gray-100 rounded-lg shadow-lg">
-                            <ul>
+                        <div className="absolute right-0 mt-3 w-56 bg-purple-500 rounded-lg z-10 shadow-lg p-3">
+                            <ul className="space-y-2">
+                                {/* Profile */}
+                                <li className="text-center text-white font-semibold">
+                                    My Profile
+                                </li>
+                                <hr className="border-gray-300" />
                                 {/* Change Password */}
                                 <li
                                     onClick={openPasswordChangeForm}
-                                    className="flex items-center px-4 py-2 hover:bg-blue-300 cursor-pointer"
+                                    className="flex items-center text-white px-4 py-2 hover:bg-blue-300 rounded-md cursor-pointer transition duration-300 ease-in-out"
                                 >
                                     <FaLock className="w-5 h-5 mr-2" />
                                     Change Password
@@ -188,13 +193,14 @@ const Navbar: React.FC = () => {
                                 {/* Logout */}
                                 <li
                                     onClick={handleLogout}
-                                    className="flex items-center px-4 py-2 hover:bg-blue-300 cursor-pointer"
+                                    className="flex items-center text-white px-4 py-2 hover:bg-blue-300 rounded-md cursor-pointer transition duration-300 ease-in-out"
                                 >
                                     <FaSignOutAlt className="w-5 h-5 mr-2" />
                                     Logout
                                 </li>
                             </ul>
                         </div>
+
                     )}
                 </div>
             </div>
@@ -206,7 +212,7 @@ const Navbar: React.FC = () => {
             {/* Render Change Password Form */}
             {isPasswordChangeOpen && <PasswordChangeForm onCancel={closePasswordChangeForm} />}
             <ToastContainer />
-        </div>        
+        </div>
     );
 };
 export default Navbar;

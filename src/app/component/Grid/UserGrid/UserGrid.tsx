@@ -66,7 +66,25 @@ const UserGrid = () => {
 
     const router = useRouter();
 
-     const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState({
+        userId: 0,
+        username: '',
+        password: '',
+        confirmPassword: '',
+        wareHouse: '',
+        role: '',
+        deviceId: '',
+        isActive: true,
+        createdBy: '',
+        createdOn: '',
+        updatedBy: '',
+        updatedOn: '',
+        isDeleted: false,
+    });
+
+    const handleCancel = () => {
+        //setFormData(null);
+        setFormData({
             userId: 0,
             username: '',
             password: '',
@@ -74,33 +92,15 @@ const UserGrid = () => {
             wareHouse: '',
             role: '',
             deviceId: '',
-            isActive: true,
+            isActive: false,
             createdBy: '',
             createdOn: '',
             updatedBy: '',
             updatedOn: '',
             isDeleted: false,
         });
-
-        const handleCancel = () => {
-            //setFormData(null);
-            setFormData({
-                userId: 0,
-                username: '',
-                password: '',
-                confirmPassword: '',
-                wareHouse: '',
-                role: '',
-                deviceId: '',
-                isActive: false,
-                createdBy: '',
-                createdOn: '',
-                updatedBy: '',
-                updatedOn: '',
-                isDeleted: false,
-            });
-            //router.push('/pages/adduser');
-        };
+        //router.push('/pages/adduser');
+    };
 
     const handleAddUser = (newUser: User) => {
         debugger
@@ -117,6 +117,10 @@ const UserGrid = () => {
             document.getElementById('my-drawer-4')?.click();
         }, 100);
     };
+
+    useEffect(() => {
+        setCurrentPage(1); // Reset to first page when search term changes
+    }, [searchTerm]);
 
     const handleDelete = async (user: User) => {
         try {
@@ -140,8 +144,8 @@ const UserGrid = () => {
             //setUsers(users.filter((u) => u.userId !== user.userId));
         } catch (error) {
             console.error("Error deleting user:", error);
-        }finally{
-           // setIsDialogOpen(false);
+        } finally {
+            // setIsDialogOpen(false);
         }
     };
 
@@ -180,15 +184,15 @@ const UserGrid = () => {
 
     if (isLoading) return <Loader />;
 
-    
+
     const reversedUsers = [...filteredUsers].reverse();
 
     const indexOfLastRow = currentPage * rowPerPage;
     const indexOfFirstRow = indexOfLastRow - rowPerPage;
     const currentData = reversedUsers.slice(indexOfFirstRow, indexOfLastRow);
 
-    const handleDeleteClick = (user : User) => {
-        
+    const handleDeleteClick = (user: User) => {
+
         setSelectedUser(user);
         setIsDialogOpen(true);
         //handleConfirmDelete();
@@ -279,14 +283,14 @@ const UserGrid = () => {
                                 </button>
                                 <button
                                     className="text-error hover:scale-150"
-                                    onClick={() =>handleDeleteClick(item)}
+                                    onClick={() => handleDeleteClick(item)}
                                 >
                                     <FaTrash />
                                 </button>
                             </>
                         )}
 
-                        <ConfirmDialog  
+                        <ConfirmDialog
 
                             isOpen={isDialogOpen}
                             title="Confirm Deletion"
@@ -300,18 +304,18 @@ const UserGrid = () => {
                 </td>
             </tr>
 
-      
+
         );
     };
 
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
             {/* TOP */}
-            <Grid header="User List" role="admin" FormComponent={<AddUserForm onAddUser={handleAddUser} userData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm}  showAddButton ={true} />
+            <Grid header="User List" role="admin" FormComponent={<AddUserForm onAddUser={handleAddUser} userData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} showAddButton={true} />
             {/* LIST */}
             <Table columns={userColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}
-            <Pagination data={reversedUsers} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            <Pagination data={filteredUsers} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
         </div>
     );
 };

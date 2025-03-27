@@ -316,6 +316,10 @@ const BinConfigGrid = () => {
         router.refresh();
     };
 
+     useEffect(() => {
+            setCurrentPage(1); // Reset to first page when search term changes
+        }, [searchTerm]);
+    
     const handleEdit = async (binConfig: BinCnfg) => {
         try {
             if (binConfig.whsCode) {
@@ -453,7 +457,7 @@ const BinConfigGrid = () => {
             {/* Table */}
             <Table columns={userColumns} renderRow={renderRow} data={currentData} />
             {/* Pagination */}
-            <Pagination data={binConfg} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            <Pagination data={filteredBinConfigs} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
             <ToastContainer />
         </div>
     );

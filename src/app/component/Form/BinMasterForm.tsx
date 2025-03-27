@@ -269,10 +269,21 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
     };
 
     return (
-        <div className="relative w-full p-10 text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden">
-
-            <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="w-full text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden relative">
+            <div className="flex justify-between items-center p-2">
+                <h2 className="text-xl font-medium text-left text-black ml-2">
+                    {formData.binID > 0 ? 'Update Bin' : ' Add New Bin'}
+                </h2>
                 <button
+                    className="text-red-500 text-3xl rounded-full hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"
+                    onClick={handleBackClick}
+                    aria-label="Back"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form onSubmit={handleSubmit} className="space-y-6 p-4">
+                {/* <button
                     className="text-red-500 text-3xl absolute top-4 right-4 rounded-full hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"
                     onClick={handleBackClick}
                     aria-label="Close">
@@ -280,7 +291,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                 </button>
                 <h2 className="text-xl font-medium text-center text-black mb-8">
                     Update Bin
-                </h2>
+                </h2> */}
                 <div className="grid grid-cols-1 gap-6">
 
                     {/* Warehouse Code */}
@@ -319,7 +330,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 name="binLocCode"
                                 value={formData.binLocCode}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Bin Location Code"
 
                             />
@@ -336,7 +347,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 name="sL1Code"  // ✅ Fixed name to match state
                                 value={formData.sL1Code}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="SL1 Code"
                             />
                         </label>
@@ -351,7 +362,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 name="sL2Code"
                                 value={formData.sL2Code}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="SL2 Code"
 
                             />
@@ -368,7 +379,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 name="sL3Code"
                                 value={formData.sL3Code}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="SL3 Code"
 
                             />
@@ -385,7 +396,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 name="sL4Code"
                                 value={formData.sL4Code}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="SL4 Code"
 
                             />
@@ -402,7 +413,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 name="sL5Code"
                                 value={formData.sL5Code}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="SL5 Code"
 
                             />
@@ -420,7 +431,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 name="height"
                                 value={formData.height}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Height"
 
                             />
@@ -437,7 +448,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 name="width"
                                 value={formData.width}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Width"
 
                             />
@@ -454,7 +465,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 name="length"
                                 value={formData.length}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Length"
 
                             />
@@ -471,7 +482,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 name="filter1"
                                 value={formData.filter1}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Filter 1"
 
                             />
@@ -488,7 +499,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 name="filter2"
                                 value={formData.filter2}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Filter 2"
 
                             />
@@ -505,7 +516,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 name="filter3"
                                 value={formData.filter3}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Filter 3"
 
                             />
@@ -522,7 +533,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 name="quantity"
                                 value={formData.quantity}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Quantity"
 
                             />
@@ -539,7 +550,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 name="level"
                                 value={formData.level}
                                 onChange={handleInputChange}
-                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
+                                className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Level"
 
                             />
