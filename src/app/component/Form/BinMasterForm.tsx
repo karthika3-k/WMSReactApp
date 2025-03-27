@@ -269,7 +269,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
     };
 
     return (
-        <div className="w-full text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden relative">
+        <div className="w-full text-indigo-800 rounded-xl max-h-[900px] overflow-y-auto overflow-x-hidden relative">
             <div className="flex justify-between items-center p-2">
                 <h2 className="text-xl font-medium text-left text-black ml-2">
                     {formData.binID > 0 ? 'Update Bin' : ' Add New Bin'}
@@ -430,13 +430,17 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 id="height"
                                 name="height"
                                 value={formData.height}
-                                onChange={handleInputChange}
+                                    onChange={(e) => {
+                                    const value = Math.max(0, Number(e.target.value)).toString(); // Convert back to string
+                                    handleInputChange({ target: { name: "height", value } } as React.ChangeEvent<HTMLInputElement>);
+                                }}
                                 className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Height"
-
+                                min="0"
                             />
                         </label>
                     </div>
+
 
                     {/* Width */}
                     <div className="relative">
@@ -447,10 +451,13 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 id="width"
                                 name="width"
                                 value={formData.width}
-                                onChange={handleInputChange}
+                                onChange={(e) => {
+                                    const value = Math.max(0, Number(e.target.value)).toString(); // Convert back to string
+                                    handleInputChange({ target: { name: "width", value } } as React.ChangeEvent<HTMLInputElement>);
+                                  }}
                                 className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Width"
-
+ min="0"
                             />
                         </label>
                     </div>
@@ -464,10 +471,13 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 id="length"
                                 name="length"
                                 value={formData.length}
-                                onChange={handleInputChange}
+                                onChange={(e) => {
+                                    const value = Math.max(0, Number(e.target.value)).toString(); // Convert back to string
+                                    handleInputChange({ target: { name: "length", value } } as React.ChangeEvent<HTMLInputElement>);
+                                  }}
                                 className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Length"
-
+ min="0"
                             />
                         </label>
                     </div>
@@ -532,10 +542,13 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 id="quantity"
                                 name="quantity"
                                 value={formData.quantity}
-                                onChange={handleInputChange}
+                                onChange={(e) => {
+                                    const value = Math.max(0, Number(e.target.value)).toString(); // Convert back to string
+                                    handleInputChange({ target: { name: "quantity", value } } as React.ChangeEvent<HTMLInputElement>);
+                                }}
                                 className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Quantity"
-
+ min="0"
                             />
                         </label>
                     </div>
@@ -549,10 +562,13 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                                 id="level"
                                 name="level"
                                 value={formData.level}
-                                onChange={handleInputChange}
+                                onChange={(e) => {
+                                    const value = Math.max(0, Number(e.target.value)).toString(); // Convert back to string
+                                    handleInputChange({ target: { name: "level", value } } as React.ChangeEvent<HTMLInputElement>);
+                                }}
                                 className="input input-md w-half p-2 h-13 rounded-lg border-2 border-gray-300 focus:border-black focus:outline-none"
                                 placeholder="Level"
-
+ min="0"
                             />
                         </label>
                     </div>

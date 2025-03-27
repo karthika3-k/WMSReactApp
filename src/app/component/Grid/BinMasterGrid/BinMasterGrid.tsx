@@ -53,7 +53,7 @@ const BinMastserGrid = () => {
         fetchWareHouse();
     }, []);
     const binMasterColumns = [
-        { name: "WareHouse", field: "whsCode", className: "hidden md:table-cell px-2", visible: true },
+        // { name: "WareHouse", field: "whsCode", className: "hidden md:table-cell px-2", visible: true },
         { name: "Bin Location Code", field: "binLocCode", className: "hidden md:table-cell px-2", visible: true },
         { name: "SL1 Code", field: "sl1Code", className: "hidden md:table-cell px-2", visible: true },
         { name: "SL2 Code", field: "sl2Code", className: "hidden md:table-cell px-2", visible: true },
@@ -243,13 +243,13 @@ const BinMastserGrid = () => {
         return (
             <tr key={item.binID} className="border-b h-15 text-[14px] border-gray-200 even:bg-slate-50 text-sm hover:bg-[#8c57ff]/20">
                 {/* <td className="hidden md:table-cell">{item.binID}</td> */}
-
+{/* 
                 <td className="hidden md:table-cell">
                     <div className="flex items-center gap-1 text-center">
                         <TbBuildingWarehouse className="text-primary shrink-0" />
                         <span>{item.whsCode}</span>
                     </div>
-                </td>
+                </td> */}
                 <td className="hidden md:table-cell text-center">
                     <div className="flex items-center gap-1">
 
@@ -271,7 +271,7 @@ const BinMastserGrid = () => {
                 <td className="hidden md:table-cell">
                     <div className="flex items-center justify-center gap-1">
                         {/* <TbRulerMeasure className="text-primary shrink-0" /> */}
-                        <span>{item.height}</span>
+                        <span>{item.width}</span>
                     </div>
                 </td>
                 <td className="hidden md:table-cell text-center">{item.length}</td>

@@ -155,7 +155,7 @@ const Navbar: React.FC = () => {
     const closePasswordChangeForm = () => setPasswordChangeOpen(false);
     return (
         <div className="flex items-center justify-between p-4 w-full">
-            <h1 className="flex-grow text-center uppercase tracking-wide text-purple-600 text-shadow z-10">Warehouse Management System</h1>
+            <h1 className="flex-grow text-center uppercase tracking-wide font-semibold text-purple-600 text-shadow z-10">Warehouse Management System</h1>
             <div className="flex items-center gap-6 justify-end">
                 <div className="bg-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer">
                     <FaComments />

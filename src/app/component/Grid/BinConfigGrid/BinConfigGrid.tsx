@@ -196,7 +196,7 @@ import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loader from "../../Common/Loader"; // Corrected the import of Loader
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaUserShield, FaUserSlash } from "react-icons/fa";
 import Table from "../../Table/Table";
 import Pagination from "../../Pagination/Pagination";
 import Grid from "../Grid";
@@ -398,11 +398,15 @@ const BinConfigGrid = () => {
     // Render Table Row
     const renderRow = (item: BinCnfg) => {
         return (
-            <tr key={item.binConfigId} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-accent/20 ">
+            <tr key={item.binConfigId} className="border-b border-gray-200 h-15  even:bg-slate-50 text-[14px]  hover:bg-[#8c57ff]/20 ">
                 <td className="hidden md:table-cell">{item.whsCode}</td>
                 <td className="hidden md:table-cell">
-                    <button className={`btn btn-soft text-[16px] font-medium ${item.isActive ? "btn-success" : "btn-error"}`}>
-                        {item.isActive ? "Active" : "Inactive"}
+                    <button className={` text-[16px] font-medium ${item.isActive ? "btn-success" : "btn-error"}`}>
+                       {item.isActive ? (
+                                              <FaUserShield  className="text-[#8c57ff] text-xl" />
+                                          ) : (
+                                              <FaUserSlash  className="text-[#ff5757] text-xl" />
+                                          )}
                     </button>
                 </td>
                 <td className="hidden md:table-cell">
@@ -414,7 +418,7 @@ const BinConfigGrid = () => {
                         {role === 'admin' && (
                             <>
                                 <button
-                                    className="text-success hover:scale-150"
+                                    className="text-[#8c57ff] hover:scale-150"
                                     onClick={() => handleEdit(item)}
                                 >
                                     <FaEdit />

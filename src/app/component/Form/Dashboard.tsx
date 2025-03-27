@@ -13,13 +13,15 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
     <div className="flex h-screen">
       <div className='w-full md:w-[8%] lg:w-[16%] xl:w-[14%] p-4'>
         <Link href='/pages/admin' className='flex items-center justify-center lg:justify-start gap-2'>
-          <Image
-            src="/Techativelogo.png"
-            alt="background image"
-            width={160}
-            height={80}
-             className="w-full h-auto object-cover"
-          />
+        <Image
+  src="/Techativelogo.png"
+  alt="background image"
+  width={160}
+  height={10}
+  style={{ height: "40px", width: "100%" }}
+  className="object-cover"
+/>
+
         </Link>
         <Sidebar />
       </div>

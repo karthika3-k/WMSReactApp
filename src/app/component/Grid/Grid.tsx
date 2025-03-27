@@ -34,7 +34,7 @@ const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, sear
                 className="drawer-toggle"
               />
 
-              <div className="drawer-content">
+              <div className="drawer-content ml-4">
                 {showAddButton && ( // Only applies to the button
                   <button
                     onClick={() => {
@@ -42,7 +42,7 @@ const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, sear
                         drawerCheckboxRef.current.checked = true;
                       }
                     }}
-                    className="btn btn-outline border-[#8c57ff] text-[#8c57ff] hover:bg-[#8c57ff] hover:text-white"
+                    className="btn  btn-outline border-[#8c57ff] text-[#8c57ff] hover:bg-[#8c57ff] hover:text-white"
                   >
                     <FaPlus />
                   </button>

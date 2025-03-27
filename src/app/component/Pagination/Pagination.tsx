@@ -21,7 +21,9 @@ const Pagination = ({ rowPerPage, data, currentPage, setCurrentPage }: Paginatio
       <button
         onClick={() => paginate(currentPage - 1)}
         disabled={isPrevDisabled}
-        className="btn btn-outline btn-accent"
+        className="btn  btn-outline border-[#8c57ff] text-[#8c57ff] hover:bg-[#8c57ff] hover:text-white"
+
+
       >
        <FaArrowLeft />
       </button>
@@ -31,7 +33,7 @@ const Pagination = ({ rowPerPage, data, currentPage, setCurrentPage }: Paginatio
           <button
             key={pageNumber}
             onClick={() => paginate(pageNumber)}
-            className={`px-2 rounded-sm ${pageNumber === currentPage ? "bg-accent/20" : ""}`}
+            className={`px-2 rounded-sm ${pageNumber === currentPage ? "bg-[#8c57ff]/20" : ""}`}
           >
             {pageNumber}
           </button>
@@ -40,7 +42,7 @@ const Pagination = ({ rowPerPage, data, currentPage, setCurrentPage }: Paginatio
       <button
         onClick={() => paginate(currentPage + 1)}
         disabled={isNextDisabled}
-        className="btn btn-outline btn-purple-500"
+       className="btn  btn-outline border-[#8c57ff] text-[#8c57ff] hover:bg-[#8c57ff] hover:text-white"
       >
        <FaArrowRight />
       </button>

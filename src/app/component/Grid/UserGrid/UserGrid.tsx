@@ -4,7 +4,7 @@ import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Loader from "../../Common/Loader";
-import { FaEdit, FaPlus, FaTrash, FaUser, FaUserShield } from "react-icons/fa"
+import { FaEdit, FaPlus, FaTrash, FaUser, FaUserShield, FaUserSlash } from "react-icons/fa"
 import Table from "../../Table/Table";
 import Pagination from "../../Pagination/Pagination";
 import Image from "next/image";
@@ -233,12 +233,12 @@ const UserGrid = () => {
     };
     const renderRow = (item: User) => {
         return (
-            <tr key={item.userId} className="border-b border-gray-200 h-15 text-[16px] font-medium text-sm hover:bg-accent/20">
+            <tr key={item.userId} className="border-b border-gray-200 h-15 text-[14px] font-medium text-sm hover:bg-[#8c57ff]/20">
                 {/* <td className="flex items-center gap-4 p-4">
                     <Image src="/userlogo.png"
                         alt=""
                         width={40}
-                        height={40}
+                        height={40} 
                         className="md:hidden xl:block w-10 h-10 rounded-full object-cover" />
                     <div className="flex flex-col">
                         <h3 className="font-semibold">{item.userName}</h3>
@@ -263,9 +263,9 @@ const UserGrid = () => {
                 <td className="hidden md:table-cell">{item.deviceId}</td>
                 <td className="hidden md:table-cell">
                     {item.isActive ? (
-                        <MdOutlineAirplanemodeActive className="text-[#8c57ff] text-xl" />
+                        <FaUserShield  className="text-[#8c57ff] text-xl" />
                     ) : (
-                        <MdOutlineAirplanemodeInactive className="text-[#ff5757] text-xl" />
+                        <FaUserSlash  className="text-[#ff5757] text-xl" />
                     )}
                 </td>
                 <td>
@@ -276,7 +276,7 @@ const UserGrid = () => {
                         {role === 'admin' && (
                             <>
                                 <button
-                                    className="text-success hover:scale-150"
+                                    className="text-[#8c57ff] hover:scale-150"
                                     onClick={() => handleEdit(item)}
                                 >
                                     <FaEdit />
