@@ -57,7 +57,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
     };
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-     const [wareHouse, setWareHouse] = useState<Warehouse[]>([]);
+    const [wareHouse, setWareHouse] = useState<Warehouse[]>([]);
     const router = useRouter();
     const [parsedUserData, setParsedUserData] = useState<UserData | null>(null);
     const searchParams = useSearchParams();
@@ -69,7 +69,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
             const fetchWareHouseData = await wareHouseTypes();
             setWareHouse(fetchWareHouseData);
         };
-        fetchWareHouse();   
+        fetchWareHouse();
         if (typeof window !== "undefined") {
             if (binMasterData) {
                 setFormData({
@@ -137,42 +137,8 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
     const handleClickShowConfirmPassword = () => {
         setShowConfirmPassword(!showConfirmPassword);
     };
-    // const validateForm = () => {
 
-    //     let isValid = true;
-    //     const newErrors: any = {};
 
-    //     if (!formData.username) {
-    //         newErrors.userName = "Username is required";
-    //         isValid = false;
-    //     }
-
-    //     if (!formData.password) {
-    //         newErrors.password = "Password is required";
-    //         isValid = false;
-    //     }
-
-    //     if (formData.password !== formData.confirmPassword) {
-    //         newErrors.confirmPassword = "Passwords do not match";
-    //         showErrorToast(`Password Mismatching`);
-    //         isValid = false;
-    //     }
-    //     if (!formData.role) {
-    //         newErrors.role = "Role is required";
-    //         isValid = false;
-    //     }
-    //     if (!formData.wareHouse) {
-    //         newErrors.wareHouse = "WareHouse is required";
-    //         isValid = false;
-    //     }
-    //     if (!formData.deviceId) {
-    //         newErrors.deviceId = "Device is required";
-    //         isValid = false;
-    //     }
-
-    //     setErrors(newErrors);
-    //     return isValid;
-    // };
     const handleSubmit = async (e: React.FormEvent) => {
 
         e.preventDefault();
@@ -303,7 +269,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
     };
 
     return (
-        <div className="relative w-full p-10 text-indigo-800 rounded-xl max-h-[1000px] overflow-y-auto overflow-x-hidden">
+        <div className="relative w-full p-10 text-indigo-800 rounded-xl max-h-[700px] overflow-y-auto overflow-x-hidden">
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <button
@@ -318,29 +284,29 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                 <div className="grid grid-cols-1 gap-6">
 
                     {/* Warehouse Code */}
-                    <div className="relative flex items-center justify-left">
-    <label className="floating-label text-black font-medium">
-        <span>Warehouse Code</span>
-        <select
-            id="whsCode"
-            name="whsCode"
-            value={formData.whsCode} // Bind selected value here
-            onChange={handleInputChange} // Handle input change
-            className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:ring-indigo-500 focus:outline-none font-medium text-center"
-            required
-            style={{ fontSize: '10px' }} // Font size for selected value
-        >
-            <option value="" disabled>
-                Select Warehouse Code
-            </option>
-            {wareHouse.map((item, index) => (
-                <option key={index} value={item.whsCode}>
-                    {item.whsName}
-                </option>
-            ))}
-        </select>
-    </label>
-</div>
+                    {/* <div className="relative flex items-center justify-left">
+                        <label className="floating-label text-black font-medium">
+                            <span>Warehouse Code</span>
+                            <select
+                                id="whsCode"
+                                name="whsCode"
+                                value={formData.whsCode} // Bind selected value here
+                                onChange={handleInputChange} // Handle input change
+                                className="input input-md w-full p-2 rounded-lg border-2 border-gray-300 focus:ring-indigo-500 focus:outline-none font-medium text-center"
+                                required
+                                style={{ fontSize: '10px' }} // Font size for selected value
+                            >
+                                <option value="" disabled>
+                                    Select Warehouse Code
+                                </option>
+                                {wareHouse.map((item, index) => (
+                                    <option key={index} value={item.whsCode}>
+                                        {item.whsName}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                    </div> */}
 
 
                     {/* Bin Location Code */}
@@ -604,7 +570,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                     </button>
                     <button type="button" onClick={handleCancel} className="btn btn-outline btn-error hover:text-white"
                     >
-                        Cancel
+                        Clear
                     </button>
                 </div>
             </form>

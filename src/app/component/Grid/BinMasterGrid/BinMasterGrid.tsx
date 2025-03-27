@@ -17,7 +17,7 @@ import ConfirmDialog from "../../Common/ConfirmDialog";
 import BinMasterForm from "../../Form/BinMasterForm";
 import { toast, ToastContainer } from "react-toastify";
 import { Warehouse } from "../../types/Warehouse";
-import { TbBuildingWarehouse, TbRulerMeasure, TbRulerMeasure2 } from "react-icons/tb";
+import { TbBuildingWarehouse, TbDeviceAnalytics, TbDeviceDesktopOff, TbRulerMeasure, TbRulerMeasure2 } from "react-icons/tb";
 import { MdOutlineAirplanemodeActive, MdOutlineAirplanemodeInactive } from "react-icons/md";
 
 let user = null
@@ -26,25 +26,8 @@ if (typeof window !== "undefined") {
     user = localStorage.getItem("userName");
 }
 let role = "admin";
-const binMasterColumns = [
-    { name: "WareHouse", field: "whsCode", className: "hidden md:table-cell", visible: true },
-    { name: "Bin Location Code", field: "binLocCode", className: "hidden md:table-cell", visible: true },
-    { name: "SL1 Code", field: "sl1Code", className: "hidden md:table-cell", visible: true },
-    { name: "SL2 Code", field: "sl2Code", className: "hidden md:table-cell", visible: true },
-    { name: "SL3 Code", field: "sl3Code", className: "hidden md:table-cell", visible: true },
-    { name: "SL4 Code", field: "sl4Code", className: "hidden md:table-cell", visible: true },
-    { name: "SL5 Code", field: "sl5Code", className: "hidden md:table-cell", visible: true },
-    { name: "Height", field: "height", className: "hidden md:table-cell", visible: true },
-    { name: "Width", field: "width", className: "hidden md:table-cell", visible: true },
-    { name: "Length", field: "length", className: "hidden md:table-cell", visible: true },
-    { name: "Filter1", field: "filter1", className: "hidden md:table-cell", visible: true },
-    { name: "Filter2", field: "filter2", className: "hidden md:table-cell", visible: true },
-    { name: "Filter3", field: "filter3", className: "hidden md:table-cell", visible: true },
-    { name: "Quantity", field: "quantity", className: "hidden md:table-cell", visible: true },
-    { name: "Level", field: "level", className: "hidden md:table-cell", visible: true },
-    { name: "Active", field: "active", className: "hidden md:table-cell", visible: true },
-    { name: "Actions", field: "actions", visible: true }
-];
+
+
 
 const BinMastserGrid = () => {
     const [binMaster, setBinMaster] = useState<BinMaster[]>([]);
@@ -54,16 +37,42 @@ const BinMastserGrid = () => {
     const [currentPage, setCurrentPage] = useState(1); // Add page state
     const [searchTerm, setSearchTerm] = useState(""); // Add a search term state
     const drawerCheckboxRef = useRef<HTMLInputElement>(null);
+    const [isClient, setIsClient] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
+    const [isActionVisible, setActionIsVisible] = useState(true);
     const [selectedMaster, setSelectedMaster] = useState<BinMaster | null>(null);
+    
 
-    const rowPerPage = 10;
+    const rowPerPage = 5;
     useEffect(() => {
+        setIsClient(true);
         const fetchWareHouse = async () => {
             const fetchWareHouseData = await wareHouseTypes();
             setWareHouse(fetchWareHouseData);
         };
         fetchWareHouse();
     }, []);
+    const binMasterColumns = [
+        { name: "WareHouse", field: "whsCode", className: "hidden md:table-cell px-2", visible: true },
+        { name: "Bin Location Code", field: "binLocCode", className: "hidden md:table-cell px-2", visible: true },
+        { name: "SL1 Code", field: "sl1Code", className: "hidden md:table-cell px-2", visible: true },
+        { name: "SL2 Code", field: "sl2Code", className: "hidden md:table-cell px-2", visible: true },
+        { name: "SL3 Code", field: "sl3Code", className: "hidden md:table-cell px-2", visible: true },
+        { name: "SL4 Code", field: "sl4Code", className: "hidden md:table-cell px-2", visible: true },
+        { name: "SL5 Code", field: "sl5Code", className: "hidden md:table-cell px-2", visible: true },
+        { name: "Height", field: "height", className: "hidden md:table-cell px-2", visible: true },
+        { name: "Width", field: "width", className: "hidden md:table-cell px-2", visible: true },
+        { name: "Length", field: "length", className: "hidden md:table-cell px-2", visible: true },
+        { name: "Filter1", field: "filter1", className: "hidden md:table-cell px-2", visible: true },
+        { name: "Filter2", field: "filter2", className: "hidden md:table-cell px-2", visible: true },
+        { name: "Filter3", field: "filter3", className: "hidden md:table-cell px-2", visible: true },
+        { name: "Quantity", field: "quantity", className: "hidden md:table-cell px-2", visible: true },
+        { name: "Level", field: "level", className: "hidden md:table-cell px-2", visible: true },
+        { name: "Active", field: "active", className: "hidden md:table-cell px-2", visible: true },
+        ...(isActionVisible
+            ? [{ name: "Actions", field: "actions", className: "px-2", visible: true }]
+            : [])
+    ];
     // useEffect(() => {
 
     //     const fetchBinMaster = async () => {
@@ -104,6 +113,7 @@ const BinMastserGrid = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const handleImportClick = () => {
         if (fileInputRef.current) {
+
             fileInputRef.current.click();
         }
     };
@@ -164,7 +174,9 @@ const BinMastserGrid = () => {
             }));
 
             setBinMaster(formattedData);
-
+           
+            setActionIsVisible(false);
+            setIsVisible(true);
         };
     };
 
@@ -189,7 +201,7 @@ const BinMastserGrid = () => {
         try {
             debugger
             const values = {
-                userId: binMaster.binID,    
+                userId: binMaster.binID,
             };
             const response = await api.delete(`/BinMaster/DeleteBinMaster?id=${values.userId}`);
             debugger
@@ -197,7 +209,7 @@ const BinMastserGrid = () => {
                 if (response.data !== null) {
                     showSuccessToast('Deleted Successfully');
                     router.refresh();
-                    
+
                     // Corrected line
                     setBinMaster((prevBinMasters) => prevBinMasters.filter(bm => bm.binID !== binMaster.binID));
                 } else {
@@ -210,7 +222,7 @@ const BinMastserGrid = () => {
             console.error("Error deleting user:", error);
         }
     };
-    
+
 
     const filteredUsers = binMaster.filter((binMaster) =>
         Object.values(binMaster)
@@ -226,97 +238,134 @@ const BinMastserGrid = () => {
     const currentData = filteredUsers.slice(indexOfFirstRow, indexOfLastRow);
     const renderRow = (item: BinMaster) => {
         return (
-            <tr key={item.binID} className="border-b h-15 text-[16px] border-gray-200 even:bg-slate-50 text-sm hover:bg-[#8c57ff]/20">
+            <tr key={item.binID} className="border-b h-15 text-[14px] border-gray-200 even:bg-slate-50 text-sm hover:bg-[#8c57ff]/20">
                 {/* <td className="hidden md:table-cell">{item.binID}</td> */}
 
                 <td className="hidden md:table-cell">
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 text-center">
                         <TbBuildingWarehouse className="text-primary shrink-0" />
                         <span>{item.whsCode}</span>
                     </div>
                 </td>
-                <td className="hidden md:table-cell">
+                <td className="hidden md:table-cell text-center">
                     <div className="flex items-center gap-1">
-                        <HiMapPin className="text-primary shrink-0" />
+
                         <span>{item.binLocCode}</span>
                     </div>
                 </td>
-                <td className="hidden md:table-cell">{item.sL1Code}</td>
-                <td className="hidden md:table-cell">{item.sL2Code}</td>
-                <td className="hidden md:table-cell">{item.sL3Code}</td>
-                <td className="hidden md:table-cell">{item.sL4Code}</td>
-                <td className="hidden md:table-cell">{item.sL5Code}</td>
+                <td className="hidden md:table-cell text-center">{item.sL1Code}</td>
+                <td className="hidden md:table-cell text-center">{item.sL2Code}</td>
+                <td className="hidden md:table-cell text-center">{item.sL3Code}</td>
+                <td className="hidden md:table-cell text-center">{item.sL4Code}</td>
+                <td className="hidden md:table-cell text-center">{item.sL5Code}</td>
 
-                <td className="hidden md:table-cell">
-                    <div className="flex items-center gap-1">
-                        <TbRulerMeasure2 className="text-primary shrink-0" />
+                <td className="hidden md:table-cell ">
+                    <div className="flex items-center justify-center gap-1">
+                        {/* <TbRulerMeasure2 className="text-primary shrink-0" /> */}
                         <span>{item.height}</span>
                     </div>
                 </td>
                 <td className="hidden md:table-cell">
-                    <div className="flex items-center gap-1">
-                        <TbRulerMeasure className="text-primary shrink-0" />
+                    <div className="flex items-center justify-center gap-1">
+                        {/* <TbRulerMeasure className="text-primary shrink-0" /> */}
                         <span>{item.height}</span>
                     </div>
                 </td>
-                <td className="hidden md:table-cell">{item.length}</td>
-                <td className="hidden md:table-cell">{item.filter1}</td>
-                <td className="hidden md:table-cell">{item.filter2}</td>
-                <td className="hidden md:table-cell">{item.filter3}</td>
-                <td className="hidden md:table-cell">{item.quantity}</td>
-                <td className="hidden md:table-cell">{item.level}</td>
-                <td className="hidden md:table-cell">
-                    {item.active ? (
-                        <MdOutlineAirplanemodeActive className="text-[#8c57ff] text-xl" />
-                    ) : (
-                        <MdOutlineAirplanemodeInactive className="text-[#ff5757] text-xl" />
-                    )}
+                <td className="hidden md:table-cell text-center">{item.length}</td>
+                <td className="hidden md:table-cell text-center">{item.filter1}</td>
+                <td className="hidden md:table-cell text-center">{item.filter2}</td>
+                <td className="hidden md:table-cell text-center">{item.filter3}</td>
+                <td className="hidden md:table-cell text-center">{item.quantity}</td>
+                <td className="hidden md:table-cell text-center">{item.level}</td>
+                <td className="hidden md:table-cell text-center">
+                    <div className="flex justify-center">
+                        {item.active ? (
+                            <TbDeviceAnalytics className="text-[#8c57ff] text-xl" />
+                        ) : (
+                            <TbDeviceDesktopOff className="text-[#ff5757] text-xl" />
+                        )}
+                    </div>
                 </td>
+
                 {/* <td className="hidden md:table-cell">{item.userSign}</td> */}
 
                 {/* Actions Column */}
-                <td>
-                    <div className="flex items-center gap-2">
-                        <Link href={`/Grid/BinMasterGrid/${item.binID}`}>
-                            {/* Add an icon or user details here */}
-                        </Link>
-                        {role === 'admin' && (
-                            <>
-                                <button
-                                    className="text-[#8c57ff] hover:scale-150"
-                                    onClick={() => handleEdit(item)}
-                                >
-                                    <FaEdit />
-                                </button>
-                                <button
-                                    className="text-error hover:scale-150"
-                                 onClick={() => handleDelete(item)}
-                                >
-                                    <FaTrash />
-                                </button>
-                            </>
-                        )}
 
-                        {/* <ConfirmDialog
+                {isActionVisible && (
+                    <td className="text-center">
+                        <div className="flex items-center gap-2 justify-center">
+                            <Link href={`/Grid/BinMasterGrid/${item.binID}`}>
+                                {/* Add an icon or user details here */}
+                            </Link>
+                            {role === 'admin' && (
+                                <>
+                                    <button
+                                        className="text-[#8c57ff] hover:scale-150"
+                                        onClick={() => handleEdit(item)}
+                                    >
+                                        <FaEdit />
+                                    </button>
+                                    <button
+                                        className="text-error hover:scale-150"
+                                        onClick={() => handleDelete(item)}
+                                    >
+                                        <FaTrash />
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </td>
+                )}
 
-                            isOpen={isDialogOpen}
-                            title="Confirm Deletion"
-                            message={`Are you sure you want to delete ${selectedUser?.userName}?`}
-                            onConfirm={handleConfirmDelete}
-                            onCancel={handleCancelDelete}
-                        /> */}
-
-                    </div>
-
-                </td>
             </tr>
 
         );
     };
+    const handleDownloadExcel = () => {
+
+        if (typeof window === "undefined") return; // Ensure it's running on client-side
+
+        // Define headers
+        const headers = [
+            "WhsCode", "BinLocCode", "SL1Code", "SL2Code", "SL3Code",
+            "SL4Code", "SL5Code", "Height", "Width", "Length",
+            "Filter1", "Filter2", "Filter3", "Quantity", "Level", "Active"
+        ];
+
+        // Define data rows
+        const data = [
+            ["CWBLR", "CWBLR-F1-R1-B1", "F1", "R1", "B1", "D1", "SB1", 100, 200, 120, "LG", "LED", "WHITE", 40, 2, "Y"]
+        ];
+
+        // Combine headers and data
+        const worksheetData = [headers, ...data];
+
+        // Create a worksheet and a workbook
+        const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "BinMaster");
+
+        // Generate Excel file as a Blob
+        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+        const blob = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+        // Create a temporary anchor element
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "BinMaster.xlsx"; // File will be saved in the Downloads folder
+        document.body.appendChild(a);
+        a.click();
+
+        // Clean up
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
 
     const handleInsertData = async () => {
         try {
-            debugger
+
             if (binMaster.length === 0) {
                 toast.error("No data to save!");
                 return;
@@ -328,13 +377,33 @@ const BinMastserGrid = () => {
                 active: rest.active === true, // Ensure it's a boolean
             }));
 
-            const response = await api.post('/BinMaster/CreateBinMaster', binRequest);
+            const response = await api.post('/BinMaster/CreateBinMasterTemp', binRequest);
+
 
             if (response.status === 201 || response.status === 200) {
-                toast.success("Data saved successfully!");
+
+                const valResponse = await api.get('/BinMaster/ValBinMasterData', {
+                    params: { userSign: binRequest[0].userSign }  // Correct way to pass query params
+                });
+
+                if (valResponse.status === 201 || valResponse.status === 200) {
+                    const mainResponse = await api.post('/BinMaster/CreateBinMaster ', valResponse.data);
+                    if (mainResponse.status === 201 || mainResponse.status === 200) {
+                        toast.success("Data saved successfully!");
+                        debugger
+                        const delResponse = await api.delete(`/BinMaster/DeleteBinMasterTemp?userSign=${binRequest[0].userSign}`);
+                        debugger
+                        console.log(delResponse);
+                    }
+                }
+                else {
+                    toast.error("Failed to save data!");
+                }
             } else {
                 toast.error("Failed to save data!");
             }
+
+
         } catch (error) {
             console.error("Insert Error:", error);
             toast.error("An error occurred while saving data.");
@@ -347,6 +416,8 @@ const BinMastserGrid = () => {
 
         if (whsCode) {
             try {
+                setActionIsVisible(true);
+                setIsVisible(false);
                 const response = await api.get(`/BinMaster/BinMasterByWhs?whsCode=${whsCode}`);
                 setBinMaster(response.data); // Update grid data
             } catch (error) {
@@ -373,9 +444,8 @@ const BinMastserGrid = () => {
             }
         }, 100);
 
-
-
     };
+
 
 
 
@@ -424,9 +494,14 @@ const BinMastserGrid = () => {
                         className="btn btn-soft bg-[#b08aff] text-white flex items-center gap-2 hover:bg-[#8c57ff]"
                         onClick={handleImportClick}
                     >
-                        Import <HiArrowDownTray />
+                        Import
+                    </button>
+                    <button onClick={handleDownloadExcel} className="btn btn-soft bg-[#b08aff] ml-4  text-white flex items-center gap-2 hover:bg-[#8c57ff] rounded-full">
+                        <HiArrowDownTray />
                     </button>
                 </div>
+
+
             </div>
 
             {/* TOP */}
@@ -436,11 +511,13 @@ const BinMastserGrid = () => {
             {/* PAGINATION */}
             <Pagination data={binMaster} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
             <div className="flex justify-end mb-4">
-                <button
-                    className="btn btn-soft bg-[#b08aff] text-white flex items-center gap-2 hover:bg-[#8c57ff]"
-                    onClick={handleInsertData} >
-                    <HiDocument /> Save
-                </button>
+                {isVisible && (
+                    <button
+                        className="btn btn-soft bg-[#b08aff] text-white flex items-center gap-2 hover:bg-[#8c57ff]"
+                        onClick={handleInsertData} >
+                        <HiDocument /> Save
+                    </button>
+                )}
             </div>
             <ToastContainer position="bottom-right" />
         </div>
@@ -449,3 +526,4 @@ const BinMastserGrid = () => {
 };
 
 export default BinMastserGrid;
+
