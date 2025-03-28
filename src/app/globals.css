@@ -40,6 +40,12 @@ body {
   }
 }
 
+@layer utilities {
+  .text-shadow {
+    text-shadow: 3px 6px 6px rgba(0, 0, 0, 0.4);  /* Horizontal, Vertical, Blur Radius */
+  }
+}
+
 .react-calendar{
   width: 100% !important;
   border: none !important;
