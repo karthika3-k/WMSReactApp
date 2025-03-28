@@ -200,6 +200,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                             console.log(message);
                             onUpdateChanges(binmasterRequest.whsCode);
                         }, 1000);
+                        
                     } else {
                         showErrorToast(` ${formData.binID > 0 ? 'Updated' : 'Created'} failed.`);
                     }

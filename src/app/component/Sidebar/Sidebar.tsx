@@ -1,140 +1,169 @@
-"use client"
-import { useState } from "react";
-import {FaWarehouse, FaRecycle, FaRulerCombined, FaUserAlt, FaMobileAlt, FaBox, FaTruck, FaTruckLoading, FaStoreAlt, FaAngleUp, FaAngleDown, FaUserPlus } from 'react-icons/fa'
+"use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React, { useState } from "react";
+import {
+  FaWarehouse,
+  FaRecycle,
+  FaRulerCombined,
+  FaUserAlt,
+  FaMobileAlt,
+  FaBox,
+  FaTruck,
+  FaTruckLoading,
+  FaStoreAlt,
+  FaAngleUp,
+  FaAngleDown,
+  FaUserPlus,
+} from "react-icons/fa";
 
 const Sidebar: React.FC = () => {
-    const [isInventoryOpen, setIsInventoryOpen] = useState(false);
-    const [isAdminOpen, setIsAdminOpen] = useState(false);
-    const [isMasterOpen, setIsMasterOpen] = useState(false);
+  const pathname = usePathname();
+  type MenuKey = "Inventory" | "Admin" | "Master";
+  // Menu items with submenus
+  const menuItems = [
+    { name: "Master", icon: <FaWarehouse />, hasSubMenu: true },
+    { name: "Admin", icon: <FaUserAlt />, hasSubMenu: true },
+    { name: "Inventory", icon: <FaBox />, hasSubMenu: true },
+  ];
 
-    const toggleSubMenu = (menu: string) => {
-        if (menu === 'inventory') {
-            setIsInventoryOpen(!isInventoryOpen);
-        } else if (menu === 'admin') {
-            setIsAdminOpen(!isAdminOpen);
-        } else if (menu === 'master') {
-            setIsMasterOpen(!isMasterOpen);
-        }
-    };
+  // Submenu items for each parent
+  const inventorySubMenuItems = [
+    { name: "Inward", path: "/inward", icon: <FaTruck /> },
+    { name: "Outward", path: "/outward", icon: <FaTruckLoading /> },
+    { name: "PO Confirmation Wizard", path: "/po-confirmation", icon: <FaStoreAlt /> },
+  ];
 
-    const menuItems = [
-        { name: 'Master', path: '', icon: <FaWarehouse />, hasSubMenu: true },
-        { name: 'Admin', path: '', icon: <FaUserAlt />, hasSubMenu: true },
-        { name: 'Inventory', path: '', icon: <FaBox />, hasSubMenu: true },
-    ];
+  const adminSubMenuItems = [
+    { name: "User", path: "/pages/usergrid", icon: <FaUserPlus /> },
+  ];
 
-    const inventorySubMenuItems = [
-        { name: 'Inward', path: '', icon: <FaTruck /> },
-        { name: 'Outward', path: '', icon: <FaTruckLoading /> },
-        { name: 'PO Confirmation Wizard', path: '', icon: <FaStoreAlt /> }
-    ];
+  const masterSubMenuItems = [
+    { name: "Bin Configuration", path: "/pages/binconfiggrid", icon: <FaRecycle /> },
+    { name: "Bin Master", path: "/pages/binmastergrid", icon: <FaRulerCombined /> },
+    { name: "Device", path: "/pages/devicegrid", icon: <FaMobileAlt /> },
+  ];
 
-    const adminSubMenuItems = [
-        { name: 'User', path: '/pages/usergrid', icon: <FaUserPlus /> },
-    ];
+  // Toggle states if you want manual toggling (optional)
+  const [openMenus, setOpenMenus] = useState<{ [key in MenuKey]: boolean }>({
+    Inventory: false,
+    Admin: false,
+    Master: false,
+  });
+  
 
-    const masterSubMenuItems = [
-        { name: 'Bin Configuration', path: '/pages/binconfiggrid', icon: <FaRecycle /> },
-        { name: 'Bin Master', path: '/pages/binmastergrid', icon: <FaRulerCombined /> },
-        { name: 'Device', path: '/pages/devicegrid', icon: <FaMobileAlt /> },
-    ];
+  const isSubMenuOpen = (menuName: MenuKey, subItems: { path: string }[]) => {
+    return subItems.some((sub) => pathname.includes(sub.path)) || openMenus[menuName];
+  };
+  
+  const toggleSubMenu = (menuName: MenuKey) => {
+    setOpenMenus((prev) => ({
+      ...prev,
+      [menuName]: !prev[menuName],
+    }));
+  };
+  
+  return (
+    <div className="mt-4 text-sm">
+      {menuItems.map((item) => (
+        <div key={item.name}>
+        <div className="relative">
+  {item.hasSubMenu ? (
+    <div
+      onClick={() => toggleSubMenu(item.name as MenuKey)}
+      className="block py-2 px-2 rounded flex items-center hover:bg-[#8c57ff]/20 cursor-pointer"
+    >
+      <span className="mr-2">{item.icon}</span>
+      <span className="hidden lg:flex text-black-400 font-light items-center">
+        {item.name}
+        <button className="ml-auto text-lg">
+          {item.name === "Inventory" && isSubMenuOpen("Inventory", inventorySubMenuItems) ? (
+            <FaAngleUp />
+          ) : item.name === "Admin" && isSubMenuOpen("Admin", adminSubMenuItems) ? (
+            <FaAngleUp />
+          ) : item.name === "Master" && isSubMenuOpen("Master", masterSubMenuItems) ? (
+            <FaAngleUp />
+          ) : (
+            <FaAngleDown />
+          )}
+        </button>
+      </span>
+    </div>
+  ) : (
+    <Link
+      href={item.name} // Update as needed if direct links exist
+      className="block py-2 px-4 rounded flex items-center hover:bg-teal-700"
+    >
+      {item.icon && <span className="mr-2">{item.icon}</span>}
+      <span className="hidden lg:flex text-black-400 font-light items-center">
+        {item.name}
+      </span>
+    </Link>
+  )}
+</div>
 
-    return (
-        <div className="mt-4 text-sm">
 
-            {menuItems.map((item) => (
-                <div key={item.name}> {/* Ensure uniqueness of the key */}
-                    <div className="relative">
-                        {/* Parent link that toggles submenu visibility */}
-                        {item.hasSubMenu ? (
-                            <div
-                                onClick={() => toggleSubMenu(item.name.toLowerCase())}
-                                className="block py-2 px-2 rounded flex items-center hover:bg-[#8c57ff]/20 cursor-pointer"
-                            >
-                                {item.icon && (
-                                    <span className="mr-2">
-                                        {item.icon}
-                                    </span>
-                                )}
-                                <span className="hidden lg:flex text-black-400 font-light items-center">
-                                    
-                                    {item.name}
-                                    <button className="ml-auto text-lg">
-                                        {['Inventory', 'Admin', 'Master'].includes(item.name) && (
-                                            item.name === 'Inventory' && isInventoryOpen ||
-                                                item.name === 'Admin' && isAdminOpen ||
-                                                item.name === 'Master' && isMasterOpen ? (
-                                                <FaAngleUp />
-                                            ) : (
-                                                <FaAngleDown />
-                                            )
-                                        )}
-                                    </button>
-                                </span>
+          {/* Submenu: Render only if open */}
+          {item.hasSubMenu && item.name === "Inventory" && isSubMenuOpen("Inventory", inventorySubMenuItems) && (
+            <div className="pl-2 mt-2 transition-all duration-300 transform ease-in-out">
+              {inventorySubMenuItems.map((subItem) => (
+                <Link
+                  key={subItem.name}
+                  href={subItem.path}
+                  className={`block py-2 px-4 text-sm hover:bg-[#8c57ff]/20 rounded-md flex items-center ${
+                    pathname === subItem.path ? "bg-[#8c57ff]/40" : ""
+                  }`}
+                >
+                  <span className="mr-2">{subItem.icon}</span>
+                  <span className="hidden lg:flex text-black-400 font-light items-center">
+                    {subItem.name}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          )}
 
-                            </div>
-                        ) : (
-                            // Direct link for items with no submenus
-                            <Link
-                                href={item.path}
-                                className="block py-2 px-4 rounded flex items-center hover:bg-teal-700"
-                            >
-                                {item.icon && <span className="mr-2">{item.icon}</span>}
-                                <span className="hidden lg:flex text-black-400 font-light items-center"> {item.name}</span>
-                            </Link>
-                        )}
-                    </div>
+          {item.hasSubMenu && item.name === "Admin" && isSubMenuOpen("Admin", adminSubMenuItems) && (
+            <div className="pl-2 mt-2 transition-all duration-300 transform ease-in-out">
+              {adminSubMenuItems.map((subItem) => (
+                <Link
+                  key={subItem.name}
+                  href={subItem.path}
+                  className={`block py-2 px-4 text-sm hover:bg-[#8c57ff]/20 rounded-md flex items-center ${
+                    pathname === subItem.path ? "bg-[#8c57ff]/40" : ""
+                  }`}
+                >
+                  <span className="mr-2">{subItem.icon}</span>
+                  <span className="hidden lg:flex text-black-400 font-light items-center">
+                    {subItem.name}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          )}
 
-                    {/* Only show submenu if the parent is open */}
-                    {item.hasSubMenu && ((item.name === 'Inventory' && isInventoryOpen) || (item.name === 'Admin' && isAdminOpen) || (item.name === 'Master' && isMasterOpen)) &&  (
-                        <div className="pl-2 mt-2 transition-all duration-300 transform ease-in-out">
-                            <div className="relative">
-                                {/* Vertical line with sliding effect */}
-                                <div
-                                    className={`absolute left-0 top-0 h-full w-1 bg-[#8c57ff] rounded-tl-full rounded-br-full transition-all duration-300 transform ${isInventoryOpen ? 'translate-x-0' : '-translate-x-full'}`}
-                                ></div>
-                                <div className="pl-0">
-                                    {/* Submenu items */}
-                                    {item.name === 'Inventory' && inventorySubMenuItems.map((subItem) => (
-                                        <Link
-                                            href={subItem.path}
-                                            key={subItem.name}
-                                            className="block py-2 px-4 text-sm hover:bg-[#8c57ff]/20 rounded-md flex items-center"
-                                        >
-                                            <span className="mr-2">{subItem.icon}</span>
-                                            <span className="hidden lg:flex text-black-400 font-light items-center"> {subItem.name}</span>
-                                        </Link>
-                                    ))}
-                                    {item.name === 'Admin' && adminSubMenuItems.map((subItem) => (
-                                        <Link
-                                            href={subItem.path}
-                                            key={subItem.name}
-                                            className="block py-2 px-4 text-sm hover:bg-[#8c57ff]/20 rounded-md flex items-center"
-                                        >
-                                            <span className="mr-2">{subItem.icon}</span>
-                                            <span className="hidden lg:flex text-black-400 font-light items-center"> {subItem.name}</span>
-                                        </Link>
-                                    ))}
-                                    {item.name === 'Master' && masterSubMenuItems.map((subItem) => (
-                                        <Link
-                                            href={subItem.path}
-                                            key={subItem.name}
-                                            className="block py-2 px-4 text-sm hover:bg-[#8c57ff]/20 rounded-md flex items-center"
-                                        >
-                                            <span className="mr-2">{subItem.icon}</span>
-                                            <span className="hidden lg:flex text-black-400 font-light items-center"> {subItem.name}</span>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            ))}
-
+          {item.hasSubMenu && item.name === "Master" && isSubMenuOpen("Master", masterSubMenuItems) && (
+            <div className="pl-2 mt-2 transition-all duration-300 transform ease-in-out">
+              {masterSubMenuItems.map((subItem) => (
+                <Link
+                  key={subItem.name}
+                  href={subItem.path}
+                  className={`block py-2 px-4 text-sm hover:bg-[#8c57ff]/20 rounded-md flex items-center ${
+                    pathname === subItem.path ? "bg-[#8c57ff]/40" : ""
+                  }`}
+                >
+                  <span className="mr-2">{subItem.icon}</span>
+                  <span className="hidden lg:flex text-black-400 font-light items-center">
+                    {subItem.name}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
-    );
+      ))}
+    </div>
+  );
 };
 
 export default Sidebar;

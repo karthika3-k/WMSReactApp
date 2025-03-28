@@ -41,7 +41,7 @@ const BinMastserGrid = () => {
     const [isVisible, setIsVisible] = useState(true);
     const [isActionVisible, setActionIsVisible] = useState(true);
     const [selectedMaster, setSelectedMaster] = useState<BinMaster | null>(null);
-    
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const rowPerPage = 5;
     useEffect(() => {
@@ -51,6 +51,40 @@ const BinMastserGrid = () => {
             setWareHouse(fetchWareHouseData);
         };
         fetchWareHouse();
+        //         const fetchBinMaster = async () => {
+        //     setIsLoading(true);
+        //     try {
+        //         const response = await api.get('/BinMaster/BinMasterByWhs?whsCode=${null}');
+        //         const data = response.data;
+        //         debugger
+        //         const filteredBinConfig = data.map((binMaster: any) => ({
+        //             binId: binMaster.binId,
+        //             whsCode: binMaster.whsCode,
+        //             binLocCode: binMaster.binLocCode,
+        //             sL1Code: binMaster.sL1Code,
+        //             sL2Code: binMaster.sL2Code,
+        //             sL3Code: binMaster.sL3Code,
+        //             sL4Code: binMaster.sL4Code,
+        //             sL5Code: binMaster.sL5Code,
+        //             height: binMaster.height,
+        //             width: binMaster.width,
+        //             length: binMaster.length,
+        //             filter1: binMaster.filter1,
+        //             filter2: binMaster.filter2,
+        //             filter3: binMaster.filter3,
+        //             quantity: binMaster.quantity,
+        //             level: binMaster.level,
+        //             active: binMaster.active,
+        //             userSign: binMaster.userSign,
+        //         }));
+
+        //         setBinMaster(filteredBinConfig);
+        //     } catch (error) {
+        //         console.error("Error fetching users:", error);
+        //     }
+        //     setIsLoading(false);
+        // };
+        // fetchBinMaster();
     }, []);
     const binMasterColumns = [
         // { name: "WareHouse", field: "whsCode", className: "hidden md:table-cell px-2", visible: true },
@@ -174,7 +208,7 @@ const BinMastserGrid = () => {
             }));
 
             setBinMaster(formattedData);
-           
+
             setActionIsVisible(false);
             setIsVisible(true);
         };
@@ -200,31 +234,61 @@ const BinMastserGrid = () => {
 
     };
 
-    const handleDelete = async (binMaster: BinMaster) => {
-        try {
-            debugger
-            const values = {
-                userId: binMaster.binID,
-            };
-            const response = await api.delete(`/BinMaster/DeleteBinMaster?id=${values.userId}`);
-            debugger
-            if (response.status === 200 || response.status == 201 || response.status == 204) {
-                if (response.data !== null) {
-                    showSuccessToast('Deleted Successfully');
-                    router.refresh();
+    const handleCancelDelete = () => {
+        debugger
+        setIsDialogOpen(false);
+    };
 
-                    // Corrected line
-                    setBinMaster((prevBinMasters) => prevBinMasters.filter(bm => bm.binID !== binMaster.binID));
-                } else {
-                    showErrorToast('Deletion Failed');
-                }
+    // const handleDelete = async (binMaster: BinMaster) => {
+    //     try {
+    //         debugger
+    //         const values = {
+    //             binId: binMaster.binID,
+    //         };
+    //         const response = await api.delete(`/BinMaster/DeleteBinMaster?id=${values.binId}`);
+    //         debugger
+    //         if (response.status === 200 || response.status == 201 || response.status == 204) {
+    //             if (response.data !== null) {
+    //                 showSuccessToast('Deleted Successfully');
+    //                 router.refresh();
+
+    //                 // Corrected line
+    //                 setBinMaster((prevBinMasters) => prevBinMasters.filter(bm => bm.binID !== binMaster.binID));
+    //             } else {
+    //                 showErrorToast('Deletion Failed');
+    //             }
+    //         } else {
+    //             showErrorToast('Error');
+    //         }
+    //     } catch (error) {
+    //         console.error("Error deleting user:", error);
+    //     }
+    //     finally {
+    //         setIsDialogOpen(false);
+    //     }
+    // };
+
+    const handleDelete = async () => {
+        debugger;
+        if (!selectedMaster) return; // Check the actual state, not the setter function
+    
+        try {
+            const response = await api.delete(`/User/DeleteUser?id=${selectedMaster.binID}`);
+            if (response.status === 200 || response.status === 201 || response.status === 204) {
+                setBinMaster((prevBinMasters) => prevBinMasters.filter(bm => bm.binID !== selectedMaster.binID));
+                showSuccessToast('Deleted Successfully');
+                router.refresh();
             } else {
-                showErrorToast('Error');
+                showErrorToast('Deletion Failed');
             }
         } catch (error) {
-            console.error("Error deleting user:", error);
+            console.error('Error deleting user:', error);
+            showErrorToast('An error occurred');
+        } finally {
+            setIsDialogOpen(false);
         }
     };
+    
 
 
     const filteredUsers = binMaster.filter((binMaster) =>
@@ -243,7 +307,7 @@ const BinMastserGrid = () => {
         return (
             <tr key={item.binID} className="border-b h-15 text-[14px] border-gray-200 even:bg-slate-50 text-sm hover:bg-[#8c57ff]/20">
                 {/* <td className="hidden md:table-cell">{item.binID}</td> */}
-{/* 
+                {/* 
                 <td className="hidden md:table-cell">
                     <div className="flex items-center gap-1 text-center">
                         <TbBuildingWarehouse className="text-primary shrink-0" />
@@ -310,7 +374,7 @@ const BinMastserGrid = () => {
                                     </button>
                                     <button
                                         className="text-error hover:scale-150"
-                                        onClick={() => handleDelete(item)}
+                                        onClick={() => handleDeleteClick(item)}
                                     >
                                         <FaTrash />
                                     </button>
@@ -320,9 +384,26 @@ const BinMastserGrid = () => {
                     </td>
                 )}
 
+                <ConfirmDialog
+
+                    isOpen={isDialogOpen}
+                    title="Confirm Deletion"
+                    message={`Are you sure you want to delete ${selectedMaster?.binLocCode}?`}
+                    onConfirm={ handleDelete}
+                    onCancel={handleCancelDelete}
+                />
+
             </tr>
 
         );
+    };
+    const handleDeleteClick = (binMaster: BinMaster) => {
+
+        setSelectedMaster(binMaster);
+        setIsDialogOpen(true);
+        //handleConfirmDelete();
+        //handleDelete(user);
+        //handleCancel();
     };
     const handleDownloadExcel = () => {
 
