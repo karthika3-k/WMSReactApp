@@ -37,14 +37,18 @@ const LoginPage: React.FC = () => {
             const response = await api.get(`/Login/Login?userName=${username}&password=${password}`)
             debugger
             const responsedata = response.data;
+            debugger
             if (response.status != 200) {
                 setErrorMessage('Login failed.');
                 showErrorToast('Login Failed');
             }
             else {
-                localStorage.setItem('userName', username);
-                // localStorage.setItem('userRole', "Admin")
-                localStorage.setItem('userID', responsedata.login.userId);
+                debugger
+                localStorage.setItem('userName', responsedata.userName);
+                localStorage.setItem('userRole', responsedata.role);
+                localStorage.setItem('authToken', responsedata.accessToken);
+                localStorage.setItem('userID', responsedata.userId);
+                debugger
                 router.push('/pages/admin');
             }
 
@@ -56,7 +60,7 @@ const LoginPage: React.FC = () => {
     return (
         <div>
             <div>
-               
+
                 <LoginForm
                     onSubmit={handleLogin}
                     usernameError={usernameError}

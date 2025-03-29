@@ -19,12 +19,15 @@ import { toast, ToastContainer } from "react-toastify";
 import { Warehouse } from "../../types/Warehouse";
 import { TbBuildingWarehouse, TbDeviceAnalytics, TbDeviceDesktopOff, TbRulerMeasure, TbRulerMeasure2 } from "react-icons/tb";
 import { MdOutlineAirplanemodeActive, MdOutlineAirplanemodeInactive } from "react-icons/md";
-
-let user = null
+import { withAuth } from "@/app/utils/auth";
+let user = null;
+let accessToken = null;
 if (typeof window !== "undefined") {
     debugger
     user = localStorage.getItem("userName");
+    accessToken = localStorage.getItem("authToken");
 }
+
 let role = "admin";
 
 
@@ -153,7 +156,11 @@ const BinMastserGrid = () => {
     };
     const wareHouseTypes = async () => {
         try {
-            const response = await api.get('/WareHouse/WareHouseList');
+            const response = await api.get('/WareHouse/WareHouseList', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             const wareHouseData = response.data;
             const wareHouseNames = wareHouseData.map((item: { whsCode: string, whsName: string }) => ({
                 whsCode: item.whsCode,
@@ -273,7 +280,11 @@ const BinMastserGrid = () => {
         if (!selectedMaster) return; // Check the actual state, not the setter function
     
         try {
-            const response = await api.delete(`/User/DeleteUser?id=${selectedMaster.binID}`);
+            const response = await api.delete(`/User/DeleteUser?id=${selectedMaster.binID}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             if (response.status === 200 || response.status === 201 || response.status === 204) {
                 setBinMaster((prevBinMasters) => prevBinMasters.filter(bm => bm.binID !== selectedMaster.binID));
                 showSuccessToast('Deleted Successfully');
@@ -461,21 +472,36 @@ const BinMastserGrid = () => {
                 active: rest.active === true, // Ensure it's a boolean
             }));
 
-            const response = await api.post('/BinMaster/CreateBinMasterTemp', binRequest);
+            const response = await api.post('/BinMaster/CreateBinMasterTemp', binRequest, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
 
 
             if (response.status === 201 || response.status === 200) {
 
                 const valResponse = await api.get('/BinMaster/ValBinMasterData', {
-                    params: { userSign: binRequest[0].userSign }  // Correct way to pass query params
+                    params: { userSign: binRequest[0].userSign },
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    } // Correct way to pass query params
                 });
 
                 if (valResponse.status === 201 || valResponse.status === 200) {
-                    const mainResponse = await api.post('/BinMaster/CreateBinMaster ', valResponse.data);
+                    const mainResponse = await api.post('/BinMaster/CreateBinMaster ', valResponse.data, {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    });
                     if (mainResponse.status === 201 || mainResponse.status === 200) {
                         toast.success("Data saved successfully!");
                         debugger
-                        const delResponse = await api.delete(`/BinMaster/DeleteBinMasterTemp?userSign=${binRequest[0].userSign}`);
+                        const delResponse = await api.delete(`/BinMaster/DeleteBinMasterTemp?userSign=${binRequest[0].userSign}`, {
+                            headers: {
+                                'Authorization': `Bearer ${accessToken}`
+                            }
+                        });
                         debugger
                         console.log(delResponse);
                     }
@@ -502,7 +528,11 @@ const BinMastserGrid = () => {
             try {
                 setActionIsVisible(true);
                 setIsVisible(false);
-                const response = await api.get(`/BinMaster/BinMasterByWhs?whsCode=${whsCode}`);
+                const response = await api.get(`/BinMaster/BinMasterByWhs?whsCode=${whsCode}`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
                 setBinMaster(response.data); // Update grid data
             } catch (error) {
                 console.error("Error fetching bin data:", error);
@@ -520,7 +550,11 @@ const BinMastserGrid = () => {
 
             if (whsCode) {
                 try {
-                    const response = await api.get(`/BinMaster/BinMasterByWhs?whsCode=${whsCode}`);
+                    const response = await api.get(`/BinMaster/BinMasterByWhs?whsCode=${whsCode}`, {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    });
                     setBinMaster(response.data); // Update grid data
                 } catch (error) {
                     console.error("Error fetching bin data:", error);
@@ -609,5 +643,5 @@ const BinMastserGrid = () => {
     );
 };
 
-export default BinMastserGrid;
+export default withAuth(BinMastserGrid);
 

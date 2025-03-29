@@ -6,6 +6,13 @@ import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 import { Device } from "@/app/component/types/Device";
 import { ToastContainer } from "react-toastify";
 
+let user = null;
+let accessToken = null;
+if (typeof window !== "undefined") {
+    debugger
+    user = localStorage.getItem("userName");
+    accessToken = localStorage.getItem("authToken");
+}
 interface DeviceFormProps {
     deviceData?: Device | null;
     onAddDevice: (newDevice: Device) => void;
@@ -93,11 +100,19 @@ const DeviceForm: React.FC<DeviceFormProps> = ({ deviceData, onAddDevice }) => {
                 const values = {
                     deviceId: deviceRequest.deviceId,
                 };
-                response = await api.put(`/Device/UpdateDevice?id=${values.deviceId}`, deviceRequest);
+                response = await api.put(`/Device/UpdateDevice?id=${values.deviceId}`, deviceRequest, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
                 console.log(response);
             }
             else {
-                response = await api.post('/Device/CreateDevice', deviceRequest);
+                response = await api.post('/Device/CreateDevice', deviceRequest, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
             }
 
 

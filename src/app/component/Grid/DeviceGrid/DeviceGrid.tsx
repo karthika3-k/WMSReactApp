@@ -11,11 +11,18 @@ import Link from "next/link";
 import Grid from "../Grid";
 import DeviceForm from "../../Form/DeviceForm";
 import { FaEdit, FaTrash } from "react-icons/fa";
-
+import { withAuth } from "@/app/utils/auth";
 import { Device } from "@/app/component/types/Device";
 import ConfirmDialog from "../../Common/ConfirmDialog";
 
 let role = "admin";
+let user = null;
+let accessToken = null;
+if (typeof window !== "undefined") {
+    debugger
+    user = localStorage.getItem("userName");
+    accessToken = localStorage.getItem("authToken");
+}
 const deviceColumns = [
     //{ name: "DeviceId", field: "deviceId", visible: false },
     { name: "User Name", field: "userName", className: "hidden md:table-cell", visible: true },
@@ -54,7 +61,11 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
         setIsLoading(true);
         try {
 
-            const response = await api.get('/Device/DeviceList');
+            const response = await api.get('/Device/DeviceList', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             const data = response.data;
             const filteredDevices = data.map((device: any) => ({
                 deviceId: device.deviceId,
@@ -104,7 +115,11 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
             const values = {
                 DeviceId: device.deviceId,
             };
-            const response = await api.delete(`/Device/DeleteDevice?id=${values.DeviceId}`);
+            const response = await api.delete(`/Device/DeleteDevice?id=${values.DeviceId}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             if (response.status === 200) {
                 if (response.data.ErrorCode === 200) {
                     showSuccessToast('Device Deleted Successfully');
@@ -132,7 +147,11 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
         if (!selectedDevice) return;
 
         try {
-            const response = await api.delete(`/Device/DeleteDevice?id=${selectedDevice.deviceId}`);
+            const response = await api.delete(`/Device/DeleteDevice?id=${selectedDevice.deviceId}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             if (response.status === 200 || response.status === 201 || response.status === 204) {
                 setDevices(devices.filter((u) => u.deviceId !== selectedDevice.deviceId));
                 //handleDelete(response.data);
@@ -216,4 +235,4 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
     );
 };
 
-export default DeviceGrid;
+export default withAuth(DeviceGrid);

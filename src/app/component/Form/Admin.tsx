@@ -2,7 +2,15 @@ import UserCard from "../UserCard/UserCard";
 import CountChart from "../Charts/CountChart/CountChart";
 import Attendance from "../Charts/Attendance/Attendance";
 import EventCalender from "../Charts/EventCalender/EventCalender";
+import { withAuth } from "@/app/utils/auth";
 
+let user = null;
+let accessToken = null;
+if (typeof window !== "undefined") {
+    debugger
+    user = localStorage.getItem("userName");
+    accessToken = localStorage.getItem("authToken");
+}
 const AdminPage = () => {
     return (
         <div className="p-4 flex gap-4 flex-col md:flex-row">

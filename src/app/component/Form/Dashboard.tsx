@@ -4,7 +4,15 @@ import React from 'react';
 import Image from 'next/image';
 import Sidebar from '../Sidebar/Sidebar';
 import Navbar from '../Navbar/Navbar';
+import { withAuth } from '@/app/utils/auth';
 
+let user = null;
+let accessToken = null;
+if (typeof window !== "undefined") {
+    debugger
+    user = localStorage.getItem("userName");
+    accessToken = localStorage.getItem("authToken");
+}
 interface DashboardProps {
   children: React.ReactNode;
 }
@@ -35,4 +43,4 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);

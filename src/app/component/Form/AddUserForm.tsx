@@ -9,10 +9,13 @@ import UserGrid from "../Grid/UserGrid/UserGrid";
 import { Warehouse } from "../types/Warehouse";
 import { Device } from "../types/Device";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { withAuth } from "@/app/utils/auth";
 //const user = localStorage.getItem("userName");
-let user = null
+let user = null;
+let accessToken = null;
 if (typeof window !== "undefined") {
   user = localStorage.getItem("userName");
+  accessToken = localStorage.getItem("authToken");
 }
 interface AddUserFormProps {
   userData?: User | null;
@@ -177,11 +180,19 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
           const values = {
             userId: userRequest.userId,
           };
-          response = await api.put(`/User/UpdateUser?id=${values.userId}`, userRequest);
+          response = await api.put(`/User/UpdateUser?id=${values.userId}`, userRequest, {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`
+            }
+          });
           console.log(response);
         }
         else {
-          response = await api.post('/User/CreateUser', userRequest);
+          response = await api.post('/User/CreateUser', userRequest, {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`
+            }
+          });
         }
         if (response.status === 200 || response.status === 201) {
           debugger
@@ -256,7 +267,11 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
 
   const wareHouseTypes = async () => {
     try {
-      const response = await api.get('/WareHouse/WareHouseList');
+      const response = await api.get('/WareHouse/WareHouseList', {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
       const wareHouseData = response.data;
       const wareHouseNames = wareHouseData.map((item: { whsCode: string, whsName: string }) => ({
         whsCode: item.whsCode,
@@ -280,7 +295,11 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
   //device
   const deviceTypes = async () => {
     try {
-      const response = await api.get('/Device/DevicedropdownList');
+      const response = await api.get('/Device/DevicedropdownList', {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
       debugger
       const deviceData = response.data;
       const deviceNames = deviceData.map((item: { deviceId: number, deviceSerialNo: string }) => ({
@@ -359,7 +378,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
                 onClick={handleClickShowPassword}  // Directly call the function
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500"
               >
-                {showPassword ?  <FaEye /> :<FaEyeSlash /> }
+                {showPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
             </label>
           </div>
@@ -383,7 +402,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
                 onClick={handleClickShowConfirmPassword}  // Directly call the function
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500"
               >
-                {showConfirmPassword ? <FaEye /> :<FaEyeSlash />}
+                {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
 
             </label>
@@ -492,4 +511,4 @@ const AddUserForm: React.FC<AddUserFormProps> = ({ userData, onAddUser }) => {
   );
 
 };
-export default AddUserForm;
+export default withAuth(AddUserForm);

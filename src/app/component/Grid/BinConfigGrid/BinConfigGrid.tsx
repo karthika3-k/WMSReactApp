@@ -205,8 +205,16 @@ import { BinCnfg } from "@/app/component/types/BinConfig";
 import Link from "next/link";
 import ConfirmDialog from "../../Common/ConfirmDialog";
 import { ToastContainer } from "react-toastify";
+import { withAuth } from "@/app/utils/auth";
 
 let role = "admin";
+let user = null;
+let accessToken = null;
+if (typeof window !== "undefined") {
+    debugger
+    user = localStorage.getItem("userName");
+    accessToken = localStorage.getItem("authToken");
+}
 
 const userColumns = [
     { name: "Warehouse", field: "whsCode", className: "hidden md:table-cell", visible: true },
@@ -229,7 +237,11 @@ const BinConfigGrid = () => {
     const fetchBinConfigs = async () => {
         setIsLoading(true);
         try {
-            const response = await api.get("/BinConfig/BinConfigList");
+            const response = await api.get("/BinConfig/BinConfigList", {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             const data = response.data;
             const filteredBinConfig = data.map((binConfig: any) => ({
                 binConfigId: binConfig.binConfigId,
@@ -247,7 +259,7 @@ const BinConfigGrid = () => {
         setIsLoading(false);
     };
     // Fetch BinConfigs List
-    useEffect(() => {       
+    useEffect(() => {
         fetchBinConfigs();
     }, []);
 
@@ -255,7 +267,11 @@ const BinConfigGrid = () => {
     const fetchBinConfigByWhsCode = async (whsCode: string) => {
         setIsLoading(true);
         try {
-            const response = await api.get(`/BinConfig/BinConfigListbyWhsCode?whsCode=${whsCode}`);
+            const response = await api.get(`/BinConfig/BinConfigListbyWhsCode?whsCode=${whsCode}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             const data = response.data;
             const filteredBinConfigLists = data.map((binConfig: any) => ({
                 binConfigId: binConfig.binConfigId,
@@ -283,22 +299,26 @@ const BinConfigGrid = () => {
         }
     }, [selectedBinConfig]);
 
-   
+
     const handleAddBinConfig = async (newBin: BinCnfg) => {
         setBinConfg((prevConfigs) => [newBin, ...prevConfigs]);
         fetchBinConfigs();
         router.refresh();
     };
-    
-     useEffect(() => {
-            setCurrentPage(1); 
-        }, [searchTerm]);
-    
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm]);
+
     const handleEdit = async (binConfig: BinCnfg) => {
         try {
             if (binConfig.whsCode) {
                 const whsCode = Array.isArray(binConfig.whsCode) ? binConfig.whsCode.join(", ") : binConfig.whsCode;
-                const response = await api.get(`/BinConfig/BinConfigListbyWhsCode?whsCode=${whsCode}`);
+                const response = await api.get(`/BinConfig/BinConfigListbyWhsCode?whsCode=${whsCode}`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
                 const data = response.data;
                 const filteredBinConfigLists = data.map((binCnfig: any) => ({
                     binConfigId: binCnfig.binConfigId,
@@ -323,7 +343,11 @@ const BinConfigGrid = () => {
     const handleDelete = async (binCnfg: BinCnfg) => {
         try {
             debugger
-            const response = await api.delete(`/BinConfig/DeleteBinConfig?whsCode=${binCnfg.whsCode}`);
+            const response = await api.delete(`/BinConfig/DeleteBinConfig?whsCode=${binCnfg.whsCode}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             if (response.status === 200 || response.status === 201 || response.status === 204) {
                 showSuccessToast("BinConfig Deleted Successfully");
 
@@ -373,15 +397,15 @@ const BinConfigGrid = () => {
                 <td className="hidden md:table-cell">{item.whsCode}</td>
                 <td className="hidden md:table-cell">
                     <button className={` text-[16px] font-medium ${item.isActive ? "btn-success" : "btn-error"}`}>
-                       {item.isActive ? (
-                                              <FaUserShield  className="text-[#8c57ff] text-xl" />
-                                          ) : (
-                                              <FaUserSlash  className="text-[#ff5757] text-xl" />
-                                          )}
+                        {item.isActive ? (
+                            <FaUserShield className="text-[#8c57ff] text-xl" />
+                        ) : (
+                            <FaUserSlash className="text-[#ff5757] text-xl" />
+                        )}
                     </button>
                 </td>
                 <td className="hidden md:table-cell">
-                {item.createdOn ? new Date(item.createdOn.replace(" ", "T")).toLocaleDateString('en-GB') : "N/A"}
+                    {item.createdOn ? new Date(item.createdOn.replace(" ", "T")).toLocaleDateString('en-GB') : "N/A"}
                 </td>
                 <td>
                     <div className="flex items-center gap-2">
@@ -438,4 +462,4 @@ const BinConfigGrid = () => {
     );
 };
 
-export default BinConfigGrid;
+export default withAuth(BinConfigGrid);

@@ -320,10 +320,13 @@ import { showErrorToast, showSuccessToast } from "@/app/utils/toastConfig";
 import { BinCnfg } from "../types/BinConfig";
 import { ToastContainer } from "react-toastify";
 import { Warehouse } from "../types/Warehouse";
+import { withAuth } from "@/app/utils/auth";
 
 let user = null;
+let accessToken = null;
 if (typeof window !== "undefined") {
     user = localStorage.getItem("userName");
+    accessToken = localStorage.getItem("authToken");
 }
 
 
@@ -335,6 +338,7 @@ interface BinConfigFormProps {
 
 const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, selectedBinConfig }) => {
     const [wareHouse, setWareHouse] = useState<Warehouse[]>([]);
+
     const [formData, setFormData] = useState({
         binConfigId: 0,
         whsCode: '',
@@ -393,7 +397,11 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
 
     const wareHouseTypes = async () => {
         try {
-            const response = await api.get('/WareHouse/WareHouseList');
+            const response = await api.get('/WareHouse/WareHouseList', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             const wareHouseData = response.data;
             const wareHouseNames = wareHouseData.map((item: { whsCode: string, whsName: string }) => ({
                 whsCode: item.whsCode,
@@ -486,10 +494,18 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                 debugger
                 if (formData.binConfigId > 0) {
                     debugger
-                    response = await api.put(`/BinConfig/UpdateBinConfig`, BinConfigRequest);
+                    response = await api.put(`/BinConfig/UpdateBinConfig`, BinConfigRequest, {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    });
                 } else {
                     debugger
-                    response = await api.post('/BinConfig/CreateBinConfig', BinConfigRequest);
+                    response = await api.post('/BinConfig/CreateBinConfig', BinConfigRequest, {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    });
                     debugger
                 }
 
@@ -680,4 +696,4 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
     );
 };
 
-export default BinConfig;
+export default withAuth(BinConfig);

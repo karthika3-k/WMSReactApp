@@ -9,12 +9,15 @@ import UserGrid from "../Grid/UserGrid/UserGrid";
 import { BinMaster } from "../types/BinMaster";
 import { FaBullseye } from "react-icons/fa";
 import { Warehouse } from "../types/Warehouse";
+import { withAuth } from "@/app/utils/auth";
 //const user = localStorage.getItem("userName");
 
-let user = null
+let user = null;
+let accessToken = null;
 if (typeof window !== "undefined") {
     debugger
     user = localStorage.getItem("userName");
+    accessToken = localStorage.getItem("authToken");
 }
 interface BinMasterFormProps {
     binMasterData: any | null;
@@ -99,7 +102,11 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
 
     const wareHouseTypes = async () => {
         try {
-            const response = await api.get('/WareHouse/WareHouseList');
+            const response = await api.get('/WareHouse/WareHouseList', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             const wareHouseData = response.data;
             const wareHouseNames = wareHouseData.map((item: { whsCode: string, whsName: string }) => ({
                 whsCode: item.whsCode,
@@ -178,7 +185,11 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                 const values = {
                     binID: binmasterRequest?.binID,
                 };
-                response = await api.put(`/BinMaster/UpdateBinMaster?id=${values.binID}`, binmasterRequest);
+                response = await api.put(`/BinMaster/UpdateBinMaster?id=${values.binID}`, binmasterRequest, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
                 console.log(response);
 
                 // else {
@@ -200,7 +211,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                             console.log(message);
                             onUpdateChanges(binmasterRequest.whsCode);
                         }, 1000);
-                        
+
                     } else {
                         showErrorToast(` ${formData.binID > 0 ? 'Updated' : 'Created'} failed.`);
                     }
@@ -594,7 +605,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                 {/* Submit and Cancel Buttons */}
                 <div className="flex justify-end gap-4 mt-6">
                     <button type="submit" className="btn btn-soft bg-[#b08aff] text-white flex items-center gap-2 hover:bg-[#8c57ff]">
-                    {formData.binID > 0 ? 'Update' : 'Save'}
+                        {formData.binID > 0 ? 'Update' : 'Save'}
                     </button>
                     <button type="button" onClick={handleCancel} className="btn btn-outline btn-error hover:text-white"
                     >
@@ -608,4 +619,4 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
 
 
 };
-export default BinMasterForm;
+export default withAuth(BinMasterForm);

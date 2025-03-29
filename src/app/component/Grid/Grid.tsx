@@ -4,7 +4,7 @@ import React, { ReactNode, useRef } from "react";
 import TableSearch from "../TableSearch/TableSearch";
 import { FaPlus } from "react-icons/fa";
 import { User } from "@/app/component/types/User";
-
+import { withAuth } from "@/app/utils/auth";
 
 interface GridProps {
   header: string;
@@ -70,4 +70,4 @@ const Grid: React.FC<GridProps> = ({ header, userData, role, FormComponent, sear
   );
 };
 
-export default Grid;
+export default withAuth(Grid);

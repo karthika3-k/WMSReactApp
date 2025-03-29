@@ -14,9 +14,16 @@ import AddUserForm from "../../Form/AddUserForm";
 import { User } from "@/app/component/types/User";
 import ConfirmDialog from "../../Common/ConfirmDialog";
 import { MdOutlineAirplanemodeActive, MdOutlineAirplanemodeInactive } from "react-icons/md";
-
+import { withAuth } from "@/app/utils/auth";
 
 let role = "admin";
+let user = null;
+let accessToken = null;
+if (typeof window !== "undefined") {
+    debugger
+    user = localStorage.getItem("userName");
+    accessToken = localStorage.getItem("authToken");
+}
 const userColumns = [
     // { name: "User Id", field: "userId", visible: true },
     { name: "User Name", field: "userName", className: "hidden md:table-cell", visible: true },
@@ -41,7 +48,11 @@ const UserGrid = () => {
         debugger
         setIsLoading(true);
         try {
-            const response = await api.get('/User/UserList');
+            const response = await api.get('/User/UserList', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             const data = response.data;
             const filteredUsers = data.map((user: any) => ({
                 userId: user.userId,
@@ -128,7 +139,11 @@ const UserGrid = () => {
             const values = {
                 userId: user.userId,
             };
-            const response = await api.delete(`/User/DeleteUser?id=${values.userId}`);
+            const response = await api.delete(`/User/DeleteUser?id=${values.userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             debugger
             if (response.status === 200 || response.status == 201 || response.status == 204) {
                 if (response.data !== null) {
@@ -205,7 +220,11 @@ const UserGrid = () => {
         if (!selectedUser) return;
         debugger
         try {
-            const response = await api.delete(`/User/DeleteUser?id=${selectedUser.userId}`);
+            const response = await api.delete(`/User/DeleteUser?id=${selectedUser.userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
             if (response.status === 200 || response.status === 201 || response.status === 204) {
                 setUsers(users.filter((u) => u.userId !== selectedUser.userId));
                 //handleDelete(response.data);
@@ -263,9 +282,9 @@ const UserGrid = () => {
                 <td className="hidden md:table-cell">{item.deviceId}</td>
                 <td className="hidden md:table-cell">
                     {item.isActive ? (
-                        <FaUserShield  className="text-[#8c57ff] text-xl" />
+                        <FaUserShield className="text-[#8c57ff] text-xl" />
                     ) : (
-                        <FaUserSlash  className="text-[#ff5757] text-xl" />
+                        <FaUserSlash className="text-[#ff5757] text-xl" />
                     )}
                 </td>
                 <td>
@@ -320,4 +339,4 @@ const UserGrid = () => {
     );
 };
 
-export default UserGrid;
+export default withAuth(UserGrid);
