@@ -602,6 +602,7 @@ const BinConfig: React.FC<BinConfigFormProps> = ({ binConfigData, onAddUser, sel
                                 onChange={(e) => setFormData({ ...formData, whsCode: e.target.value })}
                                 className="input input-md w-83 p-2 h-13  rounded-lg border-2 border-black-300 focus:ring-indigo-500 focus:outline-none"
                                 required
+                                disabled={formData.binConfigId > 0}
                             >
                                 <option value="" disabled>Select Warehouse Code</option>
                                 {wareHouse.map((item, index) => (

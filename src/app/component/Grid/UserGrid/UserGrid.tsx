@@ -239,16 +239,15 @@ const UserGrid = () => {
             showErrorToast('An error occurred');
         } finally {
             setIsDialogOpen(false);
+            setSelectedUser(null);
         }
     };
 
-    const handleClose = () => {
-        debugger
-        setIsDialogOpen(false);
-    };
+   
     const handleCancelDelete = () => {
         debugger
         setIsDialogOpen(false);
+       
     };
     const renderRow = (item: User) => {
         return (

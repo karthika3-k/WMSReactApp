@@ -54,9 +54,10 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
             .toLowerCase()
             .includes(searchTerm.toLowerCase())
     );
+    const reversedUsers = [...filteredUsers].reverse();
     const indexOfLastRow = currentPage * rowPerPage;
     const indexOfFirstRow = indexOfLastRow - rowPerPage;
-    const currentData = filteredUsers.slice(indexOfFirstRow, indexOfLastRow);
+    const currentData = reversedUsers.slice(indexOfFirstRow, indexOfLastRow);
     const fetchDevices = async () => {
         setIsLoading(true);
         try {
@@ -164,13 +165,15 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
             console.error('Error deleting user:', error);
             showErrorToast('An error occurred');
         } finally {
+            debugger
             setIsDialogOpen(false);
+            setSelectedDevice(null);
         }
     };
     const handleDeleteClick = (device: Device) => {
         setSelectedDevice(device);
         setIsDialogOpen(true);
-        //handleConfirmDelete();
+        
     };
 
 
@@ -195,7 +198,7 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
                             {/* </button> */}
                         </Link>
                         {role === "admin" && (
-                            <button onClick={() => handleEdit(item)} className="text-success hover:scale-150">
+                            <button onClick={() => handleEdit(item)} className="text-[#8c57ff] hover:scale-150">
                                 <FaEdit />
                             </button>
 
