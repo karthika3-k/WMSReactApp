@@ -93,7 +93,7 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
                     filter3: binMasterData.filter3 || "",
                     quantity: binMasterData.quantity || 0,
                     level: binMasterData.level || 0,
-                    active: binMasterData.active || "Y", // Assuming "Y" as default active status
+                    active: binMasterData.active || false, // Assuming "Y" as default active status
                     userSign: binMasterData.userSign || ""
                 });
             }
@@ -281,10 +281,10 @@ const BinMasterForm: React.FC<BinMasterFormProps> = ({ binMasterData, onUpdateCh
     };
 
     return (
-        <div className="w-full text-indigo-800 rounded-xl max-h-[900px] overflow-y-auto overflow-x-hidden relative">
+        <div className="w-full text-indigo-800 rounded-xl relative">
             <div className="flex justify-between items-center p-2">
                 <h2 className="text-xl font-medium text-left text-black ml-2">
-                    {formData.binID > 0 ? 'Update Bin' : ' Add New Bin'}
+                    Update Bin
                 </h2>
                 <button
                     className="text-red-500 text-3xl rounded-full hover:scale-125 transition-transform duration-200 ease-in-out focus:outline-none"

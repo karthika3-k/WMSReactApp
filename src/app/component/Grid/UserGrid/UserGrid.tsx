@@ -43,7 +43,7 @@ const UserGrid = () => {
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    const rowPerPage = 10;
+    const [rowPerPage, setRowPerPage] = useState(3);
     const fetchUsers = async () => {
         debugger
         setIsLoading(true);
@@ -243,7 +243,15 @@ const UserGrid = () => {
         }
     };
 
-   
+    const handleRowPerPageChange = (newRowPerPage: number) => {
+        const maxPage = Math.ceil(filteredUsers.length / newRowPerPage);
+        setRowPerPage(newRowPerPage);
+    
+        // Reset to the last page if the current page exceeds the total pages
+        if (currentPage > maxPage) {
+          setCurrentPage(maxPage);
+        }
+      };
     const handleCancelDelete = () => {
         debugger
         setIsDialogOpen(false);
@@ -329,7 +337,9 @@ const UserGrid = () => {
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
             {/* TOP */}
-            <Grid header="User List" role="admin" FormComponent={<AddUserForm onAddUser={handleAddUser} userData={selectedUser || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} showAddButton={true} />
+            <Grid header="User List" role="admin" FormComponent={<AddUserForm onAddUser={handleAddUser} 
+            userData={selectedUser || undefined} />} searchTerm={searchTerm} 
+            setSearchTerm={setSearchTerm} showAddButton={true} setRowPerPage={handleRowPerPageChange} />
             {/* LIST */}
             <Table columns={userColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}
@@ -339,3 +349,4 @@ const UserGrid = () => {
 };
 
 export default withAuth(UserGrid);
+

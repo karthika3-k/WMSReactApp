@@ -45,8 +45,9 @@ const BinMastserGrid = () => {
     const [isActionVisible, setActionIsVisible] = useState(true);
     const [selectedMaster, setSelectedMaster] = useState<BinMaster | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [rowPerPage, setRowPerPage] = useState(3);
 
-    const rowPerPage = 5;
+    //const rowPerPage = 5;
     useEffect(() => {
         setIsClient(true);
         const fetchWareHouse = async () => {
@@ -54,41 +55,18 @@ const BinMastserGrid = () => {
             setWareHouse(fetchWareHouseData);
         };
         fetchWareHouse();
-        //         const fetchBinMaster = async () => {
-        //     setIsLoading(true);
-        //     try {
-        //         const response = await api.get('/BinMaster/BinMasterByWhs?whsCode=${null}');
-        //         const data = response.data;
-        //         debugger
-        //         const filteredBinConfig = data.map((binMaster: any) => ({
-        //             binId: binMaster.binId,
-        //             whsCode: binMaster.whsCode,
-        //             binLocCode: binMaster.binLocCode,
-        //             sL1Code: binMaster.sL1Code,
-        //             sL2Code: binMaster.sL2Code,
-        //             sL3Code: binMaster.sL3Code,
-        //             sL4Code: binMaster.sL4Code,
-        //             sL5Code: binMaster.sL5Code,
-        //             height: binMaster.height,
-        //             width: binMaster.width,
-        //             length: binMaster.length,
-        //             filter1: binMaster.filter1,
-        //             filter2: binMaster.filter2,
-        //             filter3: binMaster.filter3,
-        //             quantity: binMaster.quantity,
-        //             level: binMaster.level,
-        //             active: binMaster.active,
-        //             userSign: binMaster.userSign,
-        //         }));
-
-        //         setBinMaster(filteredBinConfig);
-        //     } catch (error) {
-        //         console.error("Error fetching users:", error);
-        //     }
-        //     setIsLoading(false);
-        // };
-        // fetchBinMaster();
+       
     }, []);
+     // Ensure the current page is valid for the new rowPerPage value
+     const handleRowPerPageChange = (newRowPerPage: number) => {
+        const maxPage = Math.ceil(filteredUsers.length / newRowPerPage);
+        setRowPerPage(newRowPerPage);
+    
+        // Reset to the last page if the current page exceeds the total pages
+        if (currentPage > maxPage) {
+          setCurrentPage(maxPage);
+        }
+      };
     const binMasterColumns = [
         // { name: "WareHouse", field: "whsCode", className: "hidden md:table-cell px-2", visible: true },
         { name: "Bin Location Code", field: "binLocCode", className: "hidden md:table-cell px-2", visible: true },
@@ -194,6 +172,7 @@ const BinMastserGrid = () => {
 
             // Map data to match BinMaster fields
             const formattedData: BinMaster[] = parsedData.map((row) => ({
+              
                 binID: 0, // Default ID, you can also generate a unique ID
                 whsCode: row.WhsCode || "",
                 binLocCode: row.BinLocCode || "",
@@ -210,7 +189,7 @@ const BinMastserGrid = () => {
                 filter3: row.Filter3 || "",
                 quantity: row.Quantity || 0,
                 level: row.Level || 0,
-                active: row.Active === "Y",
+                active: row.Active ,
                 userSign: user || "", // Default empty string
             }));
 
@@ -618,12 +597,15 @@ const BinMastserGrid = () => {
                         <HiArrowDownTray />
                     </button>
                 </div>
-
+                
 
             </div>
 
             {/* TOP */}
-            <Grid header="Bin Master" role="admin" FormComponent={<BinMasterForm onUpdateChanges={onUpdateChange} binMasterData={selectedMaster || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} showAddButton={false} />
+            <Grid header="Bin Master" role="admin" 
+            FormComponent={<BinMasterForm onUpdateChanges={onUpdateChange} 
+            binMasterData={selectedMaster || undefined} />} 
+            searchTerm={searchTerm} setSearchTerm={setSearchTerm} showAddButton={false} setRowPerPage={handleRowPerPageChange} />
             {/* LIST */}
             <Table columns={binMasterColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}
@@ -637,7 +619,8 @@ const BinMastserGrid = () => {
                     </button>
                 )}
             </div>
-            <ToastContainer position="bottom-right" />
+            {/* Ensure autoClose works properly */}
+        {/* <ToastContainer position="bottom-right" autoClose={1000} hideProgressBar={false} closeOnClick draggable pauseOnHover /> */}
         </div>
 
     );

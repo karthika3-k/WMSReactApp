@@ -231,8 +231,8 @@ const BinConfigGrid = () => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [selectedBinConfig, setSelectedBinConfig] = useState<BinCnfg | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-    const rowPerPage = 7;
+    const [rowPerPage, setRowPerPage] = useState(3);
+    //const rowPerPage = 7;
     const router = useRouter();
     const fetchBinConfigs = async () => {
         setIsLoading(true);
@@ -339,6 +339,22 @@ const BinConfigGrid = () => {
             showErrorToast("Error while fetching data or opening the drawer.");
         }
     };
+    const filteredUsers = binConfg.filter((user) =>
+        Object.values(user)
+            .join(" ")
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+    );
+    
+    const handleRowPerPageChange = (newRowPerPage: number) => {
+        const maxPage = Math.ceil(filteredUsers.length / newRowPerPage);
+        setRowPerPage(newRowPerPage);
+    
+        // Reset to the last page if the current page exceeds the total pages
+        if (currentPage > maxPage) {
+          setCurrentPage(maxPage);
+        }
+      };
 
     const handleDelete = async (binCnfg: BinCnfg) => {
         try {
@@ -452,12 +468,13 @@ const BinConfigGrid = () => {
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
                 showAddButton={true}
+                setRowPerPage={handleRowPerPageChange}
             />
             {/* Table */}
             <Table columns={userColumns} renderRow={renderRow} data={currentData} />
             {/* Pagination */}
             <Pagination data={filteredBinConfigs} rowPerPage={rowPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage} />
-            <ToastContainer />
+          
         </div>
     );
 };
