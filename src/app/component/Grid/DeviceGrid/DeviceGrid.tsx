@@ -40,13 +40,13 @@ interface AddUserFormProps {
 }
 
 const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
-    const rowPerPage = 7;
+   // const rowPerPage = 7;
     const [searchTerm, setSearchTerm] = useState(""); // Add a search term state
     const [devices, setDevices] = useState<Device[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(1); // Add page state
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+    const [rowPerPage, setRowPerPage] = useState(3);
     const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
     const filteredUsers = devices.filter((Device) =>
         Object.values(Device)
@@ -137,6 +137,15 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
             setIsDialogOpen(false);
         }
     };
+    const handleRowPerPageChange = (newRowPerPage: number) => {
+        const maxPage = Math.ceil(filteredUsers.length / newRowPerPage);
+        setRowPerPage(newRowPerPage);
+    
+        // Reset to the last page if the current page exceeds the total pages
+        if (currentPage > maxPage) {
+          setCurrentPage(maxPage);
+        }
+      };
     const handleCancelDelete = () => {
         debugger
         setIsDialogOpen(false);
@@ -229,7 +238,9 @@ const DeviceGrid: React.FC<AddUserFormProps> = ({ deviceData }) => {
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
             {/* TOP */}
-            <Grid header="All Devices" role="admin" FormComponent={<DeviceForm onAddDevice={handleAddDevice} deviceData={selectedDevice || undefined} />} searchTerm={searchTerm} setSearchTerm={setSearchTerm} showAddButton={true} />
+            <Grid header="All Devices" role="admin" FormComponent={<DeviceForm onAddDevice={handleAddDevice} 
+            deviceData={selectedDevice || undefined} />} searchTerm={searchTerm} 
+            setSearchTerm={setSearchTerm} showAddButton={true} setRowPerPage={handleRowPerPageChange}/>
             {/* LIST */}
             <Table columns={deviceColumns} renderRow={renderRow} data={currentData} />
             {/* PAGINATION */}
