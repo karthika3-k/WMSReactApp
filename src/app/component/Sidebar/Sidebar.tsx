@@ -32,7 +32,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen }: SidebarProps) => {
 
   // Submenu items for each parent
   const inventorySubMenuItems = [
-    { name: "Inward", path: "/inward", icon: <FaTruck /> },
+    { name: "Inward", path: "/pages/inwardgrid", icon: <FaTruck /> },
     { name: "Outward", path: "/outward", icon: <FaTruckLoading /> },
     { name: "PO Confirmation Wizard", path: "/po-confirmation", icon: <FaStoreAlt /> },
   ];
